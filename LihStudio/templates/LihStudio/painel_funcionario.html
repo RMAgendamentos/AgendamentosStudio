@@ -1,0 +1,575 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Equipe - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --whatsapp: #25D366;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+        
+        .user-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .action-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .action-link.logout-btn {
+            background: rgba(239, 68, 68, 0.9);
+            border-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        
+        .action-link.logout-btn:hover {
+            background: rgba(220, 38, 38, 1);
+        }
+
+        /* ===== CONTAINER ===== */
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+        
+        .card-header {
+            padding: 1.75rem 2rem;
+            border-bottom: 2px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-header.hoje {
+            background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .card-header.futuros {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-body {
+            padding: 0;
+        }
+
+        /* ===== AGENDAMENTOS ===== */
+        .agendamento {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 150px 80px;
+            gap: 1.5rem;
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid #f3f4f6;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .agendamento:last-child {
+            border-bottom: none;
+        }
+
+        .agendamento:hover {
+            background: var(--secondary);
+        }
+
+        .ag-hora {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .ag-info strong {
+            display: block;
+            font-size: 1.15rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ag-info span {
+            font-size: 0.95rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ag-info span i {
+            font-size: 0.85rem;
+        }
+
+        .ag-status {
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-pendente {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-confirmado {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-concluido {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .status-cancelado {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== BOTÃO WHATSAPP ===== */
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--whatsapp) 0%, #1da851 100%);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            cursor: pointer;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-btn i {
+            font-size: 1.5rem;
+        }
+
+        /* ===== AGENDA VAZIA ===== */
+        .agenda-vazia {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #9ca3af;
+        }
+
+        .agenda-vazia i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.3;
+        }
+
+        .agenda-vazia p {
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* ===== MESSAGES ===== */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-link {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .agendamento {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .ag-hora {
+                font-size: 2rem;
+            }
+
+            .ag-info strong {
+                font-size: 1.3rem;
+                justify-content: center;
+            }
+
+            .ag-info span {
+                justify-content: center;
+            }
+
+            .ag-status {
+                width: max-content;
+                margin: 0 auto;
+            }
+
+            .whatsapp-btn {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}" style="font-size: 1.5rem;"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-clipboard-list"></i>
+                    Painel da Equipe
+                </h1>
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> Olá, {{ request.user.username }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="header-actions">
+                <form action="{% url 'logout' %}" method="post" style="display: inline; margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="action-link logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+        
+        <!-- AGENDA DE HOJE -->
+        <div class="card">
+            <div class="card-header hoje">
+                <i class="fas fa-star" style="font-size: 1.5rem;"></i>
+                <h2>Agenda de Hoje - {{ hoje|date:"d/m/Y, l" }}</h2>
+            </div>
+            <div class="card-body">
+                {% for ag in agendamentos_hoje %}
+                    <div class="agendamento">
+                        <div class="ag-hora">{{ ag.hora_backup|time:"H:i" }}</div>
+                        <div class="ag-info">
+                            <strong><i class="fas fa-user"></i> {{ ag.nome }}</strong>
+                            <span><i class="fas fa-phone"></i> {{ ag.telefone }}</span>
+                        </div>
+                        <div class="ag-info">
+                            <strong><i class="fas fa-scissors"></i> {{ ag.servico.nome }}</strong>
+                            <span><i class="fas fa-user-nurse"></i> com {{ ag.profissional.nome }}</span>
+                        </div>
+                        <div class="ag-status status-{{ ag.status }}">
+                            {% if ag.status == 'pendente' %}
+                                <i class="fas fa-hourglass-half"></i> Pendente
+                            {% elif ag.status == 'confirmado' %}
+                                <i class="fas fa-check-circle"></i> Confirmado
+                            {% elif ag.status == 'concluido' %}
+                                <i class="fas fa-check-double"></i> Concluído
+                            {% elif ag.status == 'cancelado' %}
+                                <i class="fas fa-times-circle"></i> Cancelado
+                            {% endif %}
+                        </div>
+                        <!-- BOTÃO WHATSAPP -->
+                        <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
+                           class="whatsapp-btn" 
+                           target="_blank" 
+                           title="Chamar no WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="agenda-vazia">
+                        <i class="fas fa-calendar-times"></i>
+                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum agendamento para hoje</p>
+                        <p>Aproveite para organizar ou relaxar! 😊</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- PRÓXIMOS AGENDAMENTOS -->
+        <div class="card">
+            <div class="card-header futuros">
+                <i class="fas fa-calendar-days" style="font-size: 1.5rem;"></i>
+                <h2>Próximos Agendamentos</h2>
+            </div>
+            <div class="card-body">
+                {% for ag in agendamentos_futuros %}
+                    <div class="agendamento">
+                        <div class="ag-hora" style="font-size: 1.5rem; line-height: 1.3;">
+                            {{ ag.data|date:"d/m" }}
+                            <span style="display: block; font-size: 1.1rem; font-weight: 600; background: linear-gradient(135deg, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                {{ ag.hora_backup|time:"H:i" }}
+                            </span>
+                        </div>
+                        <div class="ag-info">
+                            <strong><i class="fas fa-user"></i> {{ ag.nome }}</strong>
+                            <span><i class="fas fa-phone"></i> {{ ag.telefone }}</span>
+                        </div>
+                        <div class="ag-info">
+                            <strong><i class="fas fa-scissors"></i> {{ ag.servico.nome }}</strong>
+                            <span><i class="fas fa-user-nurse"></i> com {{ ag.profissional.nome }}</span>
+                        </div>
+                        <div class="ag-status status-{{ ag.status }}">
+                            {% if ag.status == 'pendente' %}
+                                <i class="fas fa-hourglass-half"></i> Pendente
+                            {% elif ag.status == 'confirmado' %}
+                                <i class="fas fa-check-circle"></i> Confirmado
+                            {% elif ag.status == 'concluido' %}
+                                <i class="fas fa-check-double"></i> Concluído
+                            {% elif ag.status == 'cancelado' %}
+                                <i class="fas fa-times-circle"></i> Cancelado
+                            {% endif %}
+                        </div>
+                        <!-- BOTÃO WHATSAPP -->
+                        <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
+                        class="whatsapp-btn" 
+                        target="_blank" 
+                        title="Chamar no WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="agenda-vazia">
+                        <i class="fas fa-calendar-check"></i>
+                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum agendamento futuro</p>
+                        <p>Novos agendamentos aparecerão aqui</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-fechamento de mensagens
+            document.querySelectorAll('.messages-container .alert').forEach(msg => {
+                setTimeout(() => {
+                    msg.style.transition = 'all 0.5s ease';
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateX(100px)';
+                    setTimeout(() => msg.remove(), 500);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

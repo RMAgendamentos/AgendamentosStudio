@@ -1,0 +1,387 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #343a40;
+            line-height: 1.8;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .update-date {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        h2 {
+            color: #6366f1;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: #495057;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+        
+        p, li {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .highlight {
+            background: #e0e7ff;
+            padding: 1.5rem;
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        
+        .data-table th {
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            background: #6366f1;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            background: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content-card {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-shield-alt"></i> Política de Privacidade</h1>
+        <p class="update-date">Última atualização: 19 de outubro de 2025</p>
+    </div>
+    
+    <div class="container">
+        <div class="content-card">
+            <div class="highlight">
+                <strong>🔒 Seu compromisso com a privacidade:</strong> No RM Studio, levamos a proteção dos seus dados pessoais a sério. Esta política descreve como coletamos, usamos e protegemos suas informações, em conformidade com a LGPD.
+            </div>
+            
+            <h2>1. Introdução</h2>
+            <p>
+                Esta Política de Privacidade se aplica ao site e sistema de agendamento do <strong>RM Studio</strong>, descrevendo como tratamos os dados pessoais coletados dos usuários de nossos serviços.
+            </p>
+            <p>
+                Estamos comprometidos com a transparência e a proteção da sua privacidade, em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong>.
+            </p>
+            
+            <h2>2. Dados Coletados</h2>
+            
+            <h3>2.1. Informações Fornecidas por Você</h3>
+            <p>
+                Coletamos as seguintes informações quando você utiliza nossos serviços:
+            </p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Dado Coletado</th>
+                        <th>Finalidade</th>
+                        <th>Base Legal (LGPD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nome completo</td>
+                        <td>Identificação e personalização do atendimento</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>Telefone</td>
+                        <td>Confirmação de agendamento e lembretes</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>E-mail</td>
+                        <td>Envio de confirmações e comunicações</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>Serviço solicitado</td>
+                        <td>Prestação do serviço agendado</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>Data e horário do agendamento</td>
+                        <td>Organização da agenda</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>Observações</td>
+                        <td>Atendimento personalizado</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                    <tr>
+                        <td>Dados de pagamento</td>
+                        <td>Processamento de transações</td>
+                        <td>Execução de contrato</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>2.2. Informações Coletadas Automaticamente</h3>
+            <ul>
+                <li><strong>Endereço IP:</strong> Para segurança e prevenção de fraudes</li>
+                <li><strong>Cookies:</strong> Para melhorar a experiência de navegação</li>
+                <li><strong>Informações do dispositivo:</strong> Tipo de dispositivo, navegador e sistema operacional</li>
+                <li><strong>Dados de navegação:</strong> Páginas visitadas, tempo de permanência</li>
+            </ul>
+            
+            <h2>3. Como Usamos Seus Dados</h2>
+            <p>
+                Utilizamos suas informações pessoais para:
+            </p>
+            <ul>
+                <li>✅ Processar e confirmar seus agendamentos</li>
+                <li>✅ Enviar lembretes de compromissos</li>
+                <li>✅ Processar pagamentos</li>
+                <li>✅ Melhorar nossos serviços</li>
+                <li>✅ Enviar comunicações importantes sobre seus agendamentos</li>
+                <li>✅ Cumprir obrigações legais e regulatórias</li>
+                <li>✅ Prevenir fraudes e garantir a segurança da plataforma</li>
+            </ul>
+            
+            <h2>4. Compartilhamento de Dados</h2>
+            
+            <h3>4.1. Com Quem Compartilhamos</h3>
+            <p>
+                Seus dados podem ser compartilhados com:
+            </p>
+            <ul>
+                <li><strong>Mercado Pago:</strong> Para processamento de pagamentos (seguindo suas próprias políticas de privacidade)</li>
+                <li><strong>Provedores de serviço de e-mail:</strong> Para envio de confirmações e notificações</li>
+                <li><strong>Autoridades governamentais:</strong> Quando exigido por lei</li>
+            </ul>
+            
+            <h3>4.2. Nunca Compartilhamos Seus Dados Para</h3>
+            <ul>
+                <li>❌ Venda a terceiros</li>
+                <li>❌ Marketing de outras empresas</li>
+                <li>❌ Finalidades não relacionadas aos nossos serviços</li>
+            </ul>
+            
+            <h2>5. Seus Direitos (LGPD)</h2>
+            <p>
+                De acordo com a LGPD, você tem os seguintes direitos sobre seus dados pessoais:
+            </p>
+            
+            <div class="highlight">
+                <h3 style="margin-top: 0; color: #6366f1;">🛡️ Seus Direitos Garantidos</h3>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Confirmação:</strong> Saber se tratamos seus dados</li>
+                    <li><strong>Acesso:</strong> Solicitar cópia dos seus dados</li>
+                    <li><strong>Correção:</strong> Atualizar dados incompletos ou incorretos</li>
+                    <li><strong>Anonimização:</strong> Solicitar anonimização dos seus dados</li>
+                    <li><strong>Portabilidade:</strong> Receber seus dados em formato estruturado</li>
+                    <li><strong>Eliminação:</strong> Solicitar exclusão dos seus dados</li>
+                    <li><strong>Revogação do consentimento:</strong> Retirar consentimento a qualquer momento</li>
+                    <li><strong>Oposição:</strong> Se opor a tratamentos realizados</li>
+                </ul>
+            </div>
+            
+            <p>
+                Para exercer qualquer um desses direitos, entre em contato conosco através do e-mail: <strong>privacidade@rmstudio.com</strong>
+            </p>
+            
+            <h2>6. Segurança dos Dados</h2>
+            <p>
+                Implementamos medidas técnicas e organizacionais para proteger seus dados, incluindo:
+            </p>
+            <ul>
+                <li>🔐 Criptografia de dados sensíveis (SSL/TLS)</li>
+                <li>🔐 Controle de acesso restrito às informações</li>
+                <li>🔐 Monitoramento de segurança contínuo</li>
+                <li>🔐 Backup regular de dados</li>
+                <li>🔐 Treinamento de equipe sobre proteção de dados</li>
+            </ul>
+            
+            <h2>7. Retenção de Dados</h2>
+            <p>
+                Mantemos seus dados pessoais pelo tempo necessário para cumprir as finalidades descritas nesta política, ou conforme exigido por lei.
+            </p>
+            <ul>
+                <li><strong>Dados de agendamento:</strong> 5 anos (obrigação fiscal)</li>
+                <li><strong>Dados de pagamento:</strong> Conforme legislação aplicável</li>
+                <li><strong>Logs de acesso:</strong> 6 meses (Marco Civil da Internet)</li>
+            </ul>
+            
+            <h2>8. Cookies</h2>
+            <p>
+                Utilizamos cookies para melhorar sua experiência. Tipos de cookies usados:
+            </p>
+            <ul>
+                <li><strong>Cookies essenciais:</strong> Necessários para o funcionamento do site</li>
+                <li><strong>Cookies de desempenho:</strong> Para melhorar o desempenho da plataforma</li>
+                <li><strong>Cookies de funcionalidade:</strong> Para lembrar suas preferências</li>
+            </ul>
+            <p>
+                Você pode gerenciar cookies através das configurações do seu navegador.
+            </p>
+            
+            <h2>9. Transferência Internacional de Dados</h2>
+            <p>
+                Alguns de nossos fornecedores de serviço podem estar localizados fora do Brasil. Garantimos que qualquer transferência internacional de dados seja realizada de acordo com as exigências da LGPD.
+            </p>
+            
+            <h2>10. Menores de Idade</h2>
+            <p>
+                Nossos serviços são destinados a pessoas maiores de 18 anos. Não coletamos intencionalmente dados de menores sem o consentimento dos pais ou responsáveis legais.
+            </p>
+            
+            <h2>11. Alterações nesta Política</h2>
+            <p>
+                Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos você sobre alterações significativas através de:
+            </p>
+            <ul>
+                <li>E-mail cadastrado</li>
+                <li>Aviso em nosso site</li>
+            </ul>
+            <p>
+                Recomendamos revisar esta política regularmente.
+            </p>
+            
+            <h2>12. Encarregado de Proteção de Dados (DPO)</h2>
+            <p>
+                Para questões relacionadas à proteção de dados, entre em contato com nosso DPO:
+            </p>
+            <ul>
+                <li><strong>E-mail:</strong> dpo@rmstudio.com</li>
+                <li><strong>Telefone:</strong> (83) 99999-9999</li>
+            </ul>
+            
+            <h2>13. Contato</h2>
+            <p>
+                Para dúvidas sobre esta Política de Privacidade ou sobre o tratamento dos seus dados:
+            </p>
+            <ul>
+                <li><strong>E-mail:</strong> privacidade@rmstudio.com</li>
+                <li><strong>Telefone:</strong> (83) 99999-9999</li>
+                <li><strong>WhatsApp:</strong> (83) 99999-9999</li>
+                <li><strong>Endereço:</strong> [Seu endereço completo]</li>
+            </ul>
+            
+            <div class="highlight" style="margin-top: 3rem;">
+                <strong>📧 Fale Conosco</strong><br>
+                Valorizamos sua privacidade. Se tiver qualquer dúvida ou preocupação sobre como tratamos seus dados, não hesite em nos contatar.
+            </div>
+            
+            <center>
+                <a href="{% url 'home' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Voltar para o Início
+                </a>
+            </center>
+        </div>
+    </div>
+    
+    <footer>
+        <p><strong>RM Studio</strong> - Comprometidos com sua privacidade © 2025</p>
+    </footer>
+</body>
+</html>

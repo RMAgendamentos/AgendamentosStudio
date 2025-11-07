@@ -1,0 +1,668 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header Styles */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-link { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: var(--border-radius); 
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .action-link:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Main Container */
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Filters Section */
+        .filters-container {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+        }
+
+        .filters-container:hover {
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .filter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(196, 64, 123, 0.2);
+            outline: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4407b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.4);
+        }
+
+        .btn-clear {
+            background: #e5e7eb;
+            color: var(--dark);
+        }
+
+        .btn-clear:hover {
+            background: #d1d5db;
+            transform: translateY(-2px);
+        }
+
+        /* Table Section */
+        .table-container {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        .table-container:hover {
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        th {
+            color: white;
+            font-weight: 700;
+            padding: 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+
+        th:first-child { border-radius: 12px 0 0 0; }
+        th:last-child { border-radius: 0 12px 0 0; }
+
+        tbody tr {
+            background: white;
+            transition: var(--transition);
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        tbody tr:hover {
+            background: var(--secondary);
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        td {
+            padding: 1rem;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 0.6rem;
+            min-width: 36px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp i {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .btn-history {
+            background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-history:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table th, .table td {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .action-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Messages */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+
+        #servico {
+    background-image: linear-gradient(45deg, transparent 50%, #d63384 50%), 
+                      linear-gradient(135deg, #d63384 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px), 
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+#servico option {
+    padding: 10px;
+    font-size: 1rem;
+}
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1><i class="fas fa-users"></i> Clientes - RM Studio</h1>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'painel_dona' %}" class="action-link">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Painel
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <section class="filters-container">
+            <form method="get" class="filter-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome" class="form-label">Nome</label>
+                        <input type="text" id="nome" name="nome" class="form-control" 
+                            value="{{ request.GET.nome }}" placeholder="Filtrar por nome">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servico" class="form-label">Serviço</label>
+                        <select id="servico" name="servico" class="form-control">
+                            <option value="">Todos</option>
+                            
+                            {% for servico in servicos %}
+                            <option value="{{ servico.id }}" 
+                                    {% if request.GET.servico == servico.id|stringformat:"s" %}selected{% endif %}>
+                                {{ servico.nome }}
+                            </option>
+                            {% endfor %}
+                            </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="data_inicio" class="form-label">Data Início</label>
+                        <input type="date" id="data_inicio" name="data_inicio" 
+                            class="form-control" value="{{ request.GET.data_inicio }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_fim" class="form-label">Data Fim</label>
+                        <input type="date" id="data_fim" name="data_fim" 
+                            class="form-control" value="{{ request.GET.data_fim }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profissional" class="form-label">Profissional</label>
+                        <select id="profissional" name="profissional" class="form-control">
+                            <option value="">Todos</option>
+                            {% for prof in profissionais %}
+                            <option value="{{ prof.slug }}" {% if request.GET.profissional == prof.slug %}selected{% endif %}>{{ prof.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="pendente" {% if request.GET.status == "pendente" %}selected{% endif %}>Pendente</option>
+                            <option value="confirmado" {% if request.GET.status == "confirmado" %}selected{% endif %}>Confirmado</option>
+                            <option value="concluido" {% if request.GET.status == "concluido" %}selected{% endif %}>Concluído</option>
+                            <option value="cancelado" {% if request.GET.status == "cancelado" %}selected{% endif %}>Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'lista_clientes' %}" class="action-btn btn-clear">
+                        <i class="fas fa-broom"></i> Limpar
+                    </a>
+                    <a href="{% url 'exportar_clientes_pdf' %}?{{ request.GET.urlencode }}" class="action-btn btn-primary" id="pdfLink">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </a>
+                </div>
+            </form>
+        </section>
+        
+        <section class="table-container">
+            {% if clientes %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Nome</th>
+                        <th><i class="fas fa-phone"></i> Telefone</th>
+                        <th><i class="fas fa-user-nurse"></i> Profissional</th>
+                        <th><i class="fas fa-spa"></i> Último Serviço</th>
+                        <th><i class="fas fa-calendar"></i> Última Visita</th>
+                        <th><i class="fas fa-list-ol"></i> Total Visitas</th>
+                        <th><i class="fas fa-history"></i> Histórico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td><strong>{{ cliente.nome }}</strong></td>
+                        <td>
+                            {{ cliente.telefone }}
+                            <a href="https://wa.me/55{{ cliente.telefone|cut:' '|cut:'-'|cut:'('|cut:')' }}" 
+                            target="_blank" 
+                            class="btn-whatsapp"
+                            title="Enviar mensagem no WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </td>
+                        <td>{{ cliente.profissional }}</td>
+                        <td>{{ cliente.ultimo_servico }}</td>
+                        <td>{{ cliente.ultima_visita|date:"d/m/Y" }}</td>
+                        <td>{{ cliente.total_visitas }}</td>
+                        <td>
+                            <a href="{% url 'historico_cliente' %}?nome={{ cliente.nome|urlencode }}&telefone={{ cliente.telefone|urlencode }}" 
+                            class="action-btn btn-history">
+                                <i class="fas fa-history"></i> Histórico
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-user-slash"></i>
+                    <h3>Nenhum cliente encontrado</h3>
+                    <p>Não foram encontrados clientes com os filtros aplicados.</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cache dos elementos
+        const filterForm = document.querySelector('.filter-form');
+        const tableContainer = document.querySelector('.table-container');
+        const filterInputs = document.querySelectorAll('#nome, #servico, #data_inicio, #data_fim, #profissional, #status');
+        
+        // Função para carregar os resultados via AJAX
+        function loadResults() {
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams(formData).toString();
+            
+            fetch(`{% url 'lista_clientes' %}?${params}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Extrai apenas a parte da tabela da resposta
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTable = doc.querySelector('.table-container');
+                
+                if (newTable) {
+                    tableContainer.innerHTML = newTable.innerHTML;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Adiciona eventos de input/change com debounce
+        let debounceTimer;
+        function handleFilterChange() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(loadResults, 500);
+        }
+        
+        filterInputs.forEach(input => {
+            input.addEventListener('input', handleFilterChange);
+        });
+        
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', handleFilterChange);
+        });
+        
+        // Atualiza o link do PDF
+        function updatePdfLink() {
+            const params = new URLSearchParams(new FormData(filterForm));
+            document.getElementById('pdfLink').href = `{% url 'exportar_clientes_pdf' %}?${params.toString()}`;
+        }
+        
+        // Chame esta função quando qualquer filtro mudar
+        filterInputs.forEach(input => {
+            input.addEventListener('input', updatePdfLink);
+        });
+        
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', updatePdfLink);
+        });
+
+        // Auto-fechamento de mensagens
+        document.querySelectorAll('.messages-container .alert').forEach(msg => {
+            setTimeout(() => {
+                msg.style.transition = 'all 0.5s ease';
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                setTimeout(() => msg.remove(), 500);
+            }, 4000);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const servicoSelect = document.getElementById('servico');
+    
+    if (servicoSelect) {
+        // Adicionar ícone visual ao lado do serviço selecionado
+        servicoSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            
+            if (this.value) {
+                // Destaca visualmente que há filtro ativo
+                servicoSelect.style.borderColor = '#d63384';
+                servicoSelect.style.borderWidth = '2px';
+            } else {
+                servicoSelect.style.borderColor = '#ddd';
+                servicoSelect.style.borderWidth = '1px';
+            }
+        });
+        
+        // Trigger ao carregar se já houver filtro
+        if (servicoSelect.value) {
+            servicoSelect.dispatchEvent(new Event('change'));
+        }
+    }
+});
+    </script>
+</body>
+</html>

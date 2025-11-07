@@ -1,0 +1,1099 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários Disponíveis - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header Styles */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-link { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: var(--border-radius); 
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .action-link:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Form Sections */
+        .section-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+            border-left: 5px solid var(--primary);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(196, 64, 123, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(196, 64, 123, 0.2);
+            outline: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4407b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Schedule List */
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .schedule-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .schedule-info {
+            flex: 1;
+        }
+
+        .schedule-date {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .schedule-time {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .schedule-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 1rem;
+        }
+
+        .status-available {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-unavailable {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-delete {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.6rem;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-delete:hover {
+            color: white;
+            background: var(--danger);
+            transform: scale(1.1);
+        }
+
+        /* Days Selection */
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .day-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .day-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .day-option.selected {
+            border-color: var(--primary);
+            background: var(--secondary);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.2);
+        }
+
+        .day-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .day-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .day-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%; /* Para mobile ocupar largura total */
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            width: 350px;
+            max-width: calc(100vw - 2rem); /* Nunca ultrapassar a tela */
+            z-index: 100;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Botão de exclusão - ajuste para mobile */
+        .delete-dropdown-container {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .dropdown-menu h4 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .dropdown-menu small {
+            color: #6b7280;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        /* Filter Container */
+        .filter-container {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .filter-container:hover {
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .filter-container h4 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* Empty Message */
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-message i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .empty-message p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Select All Button */
+        #select-all-btn {
+            grid-column: 1 / -1;
+            background: #e5e7eb;
+            color: var(--dark);
+            border: 2px solid #e5e7eb;
+            padding: 0.6rem 1.25rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        #select-all-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Messages */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+
+/* RESPONSIVE - Ajustes críticos */
+@media (max-width: 768px) {
+    /* Container principal */
+    .main-container {
+        padding: 0 1rem;
+    }
+
+    /* Header actions */
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .action-link {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Seção de horários cadastrados */
+    .section-card > div:first-child {
+        flex-direction: column !important;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+
+    /* Dropdown de exclusão em mobile */
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown-menu {
+        width: calc(100vw - 2rem);
+        right: 1rem;
+        left: 1rem;
+        margin: 0 auto;
+    }
+
+    #deleteDropdownBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Form rows */
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-group {
+        min-width: 100%;
+    }
+
+    /* Days container */
+    .days-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    /* Schedule items */
+    .schedule-item {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .schedule-item > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Filter container */
+    .filter-container .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Action buttons */
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Section cards */
+    .section-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 480px) {
+    .dropdown-menu {
+        padding: 1rem;
+    }
+
+    .days-container {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card p {
+        font-size: 2rem;
+    }
+
+    .admin-header {
+        padding: 1rem;
+    }
+
+    .header-left h1 {
+        font-size: 1.3rem;
+    }
+}
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1><i class="far fa-calendar-alt"></i> Gerenciar Horários</h1>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'painel_dona' %}" class="action-link">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Painel
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Formulário de Adição Manual -->
+        <section class="section-card">
+            <h2 class="section-title">
+                <i class="fas fa-plus-circle"></i> Adicionar Horário Manualmente
+            </h2>
+            <form method="POST" action="{% url 'adicionar_horario' %}" id="addScheduleForm">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_data" class="form-label">Data</label>
+                        <input type="date" name="data" id="id_data" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_hora" class="form-label">Hora</label>
+                        <input type="time" name="hora" id="id_hora" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_profissional" class="form-label">Profissional</label>
+                    <select name="profissional" class="form-control" required>
+                        <option value="ambas" selected>Todos</option>
+                        {% for p in profissionais %}
+                            <option value="{{ p.slug }}">{{ p.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="action-btn btn-primary">
+                    <i class="fas fa-plus"></i> Adicionar horário
+                </button>
+            </form>
+        </section>
+
+        <!-- Formulário de Geração Automática -->
+        <section class="section-card">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-plus"></i> Gerar Horários Automáticos
+            </h2>
+            <form action="{% url 'gerar_horarios' %}" method="POST" id="autoScheduleForm">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Dias da semana</label>
+                        <div class="days-container">
+                            <button type="button" class="action-btn" id="select-all-btn">
+                                <i class="fas fa-check-double"></i> Selecionar todos
+                            </button>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="segunda" value="1" checked>
+                                <label for="segunda">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Segunda-feira</span>
+                                </label>
+                            </div>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="terca" value="2" checked>
+                                <label for="terca">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Terça-feira</span>
+                                </label>
+                            </div>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="quarta" value="3" checked>
+                                <label for="quarta">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Quarta-feira</span>
+                                </label>
+                            </div>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="quinta" value="4" checked>
+                                <label for="quinta">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Quinta-feira</span>
+                                </label>
+                            </div>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="sexta" value="5" checked>
+                                <label for="sexta">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Sexta-feira</span>
+                                </label>
+                            </div>
+                            
+                            <div class="day-option" onclick="toggleDay(this)">
+                                <input type="checkbox" name="dias" id="sabado" value="6" checked>
+                                <label for="sabado">
+                                    <i class="fas fa-calendar-day day-icon"></i>
+                                    <span class="day-name">Sábado</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profissional_auto" class="form-label">Profissional</label>
+                        <select name="profissional" id="profissional_auto" class="form-control" required>
+                            <option value="ambas" selected>Todos</option>
+                            {% for p in profissionais %}
+                                <option value="{{ p.slug }}">{{ p.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="horario_inicio" class="form-label">Horário de início</label>
+                        <input type="time" name="horario_inicio" id="horario_inicio" class="form-control" value="09:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horario_fim" class="form-label">Horário de término</label>
+                        <input type="time" name="horario_fim" id="horario_fim" class="form-control" value="18:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="intervalo" class="form-label">Intervalo (minutos)</label>
+                        <input type="number" name="intervalo" id="intervalo" class="form-control" min="15" max="120" value="30" required>
+                    </div>
+                </div>
+                <button type="submit" class="action-btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Gerar horários automáticos
+                </button>
+            </form>
+        </section>
+
+        <!-- Lista de Horários -->
+        <section class="section-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 class="section-title" style="margin-bottom: 0;">
+                    <i class="far fa-calendar-alt"></i> Horários Cadastrados
+                </h2>
+                
+                <!-- Dropdown de exclusão -->
+                <div class="dropdown delete-dropdown-container">
+                    <button class="action-btn btn-danger" id="deleteDropdownBtn">
+                        <i class="fas fa-trash-alt"></i> Opções de exclusão
+                    </button>
+                    <div class="dropdown-menu" id="deleteDropdown">
+                        <h4>Selecione o que excluir:</h4>
+                        
+                        <form id="deletePastForm" method="POST" action="{% url 'excluir_horarios_passados' %}" style="margin-bottom: 1rem;">
+                            {% csrf_token %}
+                            <button type="button" class="action-btn btn-danger" onclick="confirmDeletePast()" style="width: 100%; margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock"></i> Excluir horários passados
+                            </button>
+                            <small>Remove apenas horários de datas anteriores a hoje</small>
+                        </form>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="data_inicio" class="form-label">De</label>
+                                    <input type="date" id="data_inicio" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="data_fim" class="form-label">Até</label>
+                                    <input type="date" id="data_fim" class="form-control">
+                                </div>
+                            </div>
+                            <button type="button" class="action-btn btn-danger" onclick="confirmDeletePeriod()" style="width: 100%;">
+                                <i class="fas fa-calendar-times"></i> Excluir neste período
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <form id="deleteAllForm" method="POST" action="{% url 'excluir_todos_horarios' %}">
+                                {% csrf_token %}
+                                <button type="button" class="action-btn btn-danger" onclick="confirmDeleteAll()" style="width: 100%;">
+                                    <i class="fas fa-exclamation-triangle"></i> Excluir TODOS os horários
+                                </button>
+                                <small style="color: var(--danger); font-weight: 500;">Atenção: Remove todos os horários sem exceção e desvincula de agendamentos</small>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-container">
+                <h4>Filtrar horários:</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <select id="filterProfissional" class="form-control" onchange="filterSchedules()">
+                            <option value="all">Todas as profissionais</option>
+                            {% for p in profissionais %}
+                                <option value="{{ p.slug }}">{{ p.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="filterStatus" class="form-control" onchange="filterSchedules()">
+                            <option value="all">Todos os status</option>
+                            <option value="available">Disponíveis</option>
+                            <option value="unavailable">Ocupados</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="filterPeriod" class="form-control" onchange="filterSchedules()">
+                            <option value="all">Todos os períodos</option>
+                            <option value="today">Hoje</option>
+                            <option value="this_week">Esta semana</option>
+                            <option value="this_month">Este mês</option>
+                            <option value="future">Futuros</option>
+                            <option value="past">Passados</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="searchDate" class="form-control" placeholder="Buscar por data (dd/mm)" onkeyup="filterSchedules()">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="scheduleItemsContainer">
+                {% if horarios %}
+                    {% for h in horarios %}
+                        <div class="schedule-item" data-date="{{ h.data|date:'Y-m-d' }}" data-status="{% if h.disponivel %}available{% else %}unavailable{% endif %}" data-profissional="{{ h.profissional.slug }}">
+                            <div class="schedule-info">
+                                <span class="schedule-date">{{ h.data|date:"d/m/Y" }}</span>
+                                <span class="schedule-time">às {{ h.hora|time:"H:i" }} com {{ h.profissional|title }}</span>
+                            </div>
+                            <div>
+                                <span class="schedule-status {% if h.disponivel %}status-available{% else %}status-unavailable{% endif %}">
+                                    {% if h.disponivel %}Disponível{% else %}Ocupado{% endif %}
+                                </span>
+                                <button class="btn-delete" onclick="if(confirm('Tem certeza que deseja excluir este horário?')) { window.location.href='{% url 'excluir_horario' h.id %}' }">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-message">
+                        <i class="far fa-calendar-times"></i>
+                        <p>Nenhum horário cadastrado ainda.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleDay(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+            updateSelectAllButton();
+        }
+        
+        function updateSelectAllButton() {
+            const checkboxes = document.querySelectorAll('.day-option input[type="checkbox"]');
+            const allChecked = [...checkboxes].every(checkbox => checkbox.checked);
+            const selectAllBtn = document.getElementById('select-all-btn');
+            
+            if (allChecked) {
+                selectAllBtn.innerHTML = '<i class="fas fa-times"></i> Desmarcar todos';
+            } else {
+                selectAllBtn.innerHTML = '<i class="fas fa-check-double"></i> Selecionar todos';
+            }
+        }
+        
+        document.getElementById('select-all-btn').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.day-option input[type="checkbox"]');
+            const anyUnchecked = [...checkboxes].some(checkbox => !checkbox.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = anyUnchecked;
+            });
+            
+            document.querySelectorAll('.day-option').forEach(day => {
+                day.classList.toggle('selected', anyUnchecked);
+            });
+            
+            updateSelectAllButton();
+        });
+        
+        // Dropdown de exclusão
+        document.getElementById('deleteDropdownBtn').addEventListener('click', function() {
+            const dropdown = document.getElementById('deleteDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('deleteDropdown');
+            const btn = document.getElementById('deleteDropdownBtn');
+            
+            if (!dropdown.contains(event.target) && event.target !== btn && !btn.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Funções de filtro
+        function filterSchedules() {
+            const profissionalFilter = document.getElementById('filterProfissional').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const periodFilter = document.getElementById('filterPeriod').value;
+            const searchText = document.getElementById('searchDate').value.toLowerCase();
+
+            // 1. Cria a data de HOJE, zerando a hora e garantindo que é no fuso local/neutro
+            const now = new Date();
+            const todayUtc = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+            
+            document.querySelectorAll('.schedule-item').forEach(item => {
+                // 2. Cria a data do ITEM, garantindo que é no mesmo fuso neutro (UTC)
+                const dateParts = item.dataset.date.split('-'); // ex: ['2025', '10', '18']
+                const itemDateUtc = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])); // Mês é 0-indexado!
+
+                const itemStatus = item.dataset.status;
+                const itemProfissional = item.dataset.profissional;
+                const itemDateStr = item.querySelector('.schedule-date').textContent.toLowerCase();
+                
+                let profissionalMatch = profissionalFilter === 'all' || 
+                                    itemProfissional === profissionalFilter;
+                
+                let statusMatch = statusFilter === 'all' || 
+                                (statusFilter === 'available' && itemStatus === 'available') ||
+                                (statusFilter === 'unavailable' && itemStatus === 'unavailable');
+                
+                let periodMatch = true;
+                if (periodFilter !== 'all') {
+                    const dayDiff = Math.floor((itemDateUtc - todayUtc) / (1000 * 60 * 60 * 24));
+                    
+                    if (periodFilter === 'today') {
+                        periodMatch = dayDiff === 0;
+                    } else if (periodFilter === 'future') {
+                        periodMatch = dayDiff >= 1; 
+                    } else if (periodFilter === 'past') {
+                        periodMatch = dayDiff <= -1;   
+                    } else if (periodFilter === 'this_week') {
+                        periodMatch = dayDiff >= 0 && dayDiff < 7;
+                    } else if (periodFilter === 'this_month') {
+                        periodMatch = now.getFullYear() === itemDateUtc.getFullYear() && now.getMonth() === itemDateUtc.getMonth();
+                    }
+                }
+                
+                let searchMatch = searchText === '' || itemDateStr.includes(searchText);
+                
+                item.style.display = profissionalMatch && statusMatch && periodMatch && searchMatch ? 'flex' : 'none';
+            });
+        }
+        
+        // Funções de exclusão
+        function confirmDeletePast() {
+            if(confirm('Tem certeza que deseja excluir todos os horários passados (anteriores a hoje)?')) {
+                document.getElementById('deletePastForm').submit(); 
+            }
+        }
+        
+        function confirmDeletePeriod() {
+            const dataInicio = document.getElementById('data_inicio').value;
+            const dataFim = document.getElementById('data_fim').value;
+            
+            if (!dataInicio || !dataFim) {
+                alert('Por favor, preencha ambas as datas do período.');
+                return;
+            }
+            
+            if(confirm(`Tem certeza que deseja excluir todos os horários entre ${formatDate(dataInicio)} e ${formatDate(dataFim)}?`)) {
+                window.location.href = `{% url 'excluir_horarios_periodo' %}?inicio=${dataInicio}&fim=${dataFim}`;
+            }
+        }
+        
+        function confirmDeleteAll() {
+            if(confirm('ATENÇÃO: Isso irá excluir TODOS os horários cadastrados e desvincular de quaisquer agendamentos. Esta ação não pode ser desfeita.\n\nTem certeza que deseja continuar?')) {
+                document.getElementById('deleteAllForm').submit();
+            }
+        }
+        
+        function formatDate(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.day-option input[type="checkbox"]:checked').forEach(checkbox => {
+                checkbox.closest('.day-option').classList.add('selected');
+            });
+            updateSelectAllButton();
+            
+            // Define a data de hoje como padrão para o filtro de período
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('data_inicio').value = today;
+            document.getElementById('data_fim').value = today;
+            
+            // Fecha mensagens após 4 segundos
+            document.querySelectorAll('.messages-container .alert').forEach(msg => {
+                setTimeout(() => {
+                    msg.style.transition = 'all 0.5s ease';
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateX(100px)';
+                    setTimeout(() => msg.remove(), 500);
+                }, 4000);
+            });
+
+            // Validação do formulário de adição manual
+            document.getElementById('addScheduleForm').addEventListener('submit', function(e) {
+                const profissional = document.getElementById('id_profissional').value;
+                if (profissional === 'ambas') {
+                    if (!confirm('Deseja realmente adicionar este horário para ambas as profissionais?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            // Validação do formulário de geração automática
+            document.getElementById('autoScheduleForm').addEventListener('submit', function(e) {
+                const inicio = document.getElementById('horario_inicio').value;
+                const fim = document.getElementById('horario_fim').value;
+                
+                if (inicio >= fim) {
+                    alert('O horário de início deve ser anterior ao horário de término!');
+                    e.preventDefault();
+                    return;
+                }
+                
+                const profissional = document.getElementById('profissional_auto').value;
+                if (profissional === 'ambas') {
+                    if (!confirm('Deseja realmente gerar horários para ambas as profissionais?\n\nIsso criará os mesmos horários para Todas Profissionais.')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

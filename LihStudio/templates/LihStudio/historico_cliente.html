@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Agendamentos - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================================================================= */
+        /* VARIÁVEIS E BASE (Coesão Visual) */
+        /* ================================================================= */
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --secondary: #fce7f1;
+            --dark: #343a40;
+            --light: #ffffff;
+            --bg-page: #f8f9fa;
+            --success: #198754;
+            --danger: #dc3545;
+            --info: #0d6efd;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-page); color: var(--dark); line-height: 1.6; }
+        
+        /* ================================================================= */
+        /* LAYOUT E HEADER */
+        /* ================================================================= */
+        .page-wrapper {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 15px;
+        }
+
+        .container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--primary);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+        
+        .page-header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .client-info {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--secondary);
+            border-radius: var(--border-radius);
+            border: 1px dashed var(--primary-light);
+            font-size: 0.95rem;
+        }
+
+        .client-info p {
+            margin: 0;
+            padding: 3px 0;
+        }
+        .client-info strong {
+            color: var(--dark);
+        }
+        
+        /* ================================================================= */
+        /* TABELA DE HISTÓRICO */
+        /* ================================================================= */
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 5px;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+        }
+        
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            background: var(--light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .table tr:hover td { background-color: var(--secondary); }
+        
+        /* Cores de Status */
+        .status-concluido { color: var(--success); font-weight: 600; }
+        .status-cancelado { color: var(--danger); font-weight: 600; }
+        .status-pendente { color: #e67700; font-weight: 600; }
+        .status-confirmado { color: var(--info); font-weight: 600; }
+        
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-back:hover { background-color: var(--primary-light); transform: translateY(-2px); }
+        
+        .empty-state { text-align: center; padding: 3rem; color: #6c757d; font-size: 1.1rem; }
+        .empty-state i { font-size: 2rem; margin-bottom: 1rem; color: #ccc; }
+        
+        /* ================================================================= */
+        /* RESPONSIVIDADE */
+        /* ================================================================= */
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem; }
+            .page-header h1 { font-size: 1.4rem; }
+            .table th, .table td { padding: 8px 10px; font-size: 0.8rem; }
+            .client-info { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <header class="page-header">
+                <h1><i class="fas fa-history"></i> Histórico de Agendamentos</h1>
+            </header>
+            
+            <div class="client-info">
+                <p><strong>Cliente:</strong> {{ cliente_nome }}</p>
+                {% if cliente_telefone %}
+                <p><strong>Telefone:</strong> {{ cliente_telefone }}</p>
+                {% endif %}
+            </div>
+
+            {% if historico %}
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Profissional</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agendamento in historico %}
+                                <tr>
+                                    <td>{{ agendamento.get_servico_display }}</td>
+                                    <td>{{ agendamento.profissional.nome }}</td>
+                                    <td>{{ agendamento.data|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if agendamento.hora %}
+                                            {{ agendamento.hora.hora|time:"H:i" }}
+                                        {% elif agendamento.hora_backup %}
+                                            {{ agendamento.hora_backup|time:"H:i" }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td class="status-{{ agendamento.status }}">
+                                        {{ agendamento.get_status_display }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>Nenhum agendamento encontrado</h3>
+                    <p>Este cliente ainda não possui agendamentos registrados.</p>
+                </div>
+            {% endif %}
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="{% url 'lista_clientes' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Voltar para Clientes
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

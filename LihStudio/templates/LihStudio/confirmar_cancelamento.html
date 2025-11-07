@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Cancelamento – RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{
+            --primary:#d63384;
+            --primary-light:#f06595;
+            --light:#f8f9fa;
+            --dark:#343a40;
+            --danger:#e03131;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Montserrat',sans-serif;
+            background:var(--light);
+            color:var(--dark);
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:2rem;
+        }
+        .card{
+            background:#fff;
+            border-radius:10px;
+            box-shadow:0 4px 15px rgba(0,0,0,.05);
+            max-width:480px;
+            width:100%;
+            padding:2rem;
+            text-align:center;
+            animation:fade .5s;
+        }
+        h2{color:var(--primary);margin-bottom:1.5rem}
+        .info{
+            background:var(--light);
+            border-left:4px solid var(--primary);
+            padding:1rem;
+            border-radius:6px;
+            margin-bottom:1.5rem;
+            text-align:left;
+            line-height:1.6;
+        }
+        .btn{
+            display:inline-block;
+            padding:12px 28px;
+            border:none;
+            border-radius:30px;
+            font-weight:600;
+            text-decoration:none;
+            cursor:pointer;
+            transition:.3s;
+            margin:0 .3rem;
+        }
+        .btn-danger{background:var(--danger);color:#fff}
+        .btn-danger:hover{background:#c92a2a}
+        .btn-secondary{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+        .btn-secondary:hover{background:var(--primary);color:#fff}
+        p.small{font-size:.9rem;color:#555;margin-top:1.5rem}
+        @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+    </style>
+</head>
+<body>
+    <form method="post" class="card">
+        {% csrf_token %}
+        <h2>Confirmar Cancelamento</h2>
+
+        <div class="info">
+            <strong>Serviço:</strong> {{ agendamento.get_servico_display }}<br>
+            
+            {% if agendamento.hora %}
+                <strong>Data:</strong> {{ agendamento.hora.data|date:"d/m/Y" }}<br>
+                <strong>Horário:</strong> {{ agendamento.hora.hora|time:"H:i" }}<br>
+            {% else %}
+                <strong>Data:</strong> {{ agendamento.data|date:"d/m/Y" }}<br>
+                <strong>Horário:</strong> {{ agendamento.hora_backup|time:"H:i" }}<br>
+            {% endif %}
+            <strong>Cliente:</strong> {{ agendamento.nome }}
+        </div>
+
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-times"></i> Cancelar agora
+        </button>
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+
+        <p class="small">
+            Cancelamentos com menos de 24&nbsp;h podem gerar taxa.
+        </p>
+    </form>
+</body>
+</html>

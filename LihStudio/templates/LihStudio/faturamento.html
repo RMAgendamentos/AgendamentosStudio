@@ -1,0 +1,1079 @@
+{% load static %}
+{% load l10n %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Faturamento - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #c4407b; 
+            --primary-light: #f174aa;
+            --secondary: #fce7f1; 
+            --dark: #343a40;
+            --light: #ffffff; 
+            --bg-page: #f8f9fa; 
+            --success: #198754; 
+            --danger: #dc3545;
+            --info: #0d6efd;
+            --warning: #ffc107;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-page); 
+            color: var(--dark); 
+            line-height: 1.6; 
+        }
+
+        /* HEADER */
+        .admin-header { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white; 
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.2);
+        }
+
+        .header-content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title i {
+            font-size: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .header-title h1 { 
+            font-size: 2rem; 
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .action-link { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: var(--border-radius); 
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .action-link:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* CONTAINER */
+        .admin-container { 
+            max-width: 1400px; 
+            margin: 2rem auto; 
+            padding: 0 2rem; 
+        }
+
+        /* FILTROS */
+        .filters-section {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filters-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(196, 64, 123, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            white-space: nowrap;
+            flex: 0 1 auto; /* Permite que os botões se ajustem */
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #146c43;
+        }
+
+        /* BADGES DE FILTROS ATIVOS */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .filter-badge {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* CARDS DE ESTATÍSTICAS */
+        .stats-cards { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+
+        .stat-card { 
+            background: var(--light); 
+            border-radius: var(--border-radius); 
+            padding: 2rem; 
+            box-shadow: var(--box-shadow); 
+            border-left: 5px solid;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.02) 50%);
+            border-radius: 0 0 0 100%;
+        }
+
+        .stat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15); 
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 { 
+            font-size: 0.9rem; 
+            color: #6c757d; 
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-card p { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            margin: 0.5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card small {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .trend-up {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--success);
+        }
+
+        .trend-down {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+
+        /* Cores específicas dos cards */
+        .stat-card-monthly { border-left-color: var(--success); }
+        .stat-card-monthly .stat-icon { background: rgba(25, 135, 84, 0.1); color: var(--success); }
+
+        .stat-card-total { border-left-color: var(--info); }
+        .stat-card-total .stat-icon { background: rgba(13, 110, 253, 0.1); color: var(--info); }
+
+        .stat-card-commission { border-left-color: var(--primary-light); }
+        .stat-card-commission .stat-icon { background: rgba(241, 116, 170, 0.1); color: var(--primary-light); }
+
+        .stat-card-services { border-left-color: var(--warning); }
+        .stat-card-services .stat-icon { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+
+        /* GRÁFICOS */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-container h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* TABELA */
+        .table-container { 
+            background: var(--light); 
+            border-radius: var(--border-radius); 
+            padding: 2rem; 
+            box-shadow: var(--box-shadow); 
+            overflow-x: auto; 
+            margin-bottom: 2rem; 
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .table-header h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .finance-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+
+        .finance-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .finance-table th, .finance-table td { 
+            padding: 1rem; 
+            text-align: left; 
+            border-bottom: 1px solid #e0e0e0; 
+            font-size: 0.95rem;
+        }
+
+        .finance-table th { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .finance-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .finance-table tbody tr:nth-child(even) { 
+            background-color: var(--bg-page); 
+        }
+
+        .finance-table tbody tr:hover { 
+            background-color: var(--secondary);
+            transform: scale(1.01);
+        }
+        
+        .total-row { 
+            background: linear-gradient(135deg, var(--secondary) 0%, #f8d7e8 100%) !important; 
+            font-weight: 700; 
+            border-top: 3px solid var(--primary) !important; 
+            color: var(--dark);
+            font-size: 1.05rem;
+        }
+
+        .total-row td {
+            padding: 1.5rem 1rem !important;
+        }
+
+        .repasse-col {
+            color: var(--success) !important;
+            font-weight: 700;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); color: white; }
+        .rank-other { background: #e0e0e0; color: #666; }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background: white; }
+            .admin-header, .filters-section, .btn, .action-link { display: none; }
+            .admin-container { max-width: 100%; padding: 0; }
+            .stat-card, .table-container { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        /* RESPONSIVE */
+        /* RESPONSIVE - Ajustes críticos */
+@media (max-width: 992px) {
+    /* Header */
+    .header-content-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .header-title {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .header-title h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Stats cards */
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Charts */
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    /* Filter grid */
+    .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    /* Filter actions */
+    .filter-actions {
+        justify-content: stretch;
+    }
+
+    .filter-actions .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Container */
+    .admin-container {
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+    }
+
+    /* Header */
+    .admin-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .header-title i {
+        font-size: 2rem;
+    }
+
+    .header-title h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Action link */
+    .action-link {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Stats cards - 1 por linha */
+    .stats-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    .stat-card p {
+        font-size: 2rem;
+    }
+
+    /* Filter grid - 1 por linha */
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Filter actions - Empilhados */
+    .filter-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .filter-actions .btn {
+        width: 100%;
+        flex: 1;
+    }
+
+    /* Filters section */
+    .filters-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .filters-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .filters-header h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Active filters */
+    .active-filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Table container */
+    .table-container {
+        padding: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .table-header h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Table */
+    .finance-table {
+        font-size: 0.85rem;
+        min-width: 600px; /* Força scroll horizontal se necessário */
+    }
+
+    .finance-table th,
+    .finance-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .rank-badge {
+        width: 25px;
+        height: 25px;
+        font-size: 0.75rem;
+    }
+
+    /* Chart containers */
+    .chart-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .chart-container h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 480px) {
+    .admin-header {
+        padding: 1rem;
+    }
+
+    .header-title h1 {
+        font-size: 1.1rem;
+    }
+
+    .header-title i {
+        font-size: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-card p {
+        font-size: 1.75rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .filters-section {
+        padding: 1rem;
+    }
+
+    .filter-group label {
+        font-size: 0.85rem;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .table-container {
+        padding: 0.75rem;
+    }
+
+    .finance-table {
+        font-size: 0.8rem;
+    }
+
+    .finance-table th,
+    .finance-table td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    .total-row td {
+        padding: 1rem 0.4rem !important;
+    }
+
+    .chart-container {
+        padding: 1rem;
+    }
+
+    .chart-container h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Landscape em mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="header-content-wrapper">
+            <div class="header-title">
+                <i class="fas fa-chart-line"></i>
+                <h1>Relatório de Faturamento</h1>
+            </div>
+            <a href="{% url 'painel_dona' %}" class="action-link">
+                <i class="fas fa-arrow-left"></i> Voltar ao Painel
+            </a>
+        </div>
+    </header>
+    
+    <div class="admin-container">
+        <!-- SEÇÃO DE FILTROS -->
+        <div class="filters-section">
+            <div class="filters-header">
+                <h2><i class="fas fa-filter"></i> Filtros Avançados</h2>
+            </div>
+            
+            <form method="GET" action="{% url 'relatorio_faturamento' %}">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="mes"><i class="fas fa-calendar-alt"></i> Mês</label>
+                        <select name="mes" id="mes">
+                            <option value="1" {% if mes_atual == 1 %}selected{% endif %}>Janeiro</option>
+                            <option value="2" {% if mes_atual == 2 %}selected{% endif %}>Fevereiro</option>
+                            <option value="3" {% if mes_atual == 3 %}selected{% endif %}>Março</option>
+                            <option value="4" {% if mes_atual == 4 %}selected{% endif %}>Abril</option>
+                            <option value="5" {% if mes_atual == 5 %}selected{% endif %}>Maio</option>
+                            <option value="6" {% if mes_atual == 6 %}selected{% endif %}>Junho</option>
+                            <option value="7" {% if mes_atual == 7 %}selected{% endif %}>Julho</option>
+                            <option value="8" {% if mes_atual == 8 %}selected{% endif %}>Agosto</option>
+                            <option value="9" {% if mes_atual == 9 %}selected{% endif %}>Setembro</option>
+                            <option value="10" {% if mes_atual == 10 %}selected{% endif %}>Outubro</option>
+                            <option value="11" {% if mes_atual == 11 %}selected{% endif %}>Novembro</option>
+                            <option value="12" {% if mes_atual == 12 %}selected{% endif %}>Dezembro</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="ano"><i class="fas fa-calendar"></i> Ano</label>
+                        <input type="number" name="ano" id="ano" value="{{ ano_atual }}" min="2020" max="2030">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="profissional"><i class="fas fa-user"></i> Profissional</label>
+                        <select name="profissional" id="profissional">
+                            <option value="todos" {% if not prof_slug_filtro or prof_slug_filtro == 'todos' %}selected{% endif %}>
+                                Todos
+                            </option>
+                            {% for prof in profissionais %}
+                            <option value="{{ prof.slug }}" {% if prof_slug_filtro == prof.slug %}selected{% endif %}>
+                                {{ prof.nome }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Aplicar Filtros
+                    </button>
+                    <a href="{% url 'relatorio_faturamento' %}" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Limpar
+                    </a>
+                    <a style="text-decoration: none;" href="{% url 'exportar_faturamento_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-export">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </a>
+                </div>
+
+                <!-- BADGES DE FILTROS ATIVOS -->
+                {% if mes_atual or ano_atual or prof_slug_filtro %}
+                <div class="active-filters">
+                    <strong style="color: var(--primary);">Filtros ativos:</strong>
+                    <span class="filter-badge">
+                        <i class="fas fa-calendar"></i> {{ mes_nome }}/{{ ano_atual }}
+                    </span>
+                    {% if prof_slug_filtro and prof_slug_filtro != 'todos' %}
+                    <span class="filter-badge">
+                        <i class="fas fa-user"></i> 
+                        {% for prof in profissionais %}
+                            {% if prof.slug == prof_slug_filtro %}{{ prof.nome }}{% endif %}
+                        {% endfor %}
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- CARDS DE ESTATÍSTICAS -->
+        <div class="stats-cards">
+            <div class="stat-card stat-card-monthly">
+                <div class="stat-card-header">
+                    <h3>Faturamento do Período</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+                <p style="color: var(--success);">R$ {{ total_bruto_mes|floatformat:2|default:"0.00" }}</p>
+                <small>
+                    <i class="fas fa-check-circle"></i> {{ total_servicos_mes }} serviços concluídos
+                </small>
+            </div>
+
+            <div class="stat-card stat-card-commission">
+                <div class="stat-card-header">
+                    <h3>Repasse (30%)</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                </div>
+                <p style="color: var(--primary-light);">R$ {{ total_comissao_mes|floatformat:2|default:"0.00" }}</p>
+                <small>
+                    <i class="fas fa-percentage"></i> Comissões dos profissionais
+                </small>
+            </div>
+
+            <div class="stat-card stat-card-total">
+                <div class="stat-card-header">
+                    <h3>Faturamento Total</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <p style="color: var(--info);">R$ {{ faturamento_total_bruto|floatformat:2|default:"0.00" }}</p>
+                <small>
+                    <i class="fas fa-infinity"></i> Acumulado de todos os tempos
+                </small>
+            </div>
+
+            <div class="stat-card stat-card-services">
+                <div class="stat-card-header">
+                    <h3>Ticket Médio</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                </div>
+                <p style="color: var(--warning);">
+                    {% if total_servicos_mes > 0 %}
+                        R$ {{ total_bruto_mes|floatformat:2|default:"0.00"|slice:2 }}
+                    {% else %}
+                        R$ 0.00
+                    {% endif %}
+                </p>
+                <small>
+                    <i class="fas fa-calculator"></i> Valor médio por serviço
+                </small>
+            </div>
+        </div>
+
+        <!-- GRÁFICOS -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-pie"></i> Distribuição por Profissional</h3>
+                <canvas id="profissionalChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-bar"></i> Faturamento vs Repasse</h3>
+                <canvas id="faturamentoChart"></canvas>
+            </div>
+        </div>
+
+        <!-- TABELA DE DESEMPENHO -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-trophy"></i> Ranking de Profissionais - {{ mes_nome }}/{{ ano_atual }}</h3>
+            </div>
+            
+            <table class="finance-table">
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Profissional</th>
+                        <th>Serviços Concluídos</th>
+                        <th>Faturamento Bruto</th>
+                        <th>Repasse (30%)</th>
+                        <th>% do Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for analise in analise_profissionais %}
+                    <tr>
+                        <td>
+                            {% if forloop.counter == 1 %}
+                                <span class="rank-badge rank-1">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="rank-badge rank-2">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="rank-badge rank-3">🥉</span>
+                            {% else %}
+                                <span class="rank-badge rank-other">{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ analise.profissional__nome }}</strong></td>
+                        <td>{{ analise.total_servicos }}</td>
+                        <td>R$ {{ analise.faturamento_bruto|floatformat:2 }}</td>
+                        <td class="repasse-col">R$ {{ analise.comissao_prof|floatformat:2 }}</td>
+                        <td>
+                            {% widthratio analise.faturamento_bruto total_bruto_mes 100 %}%
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #6c757d; padding: 3rem;">
+                            <i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 1rem;"></i>
+                            Nenhum serviço concluído neste período.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if analise_profissionais %}
+                    <tr class="total-row">
+                        <td colspan="2"><i class="fas fa-calculator"></i> TOTAL GERAL</td>
+                        <td>{{ total_servicos_mes }}</td>
+                        <td>R$ {{ total_bruto_mes|floatformat:2 }}</td>
+                        <td class="repasse-col">R$ {{ total_comissao_mes|floatformat:2 }}</td>
+                        <td>100%</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dados para os gráficos
+        {% localize off %} // Dados para os gráficos
+        const profissionais = [
+            {% for analise in analise_profissionais %}
+            {
+                nome: "{{ analise.profissional__nome }}",
+                faturamento: {{ analise.faturamento_bruto|default:0 }},
+                servicos: {{ analise.total_servicos }},
+                comissao: {{ analise.comissao_prof|default:0 }}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        {% endlocalize %}
+        // Gráfico de Pizza - Distribuição por Profissional
+        if (profissionais.length > 0) {
+            const ctxPie = document.getElementById('profissionalChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: profissionais.map(p => p.nome),
+                    datasets: [{
+                        data: profissionais.map(p => p.faturamento),
+                        backgroundColor: [
+                            'rgba(196, 64, 123, 0.8)',
+                            'rgba(241, 116, 170, 0.8)',
+                            'rgba(252, 231, 241, 0.8)',
+                            'rgba(13, 110, 253, 0.8)',
+                            'rgba(25, 135, 84, 0.8)',
+                            'rgba(255, 193, 7, 0.8)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: R$ ${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Barras - Faturamento vs Repasse
+            const ctxBar = document.getElementById('faturamentoChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: profissionais.map(p => p.nome),
+                    datasets: [
+                        {
+                            label: 'Faturamento Bruto',
+                            data: profissionais.map(p => p.faturamento),
+                            backgroundColor: 'rgba(196, 64, 123, 0.8)',
+                            borderColor: 'rgba(196, 64, 123, 1)',
+                            borderWidth: 2,
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Repasse (30%)',
+                            data: profissionais.map(p => p.comissao),
+                            backgroundColor: 'rgba(25, 135, 84, 0.8)',
+                            borderColor: 'rgba(25, 135, 84, 1)',
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toFixed(2);
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': R$ ' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendamento Cancelado – RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{
+            --primary:#d63384;
+            --primary-light:#f06595;
+            --light:#f8f9fa;
+            --dark:#343a40
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Montserrat',sans-serif;
+            background:var(--light);
+            color:var(--dark);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-height:100vh;
+            padding:2rem;
+            text-align:center;
+        }
+        .box{
+            background:#fff;
+            padding:3rem 2rem;
+            border-radius:10px;
+            box-shadow:0 4px 15px rgba(0,0,0,.05);
+            max-width:480px;
+            width:100%;
+            animation:fade .5s;
+        }
+        h2{color:var(--primary);margin-bottom:1rem}
+        .icon{
+            font-size:4rem;
+            color:var(--primary);
+            margin-bottom:1rem;
+            animation:bounce .8s;
+        }
+        p{margin:1rem 0 2rem}
+        .btn{
+            display:inline-block;
+            padding:12px 28px;
+            border:none;
+            border-radius:30px;
+            font-weight:600;
+            text-decoration:none;
+            cursor:pointer;
+            transition:.3s;
+            margin:.3rem;
+        }
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-light)}
+        .btn-secondary{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+        .btn-secondary:hover{background:var(--primary);color:#fff}
+        @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+        @keyframes bounce{0%{transform:scale(.9)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon"><i class="fas fa-check-circle"></i></div>
+        <h2>Agendamento Cancelado</h2>
+        <p>Seu agendamento foi cancelado com sucesso.<br>
+        Sentiremos sua falta! Quando quiser, estamos à disposição.</p>
+
+        <a href="{% url 'agendar_servico' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Novo agendamento
+        </a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Página inicial
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }} - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #d63384;
+            --primary-light: #f06595;
+            --secondary: #fff0f6;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --success: #40c057;
+            --warning: #fcc419;
+            --danger: #e03131;
+            --info: #228be6;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .message-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        
+        .message-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .message-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .message-content {
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+        
+        @media (max-width: 768px) {
+            .message-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="message-icon">
+            {% if 'sucesso' in titulo|lower %}
+                <i class="fas fa-check-circle"></i>
+            {% elif 'erro' in titulo|lower or 'falha' in titulo|lower %}
+                <i class="fas fa-exclamation-circle"></i>
+            {% else %}
+                <i class="fas fa-info-circle"></i>
+            {% endif %}
+        </div>
+        <h1 class="message-title">{{ titulo }}</h1>
+        <div class="message-content">
+            <p>{{ mensagem }}</p>
+        </div>
+        <a href="{% url 'home' %}" class="btn">
+            <i class="fas fa-home"></i> Voltar para o início
+        </a>
+    </div>
+</body>
+</html>

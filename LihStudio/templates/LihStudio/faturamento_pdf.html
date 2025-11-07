@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Faturamento - {{ mes_nome }}/{{ ano_atual }}</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        body { font-family: sans-serif; font-size: 10pt; color: #333; }
+        h1, h2, h3 { color: #c4407b; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h1 { font-size: 16pt; text-align: center; }
+        h2 { font-size: 14pt; margin-top: 20px; }
+        h3 { font-size: 12pt; margin-top: 15px; }
+        .stats-table, .finance-table, .detail-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .stats-table th, .stats-table td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+        .finance-table th, .finance-table td, .detail-table th, .detail-table td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        .stats-table th, .finance-table th { background-color: #fce7f1; color: #343a40; font-weight: bold; }
+        .total-row td { background-color: #c4407b; color: white; font-weight: bold; }
+        .repasse-col { color: #198754; font-weight: bold; }
+        .details-section { margin-top: 30px; page-break-before: always; }
+        .text-center { text-align: center; }
+        .data-header { margin-top: 20px; font-size: 10pt; }
+    </style>
+</head>
+<body>
+
+    <h1>RELATÓRIO DE FATURAMENTO RM STUDIO</h1>
+    <p class="text-center data-header">Período: {{ mes_nome|upper }} / {{ ano_atual }} | Gerado em: {{ hoje|date:"d/m/Y H:i" }}</p>
+
+    <h2>Resumo Financeiro do Mês</h2>
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Faturamento Bruto (Este Mês)</th>
+                <th>Repasse Profissionais (30% Mês)</th>
+                <th>Serviços Concluídos</th>
+                <th>Faturamento Bruto (Total Geral)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>R$ {{ total_bruto_mes|floatformat:2|default:"0.00" }}</td>
+                <td class="repasse-col">R$ {{ total_comissao_mes|floatformat:2|default:"0.00" }}</td>
+                <td>{{ total_servicos_mes }}</td>
+                <td>R$ {{ faturamento_total_bruto|floatformat:2|default:"0.00" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Desempenho por Profissional ({{ mes_nome }})</h2>
+    <table class="finance-table">
+        <thead>
+            <tr>
+                <th>Profissional</th>
+                <th class="text-center">Serviços Concluídos</th>
+                <th class="text-center">Faturamento Bruto (R$)</th>
+                <th class="text-center">Repasse (30% Comissão)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for analise in analise_profissionais %}
+            <tr>
+                <td>{{ analise.profissional__nome }}</td>
+                <td class="text-center">{{ analise.total_servicos }}</td>
+                <td class="text-center">R$ {{ analise.faturamento_bruto|floatformat:2 }}</td>
+                <td class="repasse-col text-center">R$ {{ analise.comissao_prof|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">Nenhum serviço concluído neste mês.</td>
+            </tr>
+            {% endfor %}
+            
+            <tr class="total-row">
+                <td>TOTAL GERAL</td>
+                <td class="text-center">{{ total_servicos_mes }}</td>
+                <td class="text-center">R$ {{ total_bruto_mes|floatformat:2 }}</td>
+                <td class="repasse-col text-center">R$ {{ total_comissao_mes|floatformat:2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="details-section">
+        <h2>Detalhe de Agendamentos Concluídos ({{ mes_nome }})</h2>
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Serviço</th>
+                    <th>Profissional</th>
+                    <th>Valor (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ag in agendamentos_detalhados %}
+                <tr>
+                    <td>{{ ag.data|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if ag.hora %}
+                            {{ ag.hora.hora|date:"H:i" }}
+                        {% elif ag.hora_backup %}
+                            {{ ag.hora_backup|date:"H:i" }}
+                        {% else %}
+                            --:--
+                        {% endif %}
+                    </td>
+                    <td>{{ ag.nome }}</td>
+                    <td>{{ ag.get_servico_display }}</td>
+                    <td>{{ ag.profissional.nome }}</td>
+                    <td class="text-center">R$ {{ ag.valor_total|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Nenhum agendamento detalhado para o período.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

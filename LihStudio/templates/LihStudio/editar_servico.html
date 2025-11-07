@@ -1,0 +1,559 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Serviço - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+        
+        .user-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+                .action-link { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: var(--border-radius); 
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .action-link:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* ===== CONTAINER ===== */
+        .admin-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 0;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.75rem 2rem;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        /* ===== FORMULÁRIO ===== */
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--light);
+        }
+        
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(196, 64, 123, 0.1);
+        }
+        
+        .form-group textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            resize: none;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .switch-container input[type="checkbox"] {
+            height: 0;
+            width: 0;
+            visibility: hidden;
+            position: absolute;
+        }
+        
+        .switch-slider {
+            cursor: pointer;
+            width: 60px;
+            height: 32px;
+            background: #d1d5db;
+            display: block;
+            border-radius: 100px;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .switch-slider:after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .switch-container input:checked + .switch-slider {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+        
+        .switch-container input:checked + .switch-slider:after {
+            left: calc(100% - 3px);
+            transform: translateX(-100%);
+        }
+        
+        .switch-label-text {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTÕES ===== */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f3f4f6;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(196, 64, 123, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+            transform: translateY(-2px);
+        }
+
+        /* ===== ERROR BOX ===== */
+        .error-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            color: #dc2626;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+        }
+        
+        .error-box strong {
+            display: block;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .error-box ul {
+            margin: 0.5rem 0 0 1.5rem;
+        }
+        
+        .error-box li {
+            margin: 0.5rem 0;
+        }
+
+        /* ===== MESSAGES ===== */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-link {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}" style="font-size: 1.5rem;"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-pen-to-square"></i>
+                    Editar Serviço
+                </h1>
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> {{ user.get_full_name|default:user.username }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'pagina_admin' %}" class="action-link">
+                    <i class="fas fa-spa"></i> Voltar para Lista
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-edit"></i> Editando: {{ servico.nome }}</h2>
+            </div>
+            <div class="card-body">
+                
+                <form method="POST" action="{% url 'editar_servico' servico.id %}">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="error-box">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Por favor, corrija os erros abaixo:</strong>
+                            {{ form.non_field_errors }}
+                            <ul>
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="{{ form.nome.id_for_label }}">
+                            <i class="fas fa-heading"></i> Nome do Serviço *
+                        </label>
+                        {{ form.nome }}
+                        <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.nome.help_text }}</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.preco.id_for_label }}">
+                            <i class="fas fa-dollar-sign"></i> Preço (R$) *
+                        </label>
+                        {{ form.preco }}
+                        <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.preco.help_text }}</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.descricao.id_for_label }}">
+                            <i class="fas fa-align-left"></i> Descrição
+                        </label>
+                        {{ form.descricao }}
+                        <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.descricao.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.ordem.id_for_label }}">
+                            <i class="fas fa-sort-numeric-down"></i> Ordem de Exibição
+                        </label>
+                        {{ form.ordem }}
+                        <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.ordem.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-toggle-on"></i> Status
+                        </label>
+                        <div class="switch-container">
+                            {{ form.ativo }}
+                            <label for="{{ form.ativo.id_for_label }}" class="switch-slider"></label>
+                            <span class="switch-label-text">{{ form.ativo.label }}</span>
+                        </div>
+                        <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.ativo.help_text }}</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                        <a href="{% url 'pagina_admin' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-fechamento de mensagens
+            document.querySelectorAll('.messages-container .alert').forEach(msg => {
+                setTimeout(() => {
+                    msg.style.transition = 'all 0.5s ease';
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateX(100px)';
+                    setTimeout(() => msg.remove(), 500);
+                }, 5000);
+            });
+
+            // Adiciona a classe .form-control para todos os inputs
+            document.querySelectorAll('form input, form textarea').forEach(input => {
+                if(input.type !== 'checkbox') {
+                    input.classList.add('form-control');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

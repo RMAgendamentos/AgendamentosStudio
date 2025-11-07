@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Clientes - RM Studio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d63384;
+        }
+        
+        .header h1 {
+            color: #d63384;
+            font-size: 18px;
+            margin: 0;
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .report-info {
+            margin-bottom: 15px;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background-color: #d63384;
+            color: white;
+            font-weight: bold;
+            text-align: left;
+            padding: 6px;
+            font-size: 10px;
+        }
+        
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+            font-size: 10px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 9px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .status {
+            font-weight: 600;
+        }
+        
+        .status-pendente {
+            color: #e67700;
+        }
+        
+        .status-confirmado {
+            color: #1971c2;
+        }
+        
+        .status-cancelado {
+            color: #c92a2a;
+        }
+        
+        .status-concluido {
+            color: #2b8a3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RM Studio - Relatório de Clientes</h1>
+        <p>Relatório gerado em {% now "d/m/Y H:i" %}</p>
+    </div>
+    
+    <div class="report-info">
+        <p><strong>Filtros aplicados:</strong> {{ filtros_aplicados }}</p>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Profissional</th>
+                <th>Última Visita</th>
+                <th>Último Serviço</th>
+                <th>Status</th>
+                <th>Total Visitas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.telefone }}</td>
+                <td>{{ cliente.profissional }}</td>
+                <td>{{ cliente.ultima_visita|date:"d/m/Y" }}</td>
+                <td>{{ cliente.ultimo_servico }}</td>
+                <td class="status status-{{ cliente.status }}">
+                    {% if cliente.status == 'confirmado' %}
+                        Confirmado
+                    {% elif cliente.status == 'cancelado' %}
+                        Cancelado
+                    {% elif cliente.status == 'concluido' %}
+                        Concluído
+                    {% else %}
+                        Pendente
+                    {% endif %}
+                </td>
+                <td>{{ cliente.total_visitas }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        Página 1 de 1 • Total de clientes: {{ clientes|length }}
+    </div>
+</body>
+</html>

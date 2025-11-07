@@ -1,0 +1,1266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* ===== HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+        
+        .user-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .action-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .action-link.logout-btn {
+            background: rgba(239, 68, 68, 0.9);
+            border-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        
+        .action-link.logout-btn:hover {
+            background: rgba(220, 38, 38, 1);
+        }
+        
+        /* ===== CONTAINER ===== */
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        /* ===== STATS CARDS ===== */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .stat-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 1.75rem;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border-left: 5px solid;
+            cursor: default;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(196, 64, 123, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-card p {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0.5rem 0;
+            position: relative;
+        }
+        
+        .stat-card small {
+            color: #6b7280;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Cards específicos */
+        .stat-card:nth-child(1) { border-left-color: var(--success); }
+        .stat-card:nth-child(1) .stat-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        
+        .stat-card:nth-child(2) { border-left-color: var(--info); }
+        .stat-card:nth-child(2) .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+        
+        .stat-card:nth-child(3) { border-left-color: var(--warning); }
+        .stat-card:nth-child(3) .stat-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        
+        .stat-card:nth-child(4) { border-left-color: var(--primary); cursor: pointer; }
+        .stat-card:nth-child(4) .stat-icon { background: rgba(196, 64, 123, 0.1); color: var(--primary); }
+        
+        /* ===== TABLES ===== */
+        .table-container {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .table-title h2 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .agendamento-count {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+        }
+        
+        /* FILTROS */
+        .filters-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #6b7280;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+        }
+        
+        /* TABELA */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+        
+        th {
+            color: white;
+            font-weight: 700;
+            padding: 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+        
+        th:first-child { border-radius: 12px 0 0 0; }
+        th:last-child { border-radius: 0 12px 0 0; }
+        
+        tbody tr {
+            background: white;
+            transition: var(--transition);
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        tbody tr:hover {
+            background: var(--secondary);
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        tbody tr.pending {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, white 100%);
+            border-left: 4px solid var(--warning);
+        }
+        
+        tbody tr.confirmed {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+            border-left: 4px solid var(--info);
+        }
+        
+        td {
+            padding: 1rem;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        /* STATUS BADGES */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .status-pendente {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-confirmed {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .status-concluido {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-cancelado {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* ACTIONS */
+        .actions-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .cancel-btn {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .concluir-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .concluir-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 0.6rem;
+            min-width: 36px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .whatsapp-btn i { margin: 0 !important; font-size: 1.1rem; }
+        
+        /* OBSERVAÇÕES - TOOLTIP */
+        .observacao-tooltip {
+            position: relative;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .observacao-tooltip:hover {
+            color: var(--primary-light);
+            transform: scale(1.2);
+        }
+
+        .observacao-tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: var(--dark);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: pre-wrap;
+            max-width: 300px;
+            width: max-content;
+            min-width: 200px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            line-height: 1.4;
+            pointer-events: none;
+        }
+
+        .observacao-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            border: 8px solid transparent;
+            border-top-color: var(--dark);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .observacao-tooltip:hover::before,
+        .observacao-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* MODAL */
+        #confirmModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-content h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-cancel {
+            background: #e5e7eb;
+            color: var(--dark);
+        }
+        
+        .modal-btn-cancel:hover {
+            background: #d1d5db;
+        }
+        
+        .modal-btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .modal-btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .modal-btn-danger:hover,
+        .modal-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* MESSAGES */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #9ca3af;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-link {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                padding: 1rem;
+                overflow-x: auto;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            table {
+                font-size: 0.85rem;
+            }
+            
+            th, td {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+
+                        .observacao-tooltip::before {
+                left: auto;
+                right: 0;
+                transform: translateX(0) translateY(-10px);
+                max-width: 250px;
+            }
+            
+            .observacao-tooltip::after {
+                left: auto;
+                right: 10px;
+                transform: translateX(0) translateY(8px);
+            }
+
+            .observacao-tooltip:hover::before {
+                transform: translateX(0) translateY(0);
+            }
+
+            .observacao-tooltip:hover::after {
+                transform: translateX(0) translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}" style="font-size: 1.5rem;"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-chart-line"></i>
+                    Painel Administrativo
+                </h1>
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> {{ user.get_full_name|default:user.username }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'relatorio_faturamento' %}" class="action-link">
+                    <i class="fas fa-chart-pie"></i> Faturamento
+                </a>
+                <a href="{% url 'lista_clientes' %}" class="action-link">
+                    <i class="fas fa-users"></i> Clientes
+                </a>
+                <a href="{% url 'adicionar_horario' %}" class="action-link">
+                    <i class="fas fa-clock"></i> Horários
+                </a>
+                <a href="{% url 'agendar_manual_admin' %}" class="action-link">
+                    <i class="fas fa-user-shield"></i> Agendamento Manual
+                </a>
+                <a href="{% url 'pagina_admin' %}" class="action-link">
+                    <i class="fas fa-spa"></i> Serviços
+                </a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline; margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="action-link logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+    
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+        <!-- STATS CARDS -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Agendamentos Hoje</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                </div>
+                <p>{{ agendamentos_hoje.count }}</p>
+                <small><i class="fas fa-clock"></i> {{ hoje|date:"d/m/Y" }}</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Confirmados</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <p>{{ agendamentos_confirmados.count }}</p>
+                <small><i class="fas fa-list"></i> Total de confirmados</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Pendentes</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+                <p>{{ agendamentos_pendentes.count }}</p>
+                <small><i class="fas fa-exclamation-circle"></i> Aguardando ação</small>
+            </div>
+
+            <div class="stat-card" onclick="window.location.href='{% url 'lista_clientes' %}'">
+                <div class="stat-card-header">
+                    <h3>Total de Clientes</h3>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                </div>
+                <p>{{ total_clientes }}</p>
+                <small><i class="fas fa-arrow-right"></i> Ver todos os clientes</small>
+            </div>
+        </div>
+        
+        <!-- AGENDAMENTOS HOJE -->
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">
+                    <h2><i class="fas fa-calendar-check"></i> Agendamentos de Hoje</h2>
+                    <span class="agendamento-count">{{ agendamentos_hoje.count }}</span>
+                </div>
+            </div>
+            
+            {% if agendamentos_hoje %}
+            <div class="filters-container">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> Todos
+                </button>
+                <button class="filter-btn" data-filter="pendente">
+                    <i class="fas fa-hourglass-half"></i> Pendentes
+                </button>
+                <button class="filter-btn" data-filter="confirmado">
+                    <i class="fas fa-check-circle"></i> Confirmados
+                </button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table id="hoje-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Cliente</th>
+                            <th><i class="fas fa-spa"></i> Serviço</th>
+                            <th><i class="fas fa-user-nurse"></i> Profissional</th>
+                            <th><i class="fas fa-clock"></i> Hora</th>
+                            <th><i class="fas fa-comment"></i> Obs</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                            <th><i class="fas fa-cog"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ag in agendamentos_hoje %}
+                        <tr data-status="{{ ag.status }}" class="{% if ag.status == 'pendente' %}pending{% elif ag.status == 'confirmado' %}confirmed{% endif %}">
+                            <td>
+                                <strong>{{ ag.nome }}</strong>
+                            </td>
+                            <td>{{ ag.get_servico_display }}</td>
+                            <td>{{ ag.profissional.nome }}</td>
+                            <td><strong>{{ ag.hora_backup|time:"H:i" }}</strong></td>
+                            <td>
+                                {% if ag.observacoes %}
+                                <span class="observacao-tooltip" data-tooltip="{{ ag.observacoes }}">
+                                    <i class="fas fa-comment-dots"></i>
+                                </span>
+                                {% else %}
+                                <span style="color: #d1d5db;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status status-{{ ag.status }}">
+                                    {% if ag.status == 'pendente' %}
+                                        <i class="fas fa-hourglass-half"></i> Pendente
+                                    {% elif ag.status == 'confirmado' %}
+                                        <i class="fas fa-check-circle"></i> Confirmado
+                                    {% elif ag.status == 'concluido' %}
+                                        <i class="fas fa-star"></i> Concluído
+                                    {% elif ag.status == 'cancelado' %}
+                                        <i class="fas fa-times-circle"></i> Cancelado
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <a href="https://wa.me/55{{ ag.telefone|cut:' '|cut:'-'|cut:'('|cut:')' }}" 
+                                    target="_blank" 
+                                    class="action-btn whatsapp-btn"
+                                    title="WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    
+                                    {% if ag.status == 'pendente' %}
+                                        <button class="action-btn confirm-btn modal-trigger"
+                                            data-action="confirmar"
+                                            data-url="{% url 'confirmar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check"></i> Confirmar
+                                        </button>
+                                        
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% elif ag.status == 'confirmado' %}
+                                        <button class="action-btn concluir-btn modal-trigger"
+                                            data-action="concluir"
+                                            data-url="{% url 'concluir_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check-double"></i> Concluir
+                                        </button>
+
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% elif ag.status == 'concluido' %}
+                                        <span style="color: var(--success); font-weight: 600; font-size: 0.9rem;">
+                                            <i class="fas fa-check-circle"></i> Concluído
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum agendamento para hoje</p>
+                    <p>Aproveite para organizar ou relaxar! 😊</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- PRÓXIMOS AGENDAMENTOS -->
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">
+                    <h2><i class="fas fa-calendar-alt"></i> Próximos Agendamentos</h2>
+                    <span class="agendamento-count">{{ agendamentos_futuros.count }}</span>
+                </div>
+            </div>
+            
+            {% if agendamentos_futuros %}
+            <div class="filters-container">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> Todos
+                </button>
+                <button class="filter-btn" data-filter="pendente">
+                    <i class="fas fa-hourglass-half"></i> Pendentes
+                </button>
+                <button class="filter-btn" data-filter="confirmado">
+                    <i class="fas fa-check-circle"></i> Confirmados
+                </button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table id="futuros-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Cliente</th>
+                            <th><i class="fas fa-spa"></i> Serviço</th>
+                            <th><i class="fas fa-user-nurse"></i> Profissional</th>
+                            <th><i class="fas fa-calendar"></i> Data</th>
+                            <th><i class="fas fa-clock"></i> Hora</th>
+                            <th><i class="fas fa-comment"></i> Obs</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                            <th><i class="fas fa-cog"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ag in agendamentos_futuros %}
+                        <tr data-status="{{ ag.status }}" class="{% if ag.status == 'pendente' %}pending{% elif ag.status == 'confirmado' %}confirmed{% endif %}">
+                            <td><strong>{{ ag.nome }}</strong></td>
+                            <td>{{ ag.get_servico_display }}</td>
+                            <td>{{ ag.profissional.nome }}</td>
+                            <td>{{ ag.data|date:"d/m/Y" }}</td>
+                            <td><strong>{{ ag.hora_backup|time:"H:i" }}</strong></td>
+                            <td>
+                                {% if ag.observacoes %}
+                                <span class="observacao-tooltip" data-tooltip="{{ ag.observacoes }}">
+                                    <i class="fas fa-comment-dots"></i>
+                                </span>
+                                {% else %}
+                                <span style="color: #d1d5db;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status status-{{ ag.status }}">
+                                    {% if ag.status == 'pendente' %}
+                                        <i class="fas fa-hourglass-half"></i> Pendente
+                                    {% elif ag.status == 'confirmado' %}
+                                        <i class="fas fa-check-circle"></i> Confirmado
+                                    {% elif ag.status == 'concluido' %}
+                                        <i class="fas fa-star"></i> Concluído
+                                    {% elif ag.status == 'cancelado' %}
+                                        <i class="fas fa-times-circle"></i> Cancelado
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <a href="https://wa.me/55{{ ag.telefone|cut:' '|cut:'-'|cut:'('|cut:')' }}?text=Olá {{ ag.nome|urlencode }}! Aqui é {{ ag.profissional.nome }}. Como posso ajudar?" 
+                                    target="_blank" 
+                                    class="action-btn whatsapp-btn"
+                                    title="Chamar WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    
+                                    {% if ag.status == 'pendente' %}
+                                        <button class="action-btn confirm-btn modal-trigger"
+                                            data-action="confirmar"
+                                            data-url="{% url 'confirmar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check"></i> Confirmar
+                                        </button>
+
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% elif ag.status == 'confirmado' %}
+                                        <button class="action-btn concluir-btn modal-trigger"
+                                            data-action="concluir"
+                                            data-url="{% url 'concluir_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check-double"></i> Concluir
+                                        </button>
+                                        
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% elif ag.status == 'concluido' %}
+                                        <span style="color: var(--success); font-weight: 600; font-size: 0.9rem;">
+                                            <i class="fas fa-check-circle"></i> Concluído
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum agendamento futuro</p>
+                    <p>Novos agendamentos aparecerão aqui</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="confirmModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirmar Ação</h3>
+            <div id="modalMessage"></div>
+            <div class="modal-actions">
+                <button id="cancelModalBtn" class="modal-btn modal-btn-cancel">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button id="confirmModalBtn" class="modal-btn modal-btn-danger">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ===== MODAL =====
+        const modal = document.getElementById('confirmModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const confirmModalBtn = document.getElementById('confirmModalBtn');
+        let currentActionUrl = '';
+
+        document.querySelectorAll('.modal-trigger').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const action = this.getAttribute('data-action');
+                const nome = this.getAttribute('data-nome');
+                const servico = this.getAttribute('data-servico');
+                const datahora = this.getAttribute('data-datahora');
+                currentActionUrl = this.getAttribute('data-url');
+                
+                let title, message, icon, btnText, btnClass, iconColor;
+
+                if (action === 'cancelar') {
+                    title = 'Cancelar Agendamento';
+                    message = 'Tem certeza que deseja <strong>cancelar</strong> este agendamento?';
+                    icon = 'fa-exclamation-triangle';
+                    btnText = 'Sim, Cancelar';
+                    btnClass = 'modal-btn-danger';
+                    iconColor = 'var(--danger)';
+                } else if (action === 'confirmar') {
+                    title = 'Confirmar Agendamento';
+                    message = 'Tem certeza que deseja <strong>confirmar</strong> este agendamento?';
+                    icon = 'fa-check-circle';
+                    btnText = 'Sim, Confirmar';
+                    btnClass = 'modal-btn-success';
+                    iconColor = 'var(--success)';
+                } else if (action === 'concluir') {
+                    title = 'Concluir Agendamento';
+                    message = 'Marcar este agendamento como <strong>concluído</strong>?';
+                    icon = 'fa-star';
+                    btnText = 'Sim, Concluir';
+                    btnClass = 'modal-btn-success';
+                    iconColor = 'var(--success)';
+                }
+
+                modalTitle.innerHTML = `<i class="fas ${icon}" style="color: ${iconColor}; margin-right: 0.5rem;"></i>${title}`;
+                modalMessage.innerHTML = `
+                    <p style="margin: 1.5rem 0; font-size: 1.05rem;">${message}</p>
+                    <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; text-align: left; margin-top: 1rem;">
+                        <p style="margin: 0.5rem 0;"><strong>👤 Cliente:</strong> ${nome}</p>
+                        <p style="margin: 0.5rem 0;"><strong>💅 Serviço:</strong> ${servico}</p>
+                        <p style="margin: 0.5rem 0;"><strong>📅 Data/Hora:</strong> ${datahora}</p>
+                    </div>
+                `;
+                
+                confirmModalBtn.className = `modal-btn ${btnClass}`;
+                confirmModalBtn.innerHTML = `<i class="fas fa-check"></i> ${btnText}`;
+
+                modal.style.display = 'flex';
+            });
+        });
+
+        cancelModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            currentActionUrl = '';
+        });
+
+        confirmModalBtn.addEventListener('click', () => {
+            if(currentActionUrl) {
+                window.location.href = currentActionUrl;
+            }
+        });
+
+        // Fechar modal ao clicar fora
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                modal.style.display = 'none';
+                currentActionUrl = '';
+            }
+        });
+
+        // ===== MENSAGENS FLASH =====
+        document.querySelectorAll('.messages-container .alert').forEach(msg => {
+            setTimeout(() => {
+                msg.style.transition = 'all 0.5s ease';
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                setTimeout(() => msg.remove(), 500);
+            }, 4000);
+        });
+
+        // ===== TOOLTIP OBSERVAÇÕES =====
+        document.querySelectorAll('.observacao-tooltip').forEach(tooltip => {
+            tooltip.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    const tooltipText = this.getAttribute('data-tooltip');
+                    alert(`Observação:\n\n${tooltipText}`);
+                }
+            });
+        });
+
+        // ===== FILTROS =====
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const container = this.closest('.table-container');
+                const table = container.querySelector('table');
+                const filter = this.getAttribute('data-filter');
+                
+                // Atualizar botões ativos
+                this.closest('.filters-container').querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Filtrar linhas
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    
+                    if (filter === 'all' || rowStatus === filter) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+    </script>
+</body>
+</html>

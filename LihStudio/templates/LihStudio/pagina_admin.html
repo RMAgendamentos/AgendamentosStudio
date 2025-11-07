@@ -1,0 +1,848 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gerenciar Serviços - RM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c4407b;
+            --primary-light: #f174aa;
+            --primary-dark: #a03566;
+            --secondary: #fce7f1;
+            --dark: #1a1d29;
+            --dark-light: #2d3142;
+            --light: #ffffff;
+            --bg-page: #f5f6fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-page);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
+            position: relative;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header-left h1 i {
+            font-size: 2rem;
+        }
+        
+        .user-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .action-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ===== CONTAINER ===== */
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.75rem 2rem;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-body {
+            padding: 0;
+        }
+
+        /* ===== TABELA ===== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .service-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .service-table thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .service-table th {
+            color: white;
+            font-weight: 700;
+            padding: 1.25rem 1.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+
+        .service-table th:first-child { border-radius: var(--border-radius) 0 0 0; }
+        .service-table th:last-child { border-radius: 0 var(--border-radius) 0 0; }
+
+        .service-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .service-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .service-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .service-table tbody tr:hover {
+            background: var(--secondary);
+            transform: scale(1.01);
+        }
+
+        .service-name-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .service-name-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .price {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-inactive {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== AÇÕES ===== */
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-delete-form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        /* ===== FORMULÁRIO ===== */
+        .form-section .card-body {
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--light);
+        }
+        
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(196, 64, 123, 0.1);
+        }
+        
+        .form-group textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+            resize: none;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .switch-container input[type="checkbox"] {
+            height: 0;
+            width: 0;
+            visibility: hidden;
+            position: absolute;
+        }
+        
+        .switch-slider {
+            cursor: pointer;
+            width: 60px;
+            height: 32px;
+            background: #d1d5db;
+            display: block;
+            border-radius: 100px;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .switch-slider:after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .switch-container input:checked + .switch-slider {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+        
+        .switch-container input:checked + .switch-slider:after {
+            left: calc(100% - 3px);
+            transform: translateX(-100%);
+        }
+        
+        .switch-label-text {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTÕES ===== */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f3f4f6;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(196, 64, 123, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+            transform: translateY(-2px);
+        }
+
+        /* ===== INFO BOXES ===== */
+        .info-box {
+            background: var(--light);
+            border-left: 5px solid var(--primary);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box ul {
+            margin-left: 1.5rem;
+            color: var(--dark);
+        }
+
+        .info-box li {
+            margin: 0.75rem 0;
+            line-height: 1.5;
+        }
+
+        .info-box.warning {
+            border-left-color: var(--warning);
+        }
+
+        .info-box.warning h3 {
+            color: #d97706;
+        }
+
+        /* ===== MESSAGES ===== */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+            color: white;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+            color: white;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #9ca3af;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-link {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .service-table th,
+            .service-table td {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .form-section .card-body {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}" style="font-size: 1.5rem;"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-spa"></i>
+                    Gerenciar Serviços
+                </h1>
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> {{ user.get_full_name|default:user.username }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'painel_dona' %}" class="action-link">
+                <i class="fas fa-arrow-left"></i> Voltar ao Painel
+            </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+        <div class="layout-grid">
+            <!-- LISTA DE SERVIÇOS -->
+            <section class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-list"></i> Lista de Serviços Cadastrados</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table class="service-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Preço (R$)</th>
+                                    <th>Status</th>
+                                    <th>Ordem</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for servico in servicos %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'editar_servico' servico.id %}" class="service-name-link" title="Clique para editar">
+                                            <i class="fas fa-spa"></i> {{ servico.nome }}
+                                        </a>
+                                    </td>
+                                    <td><span class="price">R$ {{ servico.preco|floatformat:2 }}</span></td>
+                                    <td>
+                                        {% if servico.ativo %}
+                                            <span class="status-badge status-active">
+                                                <i class="fas fa-check"></i> Ativo
+                                            </span>
+                                        {% else %}
+                                            <span class="status-badge status-inactive">
+                                                <i class="fas fa-times"></i> Inativo
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ servico.ordem }}</td>
+                                    <td class="actions">
+                                        <a href="{% url 'editar_servico' servico.id %}" class="action-btn btn-edit">
+                                            <i class="fas fa-pen"></i> Editar
+                                        </a>
+                                        
+                                        <form method="POST" action="{% url 'excluir_servico' servico.id %}" class="btn-delete-form">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn btn-delete" 
+                                                    onclick="return confirm('Tem certeza que deseja excluir o serviço \'{{ servico.nome|escapejs }}\'?');">
+                                                <i class="fas fa-trash"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum serviço cadastrado</p>
+                                        <p>Adicione um serviço usando o formulário ao lado</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORMULÁRIO ADICIONAR -->
+            <section class="card form-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Serviço</h2>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST" action="{% url 'pagina_admin' %}">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%); border: 1px solid rgba(239, 68, 68, 0.2); border-left: 4px solid var(--danger); color: #dc2626; margin-bottom: 2rem; padding: 1.5rem; border-radius: var(--border-radius);">
+                                <strong><i class="fas fa-exclamation-triangle"></i> Por favor, corrija os erros abaixo:</strong>
+                                {{ form.non_field_errors }}
+                                <ul style="margin: 0.5rem 0 0 1.5rem;">
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label for="{{ form.nome.id_for_label }}">
+                                <i class="fas fa-heading"></i> Nome do Serviço *
+                            </label>
+                            {{ form.nome }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.nome.help_text }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.preco.id_for_label }}">
+                                <i class="fas fa-dollar-sign"></i> Preço (R$) *
+                            </label>
+                            {{ form.preco }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.preco.help_text }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.descricao.id_for_label }}">
+                                <i class="fas fa-align-left"></i> Descrição
+                            </label>
+                            {{ form.descricao }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.descricao.help_text }}</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.ordem.id_for_label }}">
+                                <i class="fas fa-sort-numeric-down"></i> Ordem de Exibição
+                            </label>
+                            {{ form.ordem }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.ordem.help_text }}</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-toggle-on"></i> Status
+                            </label>
+                            <div class="switch-container">
+                                {{ form.ativo }}
+                                <label for="{{ form.ativo.id_for_label }}" class="switch-slider"></label>
+                                <span class="switch-label-text">{{ form.ativo.label }}</span>
+                            </div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.ativo.help_text }}</div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Serviço
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Limpar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- INFO BOXES -->
+        <div class="info-box">
+            <h3><i class="fas fa-lightbulb"></i> Dicas de Uso</h3>
+            <ul>
+                <li><strong>Adicionar Serviço:</strong> Use o formulário "Adicionar Novo Serviço"</li>
+                <li><strong>Editar Preço:</strong> Clique no nome do serviço na tabela, altere o preço e salve</li>
+                <li><strong>Desativar Temporariamente:</strong> Edite o serviço e desmarque "Ativo"</li>
+                <li><strong>Reordenar:</strong> Use o campo "Ordem" para controlar a exibição na página de agendamento</li>
+            </ul>
+        </div>
+
+        <div class="info-box warning">
+            <h3><i class="fas fa-exclamation-triangle"></i> Atenção!</h3>
+            <ul>
+                <li>Não é possível excluir serviços que já têm agendamentos pendentes ou confirmados.</li>
+                <li>Serviços com histórico (concluído/cancelado) serão <strong>desativados</strong> para preservar os dados.</li>
+                <li>Serviços sem histórico serão <strong>excluídos permanentemente</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-fechamento de mensagens
+            document.querySelectorAll('.messages-container .alert').forEach(msg => {
+                setTimeout(() => {
+                    msg.style.transition = 'all 0.5s ease';
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateX(100px)';
+                    setTimeout(() => msg.remove(), 500);
+                }, 5000);
+            });
+
+            // Adiciona a classe .form-control para todos os inputs
+            document.querySelectorAll('.form-section form input, .form-section form textarea').forEach(input => {
+                if(input.type !== 'checkbox') {
+                    input.classList.add('form-control');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

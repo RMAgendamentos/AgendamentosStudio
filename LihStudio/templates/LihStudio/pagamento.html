@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Pagamento - RM Studio</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0; 
+            padding: 20px;
+        }
+
+        .payment-container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: #fff; 
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #009ee3, #00b4d8, #0077b6);
+        }
+
+        .summary { 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #f0f0f0; 
+            padding-bottom: 25px; 
+        }
+
+        .summary h2 { 
+            margin: 0 0 20px; 
+            color: #2c3e50; 
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            padding: 8px 0;
+        }
+
+        .summary-item strong {
+            color: #34495e;
+            font-weight: 600;
+        }
+
+        .summary-item span {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .total-price {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .total-price .summary-item {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .total-price strong {
+            color: #27ae60;
+            font-size: 20px;
+        }
+
+        /* Botão Mercado Pago Melhorado */
+        .btn-pagar {
+            background: linear-gradient(135deg, #009ee3 0%, #0084c7 100%);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 158, 227, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-pagar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-pagar:hover {
+            background: linear-gradient(135deg, #0084c7 0%, #006ba6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 158, 227, 0.4);
+        }
+
+        .btn-pagar:hover::before {
+            left: 100%;
+        }
+
+        .btn-pagar:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 20px rgba(0, 158, 227, 0.3);
+        }
+
+        .btn-pagar:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-pagar .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .mercadopago-logo {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-pagar:hover .mercadopago-logo {
+            transform: scale(1.1);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e3f2fd;
+            border-top: 4px solid #009ee3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: #009ee3;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .security-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 4px solid #009ee3;
+        }
+
+        .security-info h4 {
+            color: #009ee3;
+            margin: 0 0 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-info p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .shield-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .payment-container {
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            
+            .summary h2 {
+                font-size: 24px;
+            }
+            
+            .btn-pagar {
+                padding: 16px 25px;
+                font-size: 16px;
+            }
+        }
+
+        /* Estados de erro */
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #e74c3c;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="summary">
+            <h2>Resumo do Pedido</h2>
+            
+            <div class="summary-item">
+                <strong>Serviço:</strong>
+                <span>{{ agendamento.get_servico_display }}</span>
+            </div>
+            
+            <div class="summary-item">
+                <strong>Profissional:</strong>
+                <span>{{ agendamento.profissional.nome }}</span>
+            </div>
+            
+            <div class="summary-item">
+                <strong>Data:</strong>
+                <span>{{ agendamento.data|date:"d/m/Y" }}</span>
+            </div>
+            
+            <div class="total-price">
+                <div class="summary-item">
+                    <strong>Total a Pagar:</strong>
+                    <strong>R$ {{ preco|floatformat:"2" }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-pagar" id="payButton" onclick="processPayment()">
+            <div class="btn-content">
+                <svg class="mercadopago-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                <span>Pagar com Mercado Pago</span>
+            </div>
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Redirecionando para o pagamento seguro...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <strong>Erro no pagamento:</strong>
+            <span id="errorText">Ocorreu um erro inesperado. Tente novamente.</span>
+        </div>
+
+        <div class="security-info">
+            <h4>
+                <svg class="shield-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11H16V18H8V11H9.2V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.4,8.7 10.4,10V11H13.6V10C13.6,8.7 12.8,8.2 12,8.2Z"/>
+                </svg>
+                Pagamento 100% Seguro
+            </h4>
+            <p>Seus dados estão protegidos pela criptografia do Mercado Pago. Aceitamos cartão de crédito, débito e PIX.</p>
+        </div>
+    </div>
+
+    <script>
+        // Inicialização do SDK do Mercado Pago
+        const mp = new MercadoPago('{{ public_key }}', {
+            locale: 'pt-BR'
+        });
+
+        // Elementos DOM
+        const payButton = document.getElementById('payButton');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Função principal de processamento do pagamento
+        function processPayment() {
+            // Validações básicas
+            if (!validatePaymentData()) {
+                return;
+            }
+
+            // Desabilitar botão e mostrar loading
+            setLoadingState(true);
+
+            try {
+                // Redirecionar para o Checkout Pro do Mercado Pago
+                const initPoint = '{{ init_point }}';
+                
+                if (!initPoint) {
+                    throw new Error('Link de pagamento não encontrado');
+                }
+
+                // Pequeno delay para melhor UX
+                setTimeout(() => {
+                    window.location.href = initPoint;
+                }, 1000);
+
+            } catch (error) {
+                console.error('Erro no pagamento:', error);
+                showError(error.message || 'Erro inesperado no pagamento');
+                setLoadingState(false);
+            }
+        }
+
+        // Validar dados do pagamento
+        function validatePaymentData() {
+            const initPoint = '{{ init_point }}';
+            const publicKey = '{{ public_key }}';
+
+            if (!initPoint) {
+                showError('Link de pagamento não disponível');
+                return false;
+            }
+
+            if (!publicKey) {
+                showError('Configuração de pagamento inválida');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Controlar estado de loading
+        function setLoadingState(isLoading) {
+            if (isLoading) {
+                payButton.disabled = true;
+                payButton.style.opacity = '0.7';
+                loading.classList.add('show');
+                hideError();
+            } else {
+                payButton.disabled = false;
+                payButton.style.opacity = '1';
+                loading.classList.remove('show');
+            }
+        }
+
+        // Mostrar mensagem de erro
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            
+            // Auto-hide após 5 segundos
+            setTimeout(hideError, 5000);
+        }
+
+        // Esconder mensagem de erro
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        // Detectar se o usuário voltou da página de pagamento
+        window.addEventListener('focus', function() {
+            // Se o usuário voltou e ainda está na página, reabilitar o botão
+            setTimeout(() => {
+                setLoadingState(false);
+            }, 2000);
+        });
+
+        // Prevenir múltiplos cliques
+        let isProcessing = false;
+        
+        payButton.addEventListener('click', function(e) {
+            if (isProcessing) {
+                e.preventDefault();
+                return false;
+            }
+            isProcessing = true;
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 3000);
+        });
+
+        // Detectar se o usuário voltou da página de pagamento
+        window.addEventListener('pageshow', function(event) {
+            // 'persisted' é true se a página veio do cache (ex: botão "Voltar")
+            if (event.persisted) {
+                console.log('Página restaurada do cache. Forçando verificação...');
+                
+                // Desabilita o botão e força um reload da página
+                payButton.textContent = "Verificando status...";
+                payButton.disabled = true;
+
+                // Força a página a recarregar.
+                // A view 'criar_pagamento_agendamento' (backend)
+                // vai rodar de novo, vai ver que já está 'aprovado'
+                // e vai redirecionar o usuário para a 'home',
+                // como já vimos acontecer no log 00:25:43.
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
