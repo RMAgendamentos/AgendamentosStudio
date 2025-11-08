@@ -133,6 +133,7 @@
             z-index: 1;
         }
 
+        /* LÓGICA DA BARRA DE PROGRESSO ATUALIZADA */
         .progress-bar::after {
             content: '';
             position: absolute;
@@ -143,8 +144,14 @@
             transform: translateY(-50%);
             z-index: 2;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            width: {% if data_selecionada and profissional_selecionada %}100%{% elif profissional_selecionada %}50%{% else %}0%{% endif %};
+            /* A barra só completa 100% se um horário for selecionado */
+            width: {% if data_selecionada and profissional_selecionada %}66%{% elif profissional_selecionada %}33%{% else %}0%{% endif %};
         }
+        /* Classe JS para completar a barra */
+        .progress-bar.step-4-active::after {
+            width: 100%;
+        }
+
 
         .step {
             width: 50px;
@@ -283,32 +290,14 @@
             width: 100%;
         }
 
-        .btn-outline {
-            background: white;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            box-shadow: none;
-        }
-
-        .btn-outline:hover {
-            background: var(--secondary);
-        }
-
-        /* ===== SELECTED INFO ===== */
+        /* ===== SELECTED INFO (RESUMO) ===== */
         .selected-info {
             background: linear-gradient(135deg, var(--secondary) 0%, #fef3f9 100%);
             padding: 1.5rem;
             border-radius: var(--border-radius);
             margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             gap: 1.5rem;
             border-left: 5px solid var(--primary);
-        }
-
-        .selected-info-content {
-            flex: 1;
         }
 
         .selected-info-content strong {
@@ -324,8 +313,7 @@
             gap: 0.5rem;
         }
         
-        /* Fix para ícone da Data (Estava faltando) */
-        .selected-info-content p i.fa-calendar-check {
+        .selected-info-content p i {
             color: var(--primary);
         }
 
@@ -340,37 +328,13 @@
             gap: 1rem;
         }
 
-        .error-message {
-            background: #fef2f2;
-            border-color: var(--danger);
-            color: var(--danger);
-        }
+        .error-message { background: #fef2f2; border-color: var(--danger); color: var(--danger); }
+        .success-message { background: #f0fdf4; border-color: var(--success); color: var(--success); }
+        .info-message { background: #f0f9ff; border-color: #3b82f6; color: #1e40af; }
+        .error-message i, .success-message i, .info-message i { font-size: 1.5rem; }
+        .errorlist { color: var(--danger); margin-top: 0.5rem; list-style: none; padding-left: 0; font-size: 0.9rem; }
 
-        .success-message {
-            background: #f0fdf4;
-            border-color: var(--success);
-            color: var(--success);
-        }
-
-        .info-message {
-            background: #f0f9ff;
-            border-color: #3b82f6;
-            color: #1e40af;
-        }
-
-        .error-message i, .success-message i, .info-message i {
-            font-size: 1.5rem;
-        }
-
-        .errorlist {
-            color: var(--danger);
-            margin-top: 0.5rem;
-            list-style: none;
-            padding-left: 0;
-            font-size: 0.9rem;
-        }
-
-        /* ===== INFO BOX ===== */
+        /* ===== INFO BOX (Usado para "Próximo passo") ===== */
         .info-box {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             border-radius: var(--border-radius);
@@ -378,40 +342,20 @@
             margin-bottom: 2rem;
             border-left: 5px solid #3b82f6;
         }
-
-        .info-box h3 {
-            color: #1e40af;
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .info-box p {
-            color: #1e3a8a;
-            margin: 0;
-        }
+        .info-box h3 { color: #1e40af; margin-bottom: 0.75rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .info-box p { color: #1e3a8a; margin: 0; }
         
-        /* (NOVO) Card de info do serviço (baseado no seu HTML) */
+        /* Card de info do serviço */
         #servico-info {
             background: var(--secondary);
             border-radius: var(--border-radius);
             padding: 1.25rem 1.75rem;
-            margin-top: -0.5rem; /* Puxa para mais perto do select */
+            margin-top: -0.5rem;
             margin-bottom: 1.75rem;
             border-left: 5px solid var(--primary);
         }
-        #servico-info h5 {
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-        }
-        #servico-info p {
-            margin: 0.25rem 0;
-            font-size: 0.95rem;
-            color: var(--primary-dark);
-        }
+        #servico-info h5 { color: var(--primary); margin-bottom: 0.75rem; font-weight: 700; }
+        #servico-info p { margin: 0.25rem 0; font-size: 0.95rem; color: var(--primary-dark); }
 
         /* ===== FOOTER ===== */
         footer {
@@ -422,192 +366,74 @@
             margin-top: 4rem;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateX(-5px);
-        }
-
-        .footer-content p {
-            margin: 0.5rem 0;
-            opacity: 0.9;
-        }
+        .footer-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 1rem; margin-bottom: 1.5rem; transition: var(--transition); backdrop-filter: blur(10px); }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.5); transform: translateX(-5px); }
+        .footer-content p { margin: 0.5rem 0; opacity: 0.9; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-                flex-direction: column;
-            }
-            
-            .booking-container {
-                padding: 1.5rem;
-            }
-            
-            .progress-bar {
-                margin-bottom: 2rem;
-            }
-            
-            .step {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            
-            .step-label {
-                font-size: 0.75rem;
-            }
-            
-            .selected-info {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            input, select, textarea {
-                padding: 0.875rem 1rem;
-            }
-            
-            main {
-                margin: 1.5rem auto;
-            }
+            h1 { font-size: 2rem; flex-direction: column; }
+            .booking-container { padding: 1.5rem; }
+            .progress-bar { margin-bottom: 2rem; }
+            .step { width: 40px; height: 40px; font-size: 1rem; }
+            .step-label { font-size: 0.75rem; }
+            input, select, textarea { padding: 0.875rem 1rem; }
+            main { margin: 1.5rem auto; }
         }
-
         @media (max-width: 480px) {
-            .booking-container {
-                padding: 1.25rem;
-            }
-            
-            .step {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-            
-            .step-label {
-                font-size: 0.7rem;
-            }
+            .booking-container { padding: 1.25rem; }
+            .step { width: 35px; height: 35px; font-size: 0.9rem; }
+            .step-label { font-size: 0.7rem; }
         }
 
-        /* ===== 2. NOVOS ESTILOS (Calendário Visual) ===== */
+        /* ===== 2. CSS DO CALENDÁRIO VISUAL ===== */
+        .select-data-original { position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; margin: 0; }
+        .calendario-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; padding: 10px; background: #fdfdff; border: 2px solid #f0f2f5; border-radius: var(--border-radius); }
+        .calendario-dia { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 90px; border: 2px solid var(--primary); border-radius: var(--border-radius); background: white; color: var(--primary); cursor: pointer; transition: var(--transition); font-family: inherit; padding: 10px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .calendario-dia:hover { background: var(--secondary); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(196, 64, 123, 0.15); }
+        .calendario-dia.active { background: var(--primary); color: white; transform: translateY(-3px); box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3); }
+        .calendario-dia .dia-semana { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+        .calendario-dia .dia-numero { font-size: 1.75rem; font-weight: 800; line-height: 1.2; color: var(--primary-dark); }
+        .calendario-dia:hover .dia-numero, .calendario-dia.active .dia-numero { color: var(--primary); }
+        .calendario-dia.active .dia-numero { color: white; }
+        .calendario-dia .dia-mes { font-size: 0.9rem; font-weight: 600; }
+        .calendario-dia.active .dia-semana, .calendario-dia.active .dia-mes { opacity: 0.9; }
+        .calendario-vazio { width: 100%; text-align: center; padding: 2rem 1rem; color: #6b7280; font-style: italic; grid-column: 1 / -1; }
 
-        /* Esconde o container do <select> original de forma acessível */
-        .select-data-original {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-            height: 0;
-            width: 0;
-            margin: 0;
+        /* ===== 3. CSS DO GRID DE HORÁRIOS ===== */
+        .select-hora-original { position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; margin: 0; }
+        .horarios-grid-container { width: 100%; background: #fdfdff; border: 2px solid #f0f2f5; border-radius: var(--border-radius); padding: 1.5rem; }
+        .horarios-grupo { margin-bottom: 1.5rem; }
+        .horarios-grupo:last-child { margin-bottom: 0; }
+        .horarios-grupo h4 { font-size: 1rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--secondary); display: flex; align-items: center; gap: 0.5rem; }
+        .horarios-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+        
+        /* BOTÃO DE HORÁRIO LIMPO */
+        .horario-botao { 
+            font-family: inherit; 
+            font-weight: 600; 
+            font-size: 1.1rem; /* Um pouco maior para facilitar o clique */
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--primary); 
+            border-radius: 10px; 
+            background: white; 
+            color: var(--primary); 
+            cursor: pointer; 
+            transition: var(--transition); 
+            text-align: center; 
         }
+        
+        .horario-botao:hover { background: var(--secondary); transform: translateY(-2px); }
+        .horario-botao.active { background: var(--primary); color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3); transform: translateY(-2px); }
+        .horarios-vazio { width: 100%; text-align: center; padding: 2rem 1rem; color: #6b7280; font-style: italic; }
 
-        /* O container dos botões de dia */
-        .calendario-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 12px;
-            padding: 10px;
-            background: #fdfdff;
-            border: 2px solid #f0f2f5;
-            border-radius: var(--border-radius);
-        }
-
-        /* Estilo de cada botão de dia */
-        .calendario-dia {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 90px;
-            border: 2px solid var(--primary);
-            border-radius: var(--border-radius);
-            background: white;
-            color: var(--primary);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: inherit;
-            padding: 10px 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .calendario-dia:hover {
-            background: var(--secondary);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.15);
-        }
-
-        /* Estilo do dia selecionado (adicionado pelo JS) */
-        .calendario-dia.active {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
-        }
-
-        .calendario-dia .dia-semana {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
-        .calendario-dia .dia-numero {
-            font-size: 1.75rem;
-            font-weight: 800;
-            line-height: 1.2;
-            color: var(--primary-dark);
-        }
-
-        .calendario-dia:hover .dia-numero,
-        .calendario-dia.active .dia-numero {
-            color: var(--primary);
-        }
-
-        .calendario-dia.active .dia-numero {
-            color: white;
-        }
-
-        .calendario-dia .dia-mes {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .calendario-dia.active .dia-semana,
-        .calendario-dia.active .dia-mes {
-            opacity: 0.9;
-        }
-
-        /* Mensagem de "nenhuma data" */
-        .calendario-vazio {
-            width: 100%;
-            text-align: center;
-            padding: 2rem 1rem;
-            color: #6b7280;
-            font-style: italic;
-            grid-column: 1 / -1; /* Ocupa a linha inteira do grid */
+        /* ===== 4. CSS PARA O NOVO FLUXO (Divulgação Progressiva) ===== */
+        #form-detalhes-container {
+            display: none;
+            border-top: 2px solid #f0f2f5;
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
         }
 
     </style>
@@ -625,7 +451,7 @@
     
     <main>
         <div class="booking-container">
-            <div class="progress-bar">
+            <div class="progress-bar" id="progress-bar">
                 <div class="step {% if profissional_selecionada %}completed{% else %}active{% endif %}">
                     1
                     <span class="step-label">Profissional</span>
@@ -636,7 +462,7 @@
                 </div>
                 <div class="step {% if data_selecionada and profissional_selecionada %}active{% endif %}">
                     3
-                    <span class="step-label">Detalhes</span>
+                    <span class="step-label">Horário</span>
                 </div>
             </div>
             
@@ -697,32 +523,21 @@
             {% endif %}
 
             {% if data_selecionada and profissional_selecionada %}
-                <div class="selected-info">
-                    <div class="selected-info-content">
-                        <p><i class="fas fa-user-nurse"></i> <strong>Profissional:</strong> {{ profissional_selecionada|title }}</p>
-                        <p><i class="fas fa-calendar-check"></i> <strong>Data:</strong> 
-                            {% for d in datas_disponiveis %}
-                                {% if d|date:'Y-m-d' == data_selecionada %}
-                                    {{ d|date:"d/m/Y (l)" }}
-                                {% endif %}
-                            {% endfor %}
-                        </p>
-                    </div>
-                </div>
                 
                 <form method="post" id="agendamento-form">
                     {% csrf_token %}
                     {{ form.profissional }}
                     {{ form.data }}
 
-                    {% if form.errors %}
-                        <div class="error-message">
+                    {% if form.errors and not form.hora.errors %} <div class="error-message">
                             <i class="fas fa-exclamation-triangle"></i>
                             <div>
                                 {% for field in form %}
-                                    {% for error in field.errors %}
-                                        <p style="margin: 0.25rem 0;">{{ error }}</p>
-                                    {% endfor %}
+                                    {% if field.name != 'hora' %}
+                                        {% for error in field.errors %}
+                                            <p style="margin: 0.25rem 0;">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endfor %}
                                 {% for error in form.non_field_errors %}
                                     <p style="margin: 0.25rem 0;">{{ error }}</p>
@@ -731,11 +546,7 @@
                         </div>
                     {% endif %}
 
-                    <div class="form-group">
-                        <label for="{{ form.hora.id_for_label }}">
-                            <i class="fas fa-clock"></i>
-                            Escolha o horário
-                        </label>
+                    <div class="form-group select-hora-original" id="select-hora-container">
                         <select name="{{ form.hora.name }}" id="{{ form.hora.id_for_label }}" required>
                             <option value="" selected disabled hidden>-- Selecione o horário --</option>
                             {% for value, label in form.hora.field.choices %}
@@ -749,83 +560,106 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="{{ form.nome.id_for_label }}">
-                            <i class="fas fa-user"></i>
-                            Nome completo
+                        <label for="horarios-grid-container">
+                            <i class="fas fa-clock"></i>
+                            Escolha o horário
                         </label>
-                        {{ form.nome }}
-                        {% if form.nome.errors %}
-                            <div class="errorlist">{{ form.nome.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.telefone.id_for_label }}">
-                            <i class="fas fa-phone"></i>
-                            Telefone (com DDD)
-                        </label>
-                        {{ form.telefone }}
-                        <small><i class="fas fa-info-circle"></i> Exemplo: (83) 99999-9999</small>
-                        {% if form.telefone.errors %}
-                            <div class="errorlist">{{ form.telefone.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.email.id_for_label }}">
-                            <i class="fas fa-envelope"></i>
-                            E-mail
-                        </label>
-                        {{ form.email }}
-                        <small><i class="fas fa-info-circle"></i> Você receberá confirmações neste e-mail</small>
-                        {% if form.email.errors %}
-                            <div class="errorlist">{{ form.email.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.servico.id_for_label }}">
-                            <i class="fas fa-cut"></i> Escolha o Serviço *
-                        </label>
-                        <select name="{{ form.servico.html_name }}" 
-                                id="{{ form.servico.id_for_label }}" 
-                                class="form-control" 
-                                required>
-                            <option value="" selected disabled hidden>Selecione um serviço</option>
-                            {% for servico in form.fields.servico.queryset %}
-                                <option value="{{ servico.id }}" 
-                                        data-preco="{{ servico.preco }}"
-                                        {% if form.servico.value == servico.id %}selected{% endif %}>
-                                    {{ servico.nome }} - R$ {{ servico.preco|floatformat:2 }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        {% if form.servico.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.servico.errors }}
+                        <div id="horarios-grid-container" class="horarios-grid-container">
                             </div>
-                        {% endif %}
                     </div>
 
-                    <div id="servico-info" style="display: none;">
-                        <h5><i class="fas fa-info-circle"></i> Detalhes do Serviço</h5>
-                        <p><strong>Serviço:</strong> <span id="servico-nome"></span></p>
-                        <p><strong>Valor:</strong> R$ <span id="servico-preco"></span></p>
-                    </div>
+                    <div id="form-detalhes-container" style="display: none;">
 
-                    <div class="form-group">
-                        <label for="{{ form.observacoes.id_for_label }}">
-                            <i class="fas fa-comment-dots"></i>
-                            Observações <small style="font-weight: 500; color: #6b7280;">(opcional)</small>
-                        </label>
-                        {{ form.observacoes }}
-                        <small><i class="fas fa-lightbulb"></i> Exemplo: "Alérgica a cola", "Quero alongamento natural", etc.</small>
-                    </div>
+                        <div class="selected-info">
+                            <div class="selected-info-content">
+                                <p id="resumo-profissional"><i class="fas fa-user-nurse"></i> <strong>Profissional:</strong> {{ profissional_selecionada|title }}</p>
+                                <p id="resumo-data"><i class="fas fa-calendar-check"></i> <strong>Data:</strong> 
+                                    {% for d in datas_disponiveis %}
+                                        {% if d|date:'Y-m-d' == data_selecionada %}
+                                            {{ d|date:"d/m/Y (l)" }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <p id="resumo-horario"></p> 
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.nome.id_for_label }}">
+                                <i class="fas fa-user"></i>
+                                Nome completo
+                            </label>
+                            {{ form.nome }}
+                            {% if form.nome.errors %}
+                                <div class="errorlist">{{ form.nome.errors }}</div>
+                            {% endif %}
+                        </div>
 
-                    <button type="submit" class="btn btn-block">
-                        <i class="fas fa-calendar-check"></i> Confirmar Agendamento
-                    </button>
-                </form>
+                        <div class="form-group">
+                            <label for="{{ form.telefone.id_for_label }}">
+                                <i class="fas fa-phone"></i>
+                                Telefone (com DDD)
+                            </label>
+                            {{ form.telefone }}
+                            <small><i class="fas fa-info-circle"></i> Exemplo: (83) 99999-9999</small>
+                            {% if form.telefone.errors %}
+                                <div class="errorlist">{{ form.telefone.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">
+                                <i class="fas fa-envelope"></i>
+                                E-mail
+                            </label>
+                            {{ form.email }}
+                            <small><i class="fas fa-info-circle"></i> Você receberá confirmações neste e-mail</small>
+                            {% if form.email.errors %}
+                                <div class="errorlist">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.servico.id_for_label }}">
+                                <i class="fas fa-cut"></i> Escolha o Serviço *
+                            </label>
+                            <select name="{{ form.servico.html_name }}" 
+                                    id="{{ form.servico.id_for_label }}" 
+                                    class="form-control" 
+                                    required>
+                                <option value="" selected disabled hidden>Selecione um serviço</option>
+                                {% for servico in form.fields.servico.queryset %}
+                                    <option value="{{ servico.id }}" 
+                                            data-preco="{{ servico.preco }}"
+                                            {% if form.servico.value == servico.id %}selected{% endif %}>
+                                        {{ servico.nome }} - R$ {{ servico.preco|floatformat:2 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.servico.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.servico.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div id="servico-info" style="display: none;">
+                            </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.observacoes.id_for_label }}">
+                                <i class="fas fa-comment-dots"></i>
+                                Observações <small style="font-weight: 500; color: #6b7280;">(opcional)</small>
+                            </label>
+                            {{ form.observacoes }}
+                            <small><i class="fas fa-lightbulb"></i> Exemplo: "Alérgica a cola", "Quero alongamento natural", etc.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-calendar-check"></i> Confirmar Agendamento
+                        </button>
+
+                    </div> </form>
             
             {% elif profissional_selecionada and not data_selecionada %}
                 <div class="info-box">
@@ -853,18 +687,17 @@
 
     <script>
         $(document).ready(function() {
+            
             // =================================================
             // 1. SEU JAVASCRIPT ORIGINAL
             // =================================================
             
-            // Máscara de telefone
             $('#id_telefone').inputmask({
                 mask: ['(99) 9999-9999', '(99) 99999-9999'],
                 keepStatic: true,
                 showMaskOnHover: false
             });
             
-            // Validação de formulário
             $('#agendamento-form').on('submit', function(e) {
                 const telefone = $('#id_telefone').val();
                 const telefoneLimpo = telefone.replace(/\D/g, '');
@@ -875,51 +708,51 @@
                     $('#id_telefone').focus();
                     return false;
                 }
+
+                const horaSelecionada = $('#{{ form.hora.id_for_label }}').val();
+                if (!horaSelecionada) {
+                    e.preventDefault();
+                    alert('⚠️ Por favor, selecione um horário para continuar.');
+                    $('html, body').animate({
+                        scrollTop: $('#horarios-grid-container').offset().top - 150
+                    }, 300);
+                    return false;
+                }
                 
-                // Loading feedback
                 const btn = $(this).find('button[type="submit"]');
                 btn.prop('disabled', true);
                 btn.html('<i class="fas fa-spinner fa-spin"></i> Processando...');
             });
             
-            // Auto-scroll suave quando muda de etapa
             if(window.location.search && window.location.search.indexOf('data=') === -1) {
-                // Rola apenas na seleção de profissional, não na de data
                 $('html, body').animate({
                     scrollTop: $('.booking-container').offset().top - 100
                 }, 600);
             }
 
             // =================================================
-            // 2. NOVO SCRIPT DO CALENDÁRIO VISUAL
+            // 2. SCRIPT DO CALENDÁRIO VISUAL
             // =================================================
             const selectData = $('#data');
             const calendarioContainer = $('#calendario-visual');
             const selectContainer = $('#select-data-container');
 
             if (selectData.length && calendarioContainer.length) {
-                // Mapeia nomes de meses para português
                 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-                
-                // Pega todas as opções do select, exceto a primeira ("Selecione...")
                 const opcoes = selectData.find('option').slice(1);
 
                 if (opcoes.length > 0) {
                     opcoes.each(function() {
-                        const valor = $(this).val(); // "2025-11-25"
-                        const texto = $(this).text().trim(); // "25/11/2025 (Terça-feira)"
-                        const isSelected = $(this).is(':selected'); // Verifica se é a data já selecionada
+                        const valor = $(this).val();
+                        const texto = $(this).text().trim();
+                        const isSelected = $(this).is(':selected');
                         
-                        // Extrai as partes da data
                         const diaNumero = texto.substring(0, 2);
-                        const diaSemana = texto.match(/\(([^)]+)\)/)[1].substring(0, 3); // "Ter"
+                        const diaSemana = texto.match(/\(([^)]+)\)/)[1].substring(0, 3);
                         const mesNumero = parseInt(valor.substring(5, 7), 10);
                         const mesAbrev = meses[mesNumero - 1];
-                        
-                        // Adiciona a classe 'active' se for a data selecionada
                         const activeClass = isSelected ? 'active' : '';
                         
-                        // Cria o botão do calendário
                         const diaBotao = `
                             <button type="button" class="calendario-dia ${activeClass}" data-valor="${valor}">
                                 <span class="dia-semana">${diaSemana}.</span>
@@ -927,53 +760,144 @@
                                 <span class="dia-mes">${mesAbrev}</span>
                             </button>
                         `;
-                        
                         calendarioContainer.append(diaBotao);
                     });
 
-                    // Adiciona o evento de clique aos novos botões
                     $('.calendario-dia').on('click', function() {
                         const valorSelecionado = $(this).data('valor');
-                        
-                        // 1. Atualiza o select escondido
                         selectData.val(valorSelecionado);
-                        
-                        // 2. Adiciona feedback visual (e remove dos outros)
                         $(this).addClass('active').siblings().removeClass('active');
-                        
-                        // 3. Mostra um feedback de loading e envia o formulário
                         $(this).html('<i class="fas fa-spinner fa-spin"></i>');
                         
-                        // Pequeno delay para o usuário ver o clique antes de recarregar
                         setTimeout(() => {
                             $('#data-form').submit();
                         }, 200);
                     });
 
-                    // Esconde o select original
                     selectContainer.hide();
                     
-                    // Se uma data já estiver selecionada, rola até ela
                     if ('{{ data_selecionada }}') {
                          $('html, body').animate({
                             scrollTop: $('.booking-container').offset().top - 100
                         }, 600);
                     }
-                    
                 } else {
-                    // Não há datas, exibe uma mensagem
                     calendarioContainer.html('<p class="calendario-vazio">Nenhuma data disponível para esta profissional no momento.</p>');
                     selectContainer.hide();
                 }
             }
             
             // =================================================
-            // 3. SCRIPT DE INFO DO SERVIÇO (do seu template)
+            // 3. SCRIPT DO GRID DE HORÁRIOS (COM CORREÇÃO DE PARSING)
+            // =================================================
+            const selectHora = $('#{{ form.hora.id_for_label }}'); 
+            const gridContainer = $('#horarios-grid-container'); 
+            const selectHoraContainer = $('#select-hora-container'); 
+            const detalhesContainer = $('#form-detalhes-container'); 
+
+            if (selectHora.length && gridContainer.length) {
+                const opcoesHora = selectHora.find('option').slice(1); 
+                
+                if (opcoesHora.length > 0) {
+                    let horariosManhaHTML = [];
+                    let horariosTardeHTML = [];
+
+                    opcoesHora.each(function() {
+                        const valor = $(this).val(); // O ID
+                        const textoLongo = $(this).text().trim(); // Ex: "Paloma - 11/11/2025 às 09:30 - Disponível"
+                        
+                        // --- INÍCIO DA CORREÇÃO ---
+                        // 1. Extrai apenas o horário (HH:MM) da string longa
+                        let textoHorario = '';
+                        const match = textoLongo.match(/(\d{2}:\d{2})/); // Procura por "HH:MM"
+                        
+                        if (match) {
+                            textoHorario = match[1]; // "09:30"
+                        } else {
+                            textoHorario = textoLongo; // Fallback caso o formato mude
+                        }
+                        
+                        // 2. Determina se é manhã ou tarde (usando o horário limpo)
+                        const hora = parseInt(textoHorario.split(':')[0], 10); // parseInt("09") = 9. CORRETO.
+                        // --- FIM DA CORREÇÃO ---
+
+                        // 3. Cria o botão APENAS com o horário limpo
+                        const botaoHTML = `
+                            <button type="button" class="horario-botao" data-valor="${valor}" data-texto="${textoHorario}">
+                                ${textoHorario}
+                            </button>
+                        `;
+                        
+                        if (hora < 12) { horariosManhaHTML.push(botaoHTML); }
+                        else { horariosTardeHTML.push(botaoHTML); }
+                    });
+                    
+                    // Constrói os grupos de Manhã/Tarde
+                    let finalHTML = '';
+                    if (horariosManhaHTML.length > 0) {
+                        finalHTML += `
+                            <div class="horarios-grupo">
+                                <h4><i class="fas fa-sun"></i> Manhã</h4>
+                                <div class="horarios-grid">
+                                    ${horariosManhaHTML.join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    if (horariosTardeHTML.length > 0) {
+                        finalHTML += `
+                            <div class="horarios-grupo">
+                                <h4><i class="fas fa-moon"></i> Tarde / Noite</h4>
+                                <div class="horarios-grid">
+                                    ${horariosTardeHTML.join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    gridContainer.html(finalHTML);
+                    selectHoraContainer.hide();
+
+                    // Lógica de "Divulgação Progressiva"
+                    $('.horario-botao').on('click', function() {
+                        const valorSelecionado = $(this).data('valor');
+                        const textoHorario = $(this).data('texto');
+                        
+                        // 1. Atualiza o select escondido
+                        selectHora.val(valorSelecionado);
+                        
+                        // 2. Atualiza o visual dos botões
+                        $('.horario-botao').removeClass('active');
+                        $(this).addClass('active');
+                        
+                        // 3. Atualiza o resumo final
+                        $('#resumo-horario').html(`<i class="fas fa-clock"></i> <strong>Horário:</strong> ${textoHorario}`);
+                        
+                        // 4. Completa a barra de progresso
+                        $('#progress-bar').addClass('step-4-active');
+                        
+                        // 5. Revela o formulário de detalhes
+                        detalhesContainer.slideDown(400);
+                        
+                        // 6. Foca no primeiro campo do formulário
+                        $('html, body').animate({ 
+                            scrollTop: detalhesContainer.offset().top - 150 
+                        }, 500, function() {
+                            $('#id_nome').focus(); // Foca no campo "Nome"
+                        });
+                    });
+
+                } else {
+                    gridContainer.html('<p class="horarios-vazio">Nenhum horário disponível para esta data.</p>');
+                    selectHoraContainer.hide();
+                }
+            }
+
+            // =================================================
+            // 4. SCRIPT DE INFO DO SERVIÇO
             // =================================================
             const servicoSelect = document.getElementById('{{ form.servico.id_for_label }}');
             const servicoInfo = document.getElementById('servico-info');
-            const servicoNome = document.getElementById('servico-nome');
-            const servicoPreco = document.getElementById('servico-preco');
             
             if (servicoSelect) {
                 servicoSelect.addEventListener('change', function() {
@@ -983,13 +907,12 @@
                         const nome = selectedOption.text.split(' - R$')[0];
                         const preco = selectedOption.getAttribute('data-preco');
                         
-                        servicoNome.textContent = nome;
-                        servicoPreco.textContent = parseFloat(preco).toLocaleString('pt-BR', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        });
+                        servicoInfo.innerHTML = `
+                            <h5><i class="fas fa-info-circle"></i> Detalhes do Serviço</h5>
+                            <p><strong>Serviço:</strong> ${nome}</p>
+                            <p><strong>Valor:</strong> R$ ${parseFloat(preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                        `;
                         
-                        // Adiciona a classe de estilo correta ao card
                         servicoInfo.className = 'info-box-servico'; 
                         servicoInfo.style.display = 'block';
 
@@ -998,7 +921,6 @@
                     }
                 });
                 
-                // Trigger change se já houver valor selecionado
                 if (servicoSelect.value) {
                     servicoSelect.dispatchEvent(new Event('change'));
                 }
