@@ -148,9 +148,22 @@ def agendar_servico(request):
                     .details p {{ margin: 8px 0; font-size: 15px; }}
                     .details strong {{ color: #d63384; }}
                     .button-container {{ text-align: center; margin: 30px 0; }}
-                    .button {{ display: inline-block; background-color: #d63384; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 16px; transition: background-color 0.3s ease; }}
+                    
+                    .button {{ 
+                        display: inline-block; 
+                        background-color: #d63384; 
+                        color: white; 
+                        padding: 12px 25px; 
+                        text-decoration: none; 
+                        border-radius: 25px; 
+                        font-weight: bold; 
+                        font-size: 16px; 
+                        transition: background-color 0.3s ease; 
+                        margin: 5px; /* <-- Adicionado espaçamento */
+                    }}
                     .button:hover {{ background-color: #c02b73; }}
-                    /* # Style Botao Mercado Pago */
+                    
+                    /* Style Botao Mercado Pago */
                     .button-payment {{ background-color: #009ee3; /* Azul do Mercado Pago */ color: white; }}
                     .button-payment:hover {{ background-color: #007eb5; }}
                     .footer {{ text-align: center; font-size: 0.85em; color: #666; padding: 20px; background-color: #f0f0f0; border-top: 1px solid #eee; }}
@@ -178,18 +191,14 @@ def agendar_servico(request):
                             <p><strong>💅 Serviço:</strong> {ag.get_servico_display()}</p>
                         </div>
 
-                        <div class="button-group">
-                            <!-- ... outros botões ... -->
+                        <p>Fique de olho na sua caixa de entrada para a confirmação!</p>
+                        
+                        <div class="button-container">
                             <a href="{request.build_absolute_uri(reverse('criar_pagamento_agendamento', args=[ag.id]))}" 
                                 class="button button-payment" target="_blank">
                                 💳 Pagar Agora
                             </a>
-                        </div>
-                        
-                        <p>Fique de olho na sua caixa de entrada para a confirmação!</p>
-                        
-                        <div class="button-container">
-                            <a href="https://wa.me/5583999999999" class="button">💬 Falar no WhatsApp</a>
+                            <a href="httpsa://wa.me/5583999999999" class="button">💬 Falar no WhatsApp</a>
                         </div>
                         
                         <p style="font-size: 0.9em; text-align: center;">Caso precise alterar ou cancelar, responda este e-mail ou entre em contato pelos nossos canais.</p>
@@ -199,8 +208,8 @@ def agendar_servico(request):
                         <p><strong>RM Studio</strong> - Transformando sua beleza em arte</p>
                         <p>✉️ contato@rmstudio.com | 📞 (83) 99999-9999</p>
                         <div>
-                            <a href="https://www.instagram.com/rmstudio" target="_blank">Instagram</a> | 
-                            <a href="https://www.facebook.com/rmstudio" target="_blank">Facebook</a> | 
+                            <a href="httpsa://www.instagram.com/rmstudio" target="_blank">Instagram</a> | 
+                            <a href="httpsa://www.facebook.com/rmstudio" target="_blank">Facebook</a> | 
                             <a href="{settings.SITE_URL}" target="_blank">Site Oficial</a>
                         </div>
                     </div>

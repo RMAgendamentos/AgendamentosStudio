@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendar Serviço - RM Studio</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    
     <style>
+        /* ===== 1. SEU CSS ORIGINAL (copiado do <style>) ===== */
         :root {
             --primary: #c4407b;
             --primary-light: #f174aa;
@@ -25,13 +28,13 @@
             --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-page);
@@ -42,7 +45,7 @@
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
         }
-        
+
         /* ===== HEADER ===== */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -53,7 +56,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         header::before {
             content: '';
             position: absolute;
@@ -64,7 +67,7 @@
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
-        
+
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -72,7 +75,7 @@
             position: relative;
             z-index: 1;
         }
-        
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 0.75rem;
@@ -83,17 +86,17 @@
             justify-content: center;
             gap: 1rem;
         }
-        
+
         h1 i {
             font-size: 2.5rem;
         }
-        
+
         header p {
             font-size: 1.1rem;
             opacity: 0.95;
             font-weight: 500;
         }
-        
+
         /* ===== MAIN ===== */
         main {
             max-width: 900px;
@@ -101,7 +104,7 @@
             padding: 0 2rem;
             flex: 1;
         }
-        
+
         .booking-container {
             background: white;
             border-radius: var(--border-radius);
@@ -109,7 +112,7 @@
             box-shadow: var(--box-shadow);
             position: relative;
         }
-        
+
         /* ===== PROGRESS BAR ===== */
         .progress-bar {
             display: flex;
@@ -117,7 +120,7 @@
             margin-bottom: 3rem;
             position: relative;
         }
-        
+
         .progress-bar::before {
             content: '';
             position: absolute;
@@ -129,7 +132,7 @@
             transform: translateY(-50%);
             z-index: 1;
         }
-        
+
         .progress-bar::after {
             content: '';
             position: absolute;
@@ -142,7 +145,7 @@
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             width: {% if data_selecionada and profissional_selecionada %}100%{% elif profissional_selecionada %}50%{% else %}0%{% endif %};
         }
-        
+
         .step {
             width: 50px;
             height: 50px;
@@ -158,20 +161,20 @@
             z-index: 3;
             transition: var(--transition);
         }
-        
+
         .step.active {
             border-color: var(--primary);
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(196, 64, 123, 0.4);
         }
-        
+
         .step.completed {
             border-color: var(--primary);
             background: var(--primary);
             color: white;
         }
-        
+
         .step-label {
             position: absolute;
             top: 100%;
@@ -183,13 +186,13 @@
             color: #6b7280;
             font-weight: 600;
         }
-        
+
         .step.active .step-label,
         .step.completed .step-label {
             color: var(--primary);
             font-weight: 700;
         }
-        
+
         /* ===== FORMS ===== */
         .form-group {
             margin-bottom: 1.75rem;
@@ -205,11 +208,11 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         label i {
             color: var(--primary);
         }
-        
+
         input, select, textarea {
             width: 100%;
             padding: 1rem 1.25rem;
@@ -221,19 +224,19 @@
             background: white;
             font-weight: 500;
         }
-        
+
         input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 4px rgba(196, 64, 123, 0.1);
         }
-        
+
         textarea {
             resize: vertical;
             min-height: 100px;
             resize: none;
         }
-        
+
         select {
             cursor: pointer;
             appearance: none;
@@ -243,14 +246,14 @@
             background-size: 20px;
             padding-right: 3rem;
         }
-        
+
         small {
             display: block;
             margin-top: 0.5rem;
             color: #6b7280;
             font-size: 0.85rem;
         }
-        
+
         /* ===== BUTTONS ===== */
         .btn {
             display: inline-flex;
@@ -269,28 +272,28 @@
             transition: var(--transition);
             box-shadow: 0 4px 15px rgba(196, 64, 123, 0.4);
         }
-        
+
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(196, 64, 123, 0.5);
         }
-        
+
         .btn-block {
             display: flex;
             width: 100%;
         }
-        
+
         .btn-outline {
             background: white;
             border: 2px solid var(--primary);
             color: var(--primary);
             box-shadow: none;
         }
-        
+
         .btn-outline:hover {
             background: var(--secondary);
         }
-        
+
         /* ===== SELECTED INFO ===== */
         .selected-info {
             background: linear-gradient(135deg, var(--secondary) 0%, #fef3f9 100%);
@@ -303,16 +306,16 @@
             gap: 1.5rem;
             border-left: 5px solid var(--primary);
         }
-        
+
         .selected-info-content {
             flex: 1;
         }
-        
+
         .selected-info-content strong {
             color: var(--primary);
             font-weight: 700;
         }
-        
+
         .selected-info-content p {
             margin: 0.5rem 0;
             font-size: 1rem;
@@ -321,6 +324,11 @@
             gap: 0.5rem;
         }
         
+        /* Fix para ícone da Data (Estava faltando) */
+        .selected-info-content p i.fa-calendar-check {
+            color: var(--primary);
+        }
+
         /* ===== MESSAGES ===== */
         .error-message, .success-message, .info-message {
             margin-bottom: 2rem;
@@ -331,29 +339,29 @@
             align-items: center;
             gap: 1rem;
         }
-        
+
         .error-message {
             background: #fef2f2;
             border-color: var(--danger);
             color: var(--danger);
         }
-        
+
         .success-message {
             background: #f0fdf4;
             border-color: var(--success);
             color: var(--success);
         }
-        
+
         .info-message {
             background: #f0f9ff;
             border-color: #3b82f6;
             color: #1e40af;
         }
-        
+
         .error-message i, .success-message i, .info-message i {
             font-size: 1.5rem;
         }
-        
+
         .errorlist {
             color: var(--danger);
             margin-top: 0.5rem;
@@ -361,7 +369,7 @@
             padding-left: 0;
             font-size: 0.9rem;
         }
-        
+
         /* ===== INFO BOX ===== */
         .info-box {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -370,7 +378,7 @@
             margin-bottom: 2rem;
             border-left: 5px solid #3b82f6;
         }
-        
+
         .info-box h3 {
             color: #1e40af;
             margin-bottom: 0.75rem;
@@ -379,12 +387,32 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .info-box p {
             color: #1e3a8a;
             margin: 0;
         }
         
+        /* (NOVO) Card de info do serviço (baseado no seu HTML) */
+        #servico-info {
+            background: var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 1.25rem 1.75rem;
+            margin-top: -0.5rem; /* Puxa para mais perto do select */
+            margin-bottom: 1.75rem;
+            border-left: 5px solid var(--primary);
+        }
+        #servico-info h5 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+        #servico-info p {
+            margin: 0.25rem 0;
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+        }
+
         /* ===== FOOTER ===== */
         footer {
             background: var(--dark);
@@ -393,13 +421,13 @@
             padding: 2.5rem 0;
             margin-top: 4rem;
         }
-        
+
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
-        
+
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -422,34 +450,12 @@
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateX(-5px);
         }
-        
+
         .footer-content p {
             margin: 0.5rem 0;
             opacity: 0.9;
         }
-        
-        /* ===== LOADING ===== */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-        }
-        
-        .loading-spinner {
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             h1 {
@@ -480,14 +486,6 @@
                 align-items: flex-start;
             }
             
-            .selected-info-actions {
-                width: 100%;
-            }
-            
-            .btn-outline {
-                width: 100%;
-            }
-            
             input, select, textarea {
                 padding: 0.875rem 1rem;
             }
@@ -496,7 +494,7 @@
                 margin: 1.5rem auto;
             }
         }
-        
+
         @media (max-width: 480px) {
             .booking-container {
                 padding: 1.25rem;
@@ -512,6 +510,106 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* ===== 2. NOVOS ESTILOS (Calendário Visual) ===== */
+
+        /* Esconde o container do <select> original de forma acessível */
+        .select-data-original {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        /* O container dos botões de dia */
+        .calendario-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+            padding: 10px;
+            background: #fdfdff;
+            border: 2px solid #f0f2f5;
+            border-radius: var(--border-radius);
+        }
+
+        /* Estilo de cada botão de dia */
+        .calendario-dia {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 90px;
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            background: white;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            padding: 10px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .calendario-dia:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.15);
+        }
+
+        /* Estilo do dia selecionado (adicionado pelo JS) */
+        .calendario-dia.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+        }
+
+        .calendario-dia .dia-semana {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .calendario-dia .dia-numero {
+            font-size: 1.75rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--primary-dark);
+        }
+
+        .calendario-dia:hover .dia-numero,
+        .calendario-dia.active .dia-numero {
+            color: var(--primary);
+        }
+
+        .calendario-dia.active .dia-numero {
+            color: white;
+        }
+
+        .calendario-dia .dia-mes {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .calendario-dia.active .dia-semana,
+        .calendario-dia.active .dia-mes {
+            opacity: 0.9;
+        }
+
+        /* Mensagem de "nenhuma data" */
+        .calendario-vazio {
+            width: 100%;
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #6b7280;
+            font-style: italic;
+            grid-column: 1 / -1; /* Ocupa a linha inteira do grid */
+        }
+
     </style>
 </head>
 <body>
@@ -527,7 +625,6 @@
     
     <main>
         <div class="booking-container">
-            <!-- PROGRESS BAR -->
             <div class="progress-bar">
                 <div class="step {% if profissional_selecionada %}completed{% else %}active{% endif %}">
                     1
@@ -543,7 +640,6 @@
                 </div>
             </div>
             
-            <!-- MESSAGES -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
@@ -553,7 +649,6 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- STEP 1: PROFISSIONAL -->
             <form method="get" id="profissional-form">
                 <div class="form-group">
                     <label for="profissional">
@@ -571,11 +666,11 @@
                 </div>
             </form>
 
-            <!-- STEP 2: DATA -->
             {% if profissional_selecionada %}
                 <form method="get" id="data-form">
                     <input type="hidden" name="profissional" value="{{ profissional_selecionada }}">
-                    <div class="form-group">
+                    
+                    <div class="form-group select-data-original" id="select-data-container">
                         <label for="data">
                             <i class="fas fa-calendar-alt"></i>
                             Escolha a data disponível
@@ -589,15 +684,23 @@
                             {% endfor %}
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="calendario-visual">
+                            <i class="fas fa-calendar-alt"></i>
+                            Escolha a data disponível
+                        </label>
+                        <div id="calendario-visual" class="calendario-container">
+                            </div>
+                    </div>
                 </form>
             {% endif %}
 
-            <!-- STEP 3: DETALHES -->
             {% if data_selecionada and profissional_selecionada %}
                 <div class="selected-info">
                     <div class="selected-info-content">
                         <p><i class="fas fa-user-nurse"></i> <strong>Profissional:</strong> {{ profissional_selecionada|title }}</p>
-                        <p><strong>Data:</strong> 
+                        <p><i class="fas fa-calendar-check"></i> <strong>Data:</strong> 
                             {% for d in datas_disponiveis %}
                                 {% if d|date:'Y-m-d' == data_selecionada %}
                                     {{ d|date:"d/m/Y (l)" }}
@@ -607,7 +710,6 @@
                     </div>
                 </div>
                 
-                <!-- FORM FINAL -->
                 <form method="post" id="agendamento-form">
                     {% csrf_token %}
                     {{ form.profissional }}
@@ -705,12 +807,11 @@
                         {% endif %}
                     </div>
 
-                    <!-- OPCIONAL: Adicione um card que mostra o valor do serviço selecionado -->
-<div id="servico-info" class="alert alert-info mt-3" style="display: none;">
-    <h5><i class="fas fa-info-circle"></i> Informações do Serviço</h5>
-    <p><strong>Serviço:</strong> <span id="servico-nome"></span></p>
-    <p><strong>Valor:</strong> R$ <span id="servico-preco"></span></p>
-</div>
+                    <div id="servico-info" style="display: none;">
+                        <h5><i class="fas fa-info-circle"></i> Detalhes do Serviço</h5>
+                        <p><strong>Serviço:</strong> <span id="servico-nome"></span></p>
+                        <p><strong>Valor:</strong> R$ <span id="servico-preco"></span></p>
+                    </div>
 
                     <div class="form-group">
                         <label for="{{ form.observacoes.id_for_label }}">
@@ -725,6 +826,7 @@
                         <i class="fas fa-calendar-check"></i> Confirmar Agendamento
                     </button>
                 </form>
+            
             {% elif profissional_selecionada and not data_selecionada %}
                 <div class="info-box">
                     <h3>
@@ -744,13 +846,17 @@
 
         <div class="footer-content">
             <p style="font-weight: 700; font-size: 1.1rem;">RM Studio</p>
-            <p>&copy; 2025 - Todos os direitos reservados</p>
+            <p>&copy; {% now "Y" %} - Todos os direitos reservados</p>
             <p><i class="fas fa-envelope"></i> contato@rmstudio.com | <i class="fas fa-phone"></i> (83) 99999-9999</p>
         </div>
     </footer>
 
     <script>
         $(document).ready(function() {
+            // =================================================
+            // 1. SEU JAVASCRIPT ORIGINAL
+            // =================================================
+            
             // Máscara de telefone
             $('#id_telefone').inputmask({
                 mask: ['(99) 9999-9999', '(99) 99999-9999'],
@@ -776,54 +882,129 @@
                 btn.html('<i class="fas fa-spinner fa-spin"></i> Processando...');
             });
             
-            // Animação suave nos selects
-            $('select').on('change', function() {
-                $(this).css('transform', 'scale(1.02)');
-                setTimeout(() => {
-                    $(this).css('transform', 'scale(1)');
-                }, 200);
-            });
-            
             // Auto-scroll suave quando muda de etapa
-            if(window.location.search) {
+            if(window.location.search && window.location.search.indexOf('data=') === -1) {
+                // Rola apenas na seleção de profissional, não na de data
                 $('html, body').animate({
                     scrollTop: $('.booking-container').offset().top - 100
                 }, 600);
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-    const servicoSelect = document.getElementById('{{ form.servico.id_for_label }}');
-    const servicoInfo = document.getElementById('servico-info');
-    const servicoNome = document.getElementById('servico-nome');
-    const servicoPreco = document.getElementById('servico-preco');
-    
-    if (servicoSelect) {
-        servicoSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            
-            if (this.value) {
-                const nome = selectedOption.text.split(' - R$')[0];
-                const preco = selectedOption.getAttribute('data-preco');
+            // =================================================
+            // 2. NOVO SCRIPT DO CALENDÁRIO VISUAL
+            // =================================================
+            const selectData = $('#data');
+            const calendarioContainer = $('#calendario-visual');
+            const selectContainer = $('#select-data-container');
+
+            if (selectData.length && calendarioContainer.length) {
+                // Mapeia nomes de meses para português
+                const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
                 
-                servicoNome.textContent = nome;
-                servicoPreco.textContent = parseFloat(preco).toLocaleString('pt-BR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
+                // Pega todas as opções do select, exceto a primeira ("Selecione...")
+                const opcoes = selectData.find('option').slice(1);
+
+                if (opcoes.length > 0) {
+                    opcoes.each(function() {
+                        const valor = $(this).val(); // "2025-11-25"
+                        const texto = $(this).text().trim(); // "25/11/2025 (Terça-feira)"
+                        const isSelected = $(this).is(':selected'); // Verifica se é a data já selecionada
+                        
+                        // Extrai as partes da data
+                        const diaNumero = texto.substring(0, 2);
+                        const diaSemana = texto.match(/\(([^)]+)\)/)[1].substring(0, 3); // "Ter"
+                        const mesNumero = parseInt(valor.substring(5, 7), 10);
+                        const mesAbrev = meses[mesNumero - 1];
+                        
+                        // Adiciona a classe 'active' se for a data selecionada
+                        const activeClass = isSelected ? 'active' : '';
+                        
+                        // Cria o botão do calendário
+                        const diaBotao = `
+                            <button type="button" class="calendario-dia ${activeClass}" data-valor="${valor}">
+                                <span class="dia-semana">${diaSemana}.</span>
+                                <span class="dia-numero">${diaNumero}</span>
+                                <span class="dia-mes">${mesAbrev}</span>
+                            </button>
+                        `;
+                        
+                        calendarioContainer.append(diaBotao);
+                    });
+
+                    // Adiciona o evento de clique aos novos botões
+                    $('.calendario-dia').on('click', function() {
+                        const valorSelecionado = $(this).data('valor');
+                        
+                        // 1. Atualiza o select escondido
+                        selectData.val(valorSelecionado);
+                        
+                        // 2. Adiciona feedback visual (e remove dos outros)
+                        $(this).addClass('active').siblings().removeClass('active');
+                        
+                        // 3. Mostra um feedback de loading e envia o formulário
+                        $(this).html('<i class="fas fa-spinner fa-spin"></i>');
+                        
+                        // Pequeno delay para o usuário ver o clique antes de recarregar
+                        setTimeout(() => {
+                            $('#data-form').submit();
+                        }, 200);
+                    });
+
+                    // Esconde o select original
+                    selectContainer.hide();
+                    
+                    // Se uma data já estiver selecionada, rola até ela
+                    if ('{{ data_selecionada }}') {
+                         $('html, body').animate({
+                            scrollTop: $('.booking-container').offset().top - 100
+                        }, 600);
+                    }
+                    
+                } else {
+                    // Não há datas, exibe uma mensagem
+                    calendarioContainer.html('<p class="calendario-vazio">Nenhuma data disponível para esta profissional no momento.</p>');
+                    selectContainer.hide();
+                }
+            }
+            
+            // =================================================
+            // 3. SCRIPT DE INFO DO SERVIÇO (do seu template)
+            // =================================================
+            const servicoSelect = document.getElementById('{{ form.servico.id_for_label }}');
+            const servicoInfo = document.getElementById('servico-info');
+            const servicoNome = document.getElementById('servico-nome');
+            const servicoPreco = document.getElementById('servico-preco');
+            
+            if (servicoSelect) {
+                servicoSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    
+                    if (this.value) {
+                        const nome = selectedOption.text.split(' - R$')[0];
+                        const preco = selectedOption.getAttribute('data-preco');
+                        
+                        servicoNome.textContent = nome;
+                        servicoPreco.textContent = parseFloat(preco).toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                        
+                        // Adiciona a classe de estilo correta ao card
+                        servicoInfo.className = 'info-box-servico'; 
+                        servicoInfo.style.display = 'block';
+
+                    } else {
+                        servicoInfo.style.display = 'none';
+                    }
                 });
                 
-                servicoInfo.style.display = 'block';
-            } else {
-                servicoInfo.style.display = 'none';
+                // Trigger change se já houver valor selecionado
+                if (servicoSelect.value) {
+                    servicoSelect.dispatchEvent(new Event('change'));
+                }
             }
+            // Fim dos scripts
         });
-        
-        // Trigger change se já houver valor selecionado
-        if (servicoSelect.value) {
-            servicoSelect.dispatchEvent(new Event('change'));
-        }
-    }
-});
     </script>
 </body>
 </html>

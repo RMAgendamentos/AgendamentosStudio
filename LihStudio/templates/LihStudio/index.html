@@ -2,507 +2,308 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RM Agendamentos - Sistema Completo de Agendamentos Online</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Agendamentos – Simplifique e Profissionalize seus Agendamentos</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {
+      font-family:"Poppins",sans-serif;
+      color:#222;
+      background:#f8f9fb;
+      line-height:1.6;
+      overflow-x:hidden;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #333;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+    /* ===== HERO ===== */
+    header {
+      background:linear-gradient(135deg,#5c6bc0,#512da8);
+      color:#fff;
+      text-align:center;
+      padding:120px 20px 100px;
+      position:relative;
+    }
+    header::after {
+      content:"";
+      position:absolute;
+      top:0;left:0;width:100%;height:100%;
+      background:url('https://www.transparenttextures.com/patterns/cubes.png');
+      opacity:.1;
+    }
+    header .content {position:relative;z-index:2;max-width:900px;margin:auto;}
+    header h1 {
+      font-size:3em;
+      font-weight:700;
+      margin-bottom:15px;
+      animation:fadeUp .8s ease-out;
+    }
+    header p {
+      font-size:1.25em;
+      opacity:.95;
+      margin-bottom:40px;
+      animation:fadeUp .9s ease-out;
+    }
+    header a.cta {
+      display:inline-block;
+      background:#fff;
+      color:#512da8;
+      padding:18px 50px;
+      border-radius:40px;
+      font-weight:700;
+      font-size:1.1em;
+      text-decoration:none;
+      box-shadow:0 10px 25px rgba(0,0,0,.15);
+      transition:.3s;
+      animation:fadeUp 1s ease-out;
+    }
+    header a.cta:hover {transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.25);}
 
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    /* ===== ABOUT ===== */
+    section.about {
+      max-width:1100px;
+      margin:100px auto 80px;
+      padding:0 20px;
+      text-align:center;
+    }
+    .about h2 {font-size:2.4em;color:#2b2b2b;margin-bottom:25px;}
+    .about p {color:#555;font-size:1.1em;max-width:800px;margin:auto;}
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
+    /* ===== FEATURES ===== */
+    section.features {
+      background:#fff;
+      padding:90px 20px;
+    }
+    .features h2 {
+      text-align:center;
+      font-size:2.2em;
+      color:#2b2b2b;
+      margin-bottom:60px;
+    }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:35px;
+      max-width:1150px;
+      margin:auto;
+    }
+    .card {
+      background:#f8f9fb;
+      border-radius:18px;
+      padding:40px 30px;
+      text-align:center;
+      box-shadow:0 5px 25px rgba(0,0,0,.05);
+      transition:.3s;
+    }
+    .card:hover {transform:translateY(-10px);box-shadow:0 10px 35px rgba(0,0,0,.1);}
+    .icon {
+      width:70px;height:70px;margin:auto;margin-bottom:25px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#5c6bc0,#512da8);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-size:1.8em;
+    }
+    .card h3 {font-size:1.3em;margin-bottom:10px;color:#2b2b2b;}
+    .card p {color:#555;font-size:.95em;}
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    /* ===== DEMO ===== */
+    section.demo {
+      padding:100px 20px;
+      background:#eef0fb;
+      text-align:center;
+    }
+    .demo h2 {font-size:2.3em;color:#2b2b2b;margin-bottom:20px;}
+    .demo p {color:#555;font-size:1.1em;margin-bottom:40px;}
+    .video {
+      position:relative;
+      width:90%;max-width:850px;
+      margin:auto;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 10px 40px rgba(0,0,0,.15);
+      background:linear-gradient(135deg,#5c6bc0,#512da8);
+    }
+    .video .placeholder {
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      height:450px;color:#fff;font-size:1.3em;font-weight:500;
+    }
+    .video .play {
+      width:90px;height:90px;border-radius:50%;
+      background:rgba(255,255,255,.25);
+      display:flex;align-items:center;justify-content:center;
+      font-size:2em;margin-bottom:20px;
+      cursor:pointer;transition:.3s;
+    }
+    .video .play:hover {background:rgba(255,255,255,.45);transform:scale(1.1);}
 
-        .hero h1 {
-            font-size: 3.5em;
-            font-weight: 800;
-            margin-bottom: 20px;
-            animation: fadeInUp 0.8s ease;
-        }
+    /* ===== WHY CHOOSE ===== */
+    section.why {
+      padding:100px 20px;
+      background:linear-gradient(135deg,#512da8,#673ab7);
+      color:#fff;
+      text-align:center;
+    }
+    .why h2 {font-size:2.4em;margin-bottom:50px;}
+    .why .reasons {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+      max-width:1100px;margin:auto;
+    }
+    .reason {
+      background:rgba(255,255,255,.1);
+      padding:40px 30px;
+      border-radius:14px;
+      transition:.3s;
+    }
+    .reason:hover {background:rgba(255,255,255,.2);transform:translateY(-6px);}
+    .reason h3 {font-size:1.2em;margin-bottom:10px;}
+    .reason p {font-size:.95em;opacity:.9;}
 
-        .hero .subtitle {
-            font-size: 1.5em;
-            margin-bottom: 40px;
-            opacity: 0.95;
-            animation: fadeInUp 0.8s ease 0.2s backwards;
-        }
+    /* ===== CTA FINAL ===== */
+    section.final-cta {
+      text-align:center;
+      padding:120px 20px;
+      background:#fff;
+    }
+    .final-cta h2 {font-size:2.3em;color:#2b2b2b;margin-bottom:25px;}
+    .final-cta p {font-size:1.1em;color:#555;margin-bottom:40px;}
+    .final-cta a {
+      display:inline-block;
+      background:linear-gradient(135deg,#5c6bc0,#512da8);
+      color:#fff;padding:18px 55px;border-radius:40px;
+      text-decoration:none;font-weight:700;font-size:1.1em;
+      box-shadow:0 8px 25px rgba(81,45,168,.35);
+      transition:.3s;
+    }
+    .final-cta a:hover {transform:translateY(-4px);box-shadow:0 12px 35px rgba(81,45,168,.55);}
 
-        .cta-primary {
-            display: inline-block;
-            background: white;
-            color: #667eea;
-            padding: 18px 45px;
-            font-size: 1.2em;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease 0.4s backwards;
-        }
+    /* ===== FOOTER ===== */
+    footer {
+      background:#1a1a1a;
+      color:#ccc;
+      text-align:center;
+      padding:45px 20px;
+      font-size:.9em;
+    }
+    footer p {margin:5px 0;}
+    footer a {color:#9c88ff;text-decoration:none;}
+    footer a:hover{text-decoration:underline;}
 
-        .cta-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from {opacity:0;transform:translateY(30px);}
+      to {opacity:1;transform:translateY(0);}
+    }
 
-        /* Features Section */
-        .features {
-            padding: 80px 20px;
-            background: #f8f9fa;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 60px;
-            color: #2d3748;
-        }
-
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            font-size: 2em;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #2d3748;
-        }
-
-        .feature-card p {
-            color: #718096;
-            line-height: 1.8;
-        }
-
-        /* Demo Video Section */
-        .demo-section {
-            padding: 80px 20px;
-            background: white;
-        }
-
-        .demo-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            margin-top: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .video-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
-            font-weight: 600;
-        }
-
-        .play-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .play-icon:hover {
-            background: rgba(255,255,255,0.5);
-            transform: scale(1.1);
-        }
-
-        /* Tech Stack Section */
-        .tech-stack {
-            padding: 80px 20px;
-            background: #2d3748;
-            color: white;
-        }
-
-        .tech-grid {
-            max-width: 1000px;
-            margin: 40px auto 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-        }
-
-        .tech-item {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .tech-item:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-5px);
-        }
-
-        .tech-item h4 {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-        }
-
-        .tech-item p {
-            opacity: 0.8;
-            font-size: 0.95em;
-        }
-
-        /* Benefits Section */
-        .benefits {
-            padding: 80px 20px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .benefits-grid {
-            max-width: 1200px;
-            margin: 40px auto 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .benefit-item {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .benefit-number {
-            font-size: 3em;
-            font-weight: 800;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .benefit-text {
-            font-size: 1.2em;
-            font-weight: 500;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 100px 20px;
-            background: white;
-            text-align: center;
-        }
-
-        .cta-section h2 {
-            font-size: 2.8em;
-            margin-bottom: 30px;
-            color: #2d3748;
-        }
-
-        .cta-section p {
-            font-size: 1.3em;
-            color: #718096;
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-button-large {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 50px;
-            font-size: 1.3em;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .cta-button-large:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
-        }
-
-        /* Footer */
-        footer {
-            background: #1a202c;
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        footer p {
-            opacity: 0.8;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
-            }
-            
-            .hero .subtitle {
-                font-size: 1.2em;
-            }
-            
-            .section-title {
-                font-size: 2em;
-            }
-            
-            .features-grid,
-            .tech-grid,
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    @media(max-width:768px){
+      header h1{font-size:2.3em;}
+      .about h2,.features h2,.demo h2,.why h2,.final-cta h2{font-size:1.9em;}
+    }
+  </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>RM Agendamentos</h1>
-            <p class="subtitle">Sistema Completo de Agendamentos Online com Pagamentos Integrados</p>
-            <a href="{% url 'home' %}" class="cta-primary">Explorar o Sistema →</a>
-        </div>
-    </section>
+  <!-- HERO -->
+  <header>
+    <div class="content">
+      <h1>RM Agendamentos</h1>
+      <p>Simplifique sua rotina e gerencie agendamentos, pagamentos e clientes em um só lugar.</p>
+      <a href="{% url 'home' %}" class="cta">Ver Demonstração →</a>
+    </div>
+  </header>
 
-    <!-- Features Section -->
-    <section class="features">
-        <h2 class="section-title">Funcionalidades Principais</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                <h3>Agendamento Inteligente</h3>
-                <p>Sistema completo de agendamento com calendário interativo, visualização de horários disponíveis e confirmação instantânea.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">💳</div>
-                <h3>Pagamento Integrado</h3>
-                <p>Integração completa com Mercado Pago para processar pagamentos de forma segura e automática.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">👤</div>
-                <h3>Gestão de Usuários</h3>
-                <p>Sistema completo de autenticação, perfis de usuário e histórico de agendamentos para clientes e administradores.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Painel Administrativo</h3>
-                <p>Dashboard completo para gerenciar agendamentos, visualizar estatísticas e controlar toda a operação.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📧</div>
-                <h3>Notificações Automáticas</h3>
-                <p>Sistema de emails automáticos para confirmações, lembretes e atualizações de status dos agendamentos.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>100% Responsivo</h3>
-                <p>Interface adaptável para todos os dispositivos - desktop, tablet e smartphone com experiência otimizada.</p>
-            </div>
-        </div>
-    </section>
+  <!-- ABOUT -->
+  <section class="about">
+    <h2>O Sistema Completo de Agendamentos Online</h2>
+    <p>O <strong>RM Agendamentos</strong> foi desenvolvido para profissionais e empresas que buscam praticidade, automação e controle total sobre seus horários, clientes e pagamentos.  
+    Com interface moderna e recursos inteligentes, você tem tudo o que precisa para oferecer uma experiência profissional ao seu público.</p>
+  </section>
 
-    <!-- Demo Video Section -->
-    <section class="demo-section">
-        <div class="demo-container">
-            <h2 class="section-title">Veja o Sistema em Ação</h2>
-            <p style="font-size: 1.2em; color: #718096; margin-bottom: 20px;">
-                Assista à demonstração completa do sistema e descubra como ele pode transformar seu negócio
-            </p>
-            
-            <div class="video-wrapper">
-                <div class="video-placeholder">
-                    <div class="play-icon">▶</div>
-                    <span>Vídeo de Demonstração</span>
-                    <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">Insira seu vídeo do YouTube ou Vimeo aqui</p>
-                </div>
-                <!-- Para adicionar vídeo real, use:
-                <iframe width="100%" height="100%" 
-                        src="https://www.youtube.com/embed/SEU_VIDEO_ID" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                </iframe>
-                -->
-            </div>
-        </div>
-    </section>
+  <!-- FEATURES -->
+  <section class="features">
+    <h2>Funcionalidades Principais</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">📅</div>
+        <h3>Agendamento Automático</h3>
+        <p>Clientes escolhem o serviço, profissional e horário disponíveis com confirmação instantânea.</p>
+      </div>
+      <div class="card">
+        <div class="icon">💳</div>
+        <h3>Pagamentos Integrados</h3>
+        <p>Integração direta com Mercado Pago: pagamentos seguros e automáticos.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Painel Administrativo</h3>
+        <p>Visualize estatísticas, controle agendamentos e acompanhe seus ganhos em tempo real.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔔</div>
+        <h3>Notificações Inteligentes</h3>
+        <p>E-mails e lembretes automáticos para clientes e equipe, evitando faltas e esquecimentos.</p>
+      </div>
+      <div class="card">
+        <div class="icon">👥</div>
+        <h3>Gestão de Usuários</h3>
+        <p>Controle perfis, permissões e históricos de agendamentos de forma prática e segura.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📱</div>
+        <h3>Design Responsivo</h3>
+        <p>Totalmente otimizado para computadores, tablets e smartphones.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Tech Stack Section -->
-    <section class="tech-stack">
-        <h2 class="section-title">Tecnologias Utilizadas</h2>
-        <div class="tech-grid">
-            <div class="tech-item">
-                <h4>🐍 Django</h4>
-                <p>Framework web robusto e escalável em Python</p>
-            </div>
-            
-            <div class="tech-item">
-                <h4>🗄️ PostgreSQL</h4>
-                <p>Banco de dados relacional confiável</p>
-            </div>
-            
-            <div class="tech-item">
-                <h4>💰 Mercado Pago</h4>
-                <p>API de pagamentos integrada</p>
-            </div>
-            
-            <div class="tech-item">
-                <h4>🎨 Bootstrap</h4>
-                <p>Interface moderna e responsiva</p>
-            </div>
-            
-            <div class="tech-item">
-                <h4>📧 Email Service</h4>
-                <p>Sistema de notificações automáticas</p>
-            </div>
-            
-            <div class="tech-item">
-                <h4>🔐 Segurança</h4>
-                <p>Autenticação e proteção de dados</p>
-            </div>
-        </div>
-    </section>
+  <!-- DEMO -->
+  <section class="demo">
+    <h2>Veja o Sistema em Ação</h2>
+    <p>Assista à demonstração e descubra como o RM Agendamentos pode transformar sua rotina profissional.</p>
+    <div class="video">
+      <div class="placeholder">
+        <div class="play">▶</div>
+        <span>Insira aqui o link do vídeo de demonstração</span>
+      </div>
+      <!-- Exemplo de vídeo real:
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/SEU_VIDEO_ID" 
+      frameborder="0" allowfullscreen></iframe> -->
+    </div>
+  </section>
 
-    <!-- Benefits Section -->
-    <section class="benefits">
-        <h2 class="section-title">Por Que Escolher Este Sistema?</h2>
-        <div class="benefits-grid">
-            <div class="benefit-item">
-                <div class="benefit-number">100%</div>
-                <div class="benefit-text">Automatizado</div>
-            </div>
-            
-            <div class="benefit-item">
-                <div class="benefit-number">24/7</div>
-                <div class="benefit-text">Disponibilidade</div>
-            </div>
-            
-            <div class="benefit-item">
-                <div class="benefit-number">∞</div>
-                <div class="benefit-text">Escalável</div>
-            </div>
-            
-            <div class="benefit-item">
-                <div class="benefit-number">🔒</div>
-                <div class="benefit-text">Seguro</div>
-            </div>
-        </div>
-    </section>
+  <!-- WHY CHOOSE -->
+  <section class="why">
+    <h2>Por Que Escolher o RM Agendamentos?</h2>
+    <div class="reasons">
+      <div class="reason">
+        <h3>🚀 100% Online</h3>
+        <p>Acesse de qualquer lugar, sem instalações. Tudo na nuvem, seguro e rápido.</p>
+      </div>
+      <div class="reason">
+        <h3>🔒 Seguro e Confiável</h3>
+        <p>Dados protegidos com autenticação e backups automáticos.</p>
+      </div>
+      <div class="reason">
+        <h3>⚙️ Totalmente Personalizável</h3>
+        <p>Adaptamos o sistema às necessidades do seu negócio.</p>
+      </div>
+      <div class="reason">
+        <h3>📈 Resultados Reais</h3>
+        <p>Mais controle, menos erros e mais clientes satisfeitos.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Final CTA Section -->
-    <section class="cta-section">
-        <h2>Pronto para Conhecer o Sistema?</h2>
-        <p>Explore todas as funcionalidades e veja como o RM Agendamentos pode revolucionar a forma como você gerencia seus agendamentos.</p>
-        <a href="{% url 'home' %}" class="cta-button-large">Acessar o Sistema Completo →</a>
-    </section>
+  <!-- CTA FINAL -->
+  <section class="final-cta">
+    <h2>Pronto para Modernizar seu Negócio?</h2>
+    <p>Experimente o RM Agendamentos e veja como é fácil transformar a forma de gerenciar seus atendimentos.</p>
+    <a href="{% url 'home' %}">Acessar Demonstração →</a>
+  </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 RM Agendamentos. Desenvolvido com Django + Mercado Pago.</p>
-        <p style="margin-top: 10px; font-size: 0.9em;">Um projeto de demonstração profissional</p>
-    </footer>
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 RM Agendamentos. Todos os direitos reservados.</p>
+    <p>Desenvolvido por <a href="https://rmdev.vercel.app">Rafael Mendes</a></p>
+  </footer>
 </body>
 </html>
