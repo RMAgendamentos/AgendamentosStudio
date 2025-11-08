@@ -23,6 +23,10 @@ from django.db import models
 from django.utils.dateparse import parse_date
 import json
 
+def index(request):
+    """Renderiza a nova landing page (index.html)"""
+    return render(request, 'LihStudio/index.html')
+
 # --- NOVO DECORATOR ---
 def only_staff(view_func):
     """

@@ -5,7 +5,7 @@ from .views import only_admin
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.index, name='index'),
     path('home/', views.home, name='home'),
     path('agendar/', views.agendar_servico, name='agendar_servico'),
     path('sucesso/', views.sucesso_view, name='sucesso'),
