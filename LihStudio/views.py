@@ -23,18 +23,6 @@ from django.db import models
 from django.utils.dateparse import parse_date
 import json
 
-import locale
-
-# Configura o locale para português do Brasil de forma robusta
-try:
-    locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_ALL, 'pt_BR')
-    except locale.Error:
-        # Fallback para Windows
-        locale.setlocale(locale.LC_ALL, 'Portuguese_Brazil')
-
 # --- NOVO DECORATOR ---
 def only_staff(view_func):
     """
@@ -1829,7 +1817,8 @@ def relatorio_faturamento(request):
     ).order_by('-faturamento_bruto')
     
     # Obter nome do mês
-    mes_nome = datetime(ano_atual, mes_atual, 1).strftime('%B').title()
+    meses = {1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
+    mes_nome = meses.get(mes_atual, "")
     
     context = {
         'faturamento_total_bruto': faturamento_total_bruto,
@@ -1899,8 +1888,8 @@ def exportar_faturamento_pdf(request):
         ) 
     ).order_by('-faturamento_bruto')
     
-    mes_nome = datetime(ano_atual, mes_atual, 1).strftime('%B').title()
-
+    meses = {1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
+    mes_nome = meses.get(mes_atual, "")
     # 3. [NOVO] BUSCAMOS OS AGENDAMENTOS DETALHADOS (necessário para o PDF)
     agendamentos_detalhados = faturamento_mes_query.select_related(
         'hora', 'profissional', 'servico'
