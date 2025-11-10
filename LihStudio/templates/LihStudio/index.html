@@ -7,7 +7,6 @@
   <title>RM Agendamentos – Sistema Completo de Gestão Profissional</title>
 
   <link rel="icon" type="image/png" href="/static/images/favicon-32x32.png">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
@@ -337,8 +336,6 @@
       border-radius: 10px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       border: 1px solid rgba(212,175,55,0.3);
-      /* NOVO: Cursor para indicar que é clicável */
-      cursor: zoom-in;
     }
     
     .carousel-placeholder {
@@ -437,6 +434,136 @@
       font-weight: 600;
       font-size: 0.95em;
       z-index: 10;
+    }
+
+    /* ===== NOVOS ESTILOS PARA AS MINIATURAS ===== */
+    .carousel-thumbnails {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+
+    .thumbnail {
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+
+    .thumbnail:hover {
+      opacity: 1;
+      transform: scale(1.05);
+      border-color: rgba(212,175,55,0.5);
+    }
+
+    .thumbnail.active {
+      opacity: 1;
+      border-color: #d4af37;
+      box-shadow: 0 0 15px rgba(212,175,55,0.4);
+    }
+
+    /* ===== LIGHTBOX MELHORADO ===== */
+    .lightbox {
+      position: fixed;
+      z-index: 9998;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 85%;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 3em;
+      font-weight: 300;
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.3s;
+      background: rgba(0,0,0,0.5);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-close:hover {
+      transform: scale(1.1);
+      background: rgba(212,175,55,0.8);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(212,175,55,0.8);
+      border: none;
+      color: #0a0a0a;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1.8em;
+      font-weight: bold;
+      z-index: 9999;
+    }
+
+    .lightbox-nav:hover {
+      background: #d4af37;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .lightbox-prev {
+      left: 30px;
+    }
+
+    .lightbox-next {
+      right: 30px;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 1.2em;
+      background: rgba(0,0,0,0.7);
+      padding: 8px 16px;
+      border-radius: 20px;
     }
 
     section.about {
@@ -739,52 +866,6 @@
       color: #f4d03f;
     }
 
-    /* ===== (NOVO) ESTILOS DO LIGHTBOX (MODAL) ===== */
-    .lightbox {
-      position: fixed;
-      z-index: 9998; /* Abaixo do menu mobile, mas acima de tudo */
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      /* Começa escondido */
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .lightbox.active {
-      /* Mostra o lightbox */
-      display: flex;
-    }
-
-    .lightbox-content {
-      max-width: 95%;
-      max-height: 90%;
-      object-fit: contain;
-      border-radius: 10px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      color: #fff;
-      font-size: 3em;
-      font-weight: 300;
-      cursor: pointer;
-      z-index: 9999;
-      transition: transform 0.3s;
-    }
-
-    .lightbox-close:hover {
-      transform: scale(1.1);
-    }
-
     /* ===== ANIMATIONS ===== */
     @keyframes fadeUp {
       from {
@@ -808,12 +889,10 @@
       }
     }
 
-    /* (NOVO) Animação para o lightbox */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
 
     /* ===== RESPONSIVIDADE ===== */
     @media(max-width: 768px) {
@@ -827,7 +906,6 @@
         font-size: 2em;
       }
       .carousel {
-        /* A altura continua 450px, mas agora a imagem é clicável */
         height: 450px;
       }
       .carousel-arrow {
@@ -854,7 +932,6 @@
         padding: 100px 40px 40px;
         transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         box-shadow: -5px 0 30px rgba(0,0,0,0.5);
-        /* Z-index alto para ficar sobre o lightbox */
         z-index: 9999; 
       }
 
@@ -884,11 +961,37 @@
         display: block;
       }
 
-      /* (NOVO) Ajuste do Lightbox no Mobile */
+      /* Ajuste do Lightbox no Mobile */
       .lightbox-close {
         top: 15px;
         right: 20px;
         font-size: 2.5em;
+        width: 40px;
+        height: 40px;
+      }
+
+      .lightbox-nav {
+        width: 45px;
+        height: 45px;
+        font-size: 1.4em;
+      }
+      
+      .lightbox-prev {
+        left: 15px;
+      }
+      
+      .lightbox-next {
+        right: 15px;
+      }
+      
+      .lightbox-content {
+        max-width: 95%;
+        max-height: 80%;
+      }
+
+      .thumbnail {
+        width: 60px;
+        height: 45px;
       }
     }
 
@@ -964,6 +1067,11 @@
       <div class="carousel-arrow next" onclick="changeSlide(1)">›</div>
       
       <div class="carousel-controls" id="carouselDots"></div>
+    </div>
+
+    <!-- NOVO: ÁREA DE MINIATURAS -->
+    <div class="carousel-thumbnails" id="thumbnails">
+      <!-- As miniaturas serão geradas pelo JavaScript -->
     </div>
   </section>
 
@@ -1078,12 +1186,14 @@
     <i class="fab fa-whatsapp"></i>
   </a>
 
-
+  <!-- LIGHTBOX MELHORADO -->
   <div class="lightbox" id="lightbox">
     <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
     <img src="" alt="Imagem Ampliada" class="lightbox-content" id="lightboxImg">
+    <div class="lightbox-counter" id="lightboxCounter">1 / 6</div>
   </div>
-
 
   <script>
     // --- Script Original do Carousel ---
@@ -1115,6 +1225,9 @@
       slides[currentSlide].classList.add('active');
       document.querySelectorAll('.carousel-dot')[currentSlide].classList.add('active');
       document.getElementById('carouselLabel').textContent = labels[currentSlide];
+      
+      // Atualiza miniaturas ativas
+      updateThumbnails();
     }
 
     function goToSlide(index) {
@@ -1126,11 +1239,13 @@
       slides[currentSlide].classList.add('active');
       document.querySelectorAll('.carousel-dot')[currentSlide].classList.add('active');
       document.getElementById('carouselLabel').textContent = labels[currentSlide];
+      
+      // Atualiza miniaturas ativas
+      updateThumbnails();
     }
 
     setInterval(() => changeSlide(1), 6000);
 
-    
     // --- Script do Menu Hamburger ---
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
@@ -1139,8 +1254,17 @@
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('active');
       navLinks.classList.toggle('active');
-      // Trava o scroll (body.nav-open)
       document.body.classList.toggle('nav-open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('active') && 
+          !navToggle.contains(e.target) && 
+          !navLinks.contains(e.target)) {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.classList.remove('nav-open');
+      }
     });
 
     allNavLinks.forEach(link => {
@@ -1153,43 +1277,104 @@
       });
     });
 
-
-    // --- (NOVO) SCRIPT DO LIGHTBOX ---
+    // --- NOVO: SISTEMA DE MINIATURAS E LIGHTBOX ---
+    const thumbnailsContainer = document.getElementById('thumbnails');
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxClose = document.getElementById('lightboxClose');
-    
-    // Seleciona TODAS as imagens dentro dos itens do carrossel
-    const carouselImages = document.querySelectorAll('.carousel-item img');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
 
-    // Adiciona um "escutador" de clique em cada imagem
-    carouselImages.forEach(img => {
-      img.addEventListener('click', () => {
-        // 1. Pega o 'src' (link) da imagem que foi clicada
-        lightboxImg.src = img.src;
-        // 2. Adiciona a classe 'active' para mostrar o lightbox
-        lightbox.classList.add('active');
-        // 3. Trava o scroll da página (reutilizando a classe do menu)
-        document.body.classList.add('nav-open');
+    let currentLightboxIndex = 0;
+
+    // Cria as miniaturas
+    function createThumbnails() {
+      slides.forEach((slide, index) => {
+        const img = slide.querySelector('img');
+        if (img && img.src) {
+          const thumbnail = document.createElement('img');
+          thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+          thumbnail.src = img.src;
+          thumbnail.alt = img.alt;
+          thumbnail.onclick = () => openLightbox(index);
+          thumbnailsContainer.appendChild(thumbnail);
+        }
       });
-    });
+    }
 
-    // Função para fechar o lightbox
+    // Atualiza as miniaturas ativas
+    function updateThumbnails() {
+      document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    // Abre o lightbox
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      const activeSlide = slides[index];
+      const img = activeSlide.querySelector('img');
+      
+      if (img && img.src) {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+        document.body.classList.add('nav-open');
+        updateLightboxCounter();
+      }
+    }
+
+    // Navega no lightbox
+    function navigateLightbox(direction) {
+      currentLightboxIndex = (currentLightboxIndex + direction + slides.length) % slides.length;
+      const activeSlide = slides[currentLightboxIndex];
+      const img = activeSlide.querySelector('img');
+      
+      if (img && img.src) {
+        lightboxImg.src = img.src;
+        updateLightboxCounter();
+      }
+    }
+
+    // Atualiza o contador do lightbox
+    function updateLightboxCounter() {
+      lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${slides.length}`;
+    }
+
+    // Fecha o lightbox
     function closeLightbox() {
       lightbox.classList.remove('active');
       document.body.classList.remove('nav-open');
     }
 
-    // 1. Fecha ao clicar no 'X'
+    // Event listeners
     lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox(-1);
+    });
+    lightboxNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox(1);
+    });
 
-    // 2. Fecha ao clicar "em qualquer lugar" (no fundo escuro)
     lightbox.addEventListener('click', (e) => {
-      // Só fecha se o clique foi EXATAMENTE no fundo (e não na imagem)
       if (e.target === lightbox) {
         closeLightbox();
       }
     });
+
+    // Navegação por teclado
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('active')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+      }
+    });
+
+    // Inicializa as miniaturas
+    createThumbnails();
 
   </script>
 </body>
