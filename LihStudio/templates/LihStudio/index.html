@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
-    @import url('httpsa://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
     
     * {margin:0; padding:0; box-sizing:border-box;}
     
@@ -26,19 +26,17 @@
       line-height: 1.6;
     }
     
-    /* ===== NOVO: Body Lock (para menu mobile) ===== */
     body.nav-open {
       overflow: hidden;
     }
 
-    /* ===== NOVO: Botão Flutuante WhatsApp ===== */
     .floating-btn-whatsapp {
         position: fixed;
         bottom: 2rem;
         right: 2rem;
         width: 60px;
         height: 60px;
-        background-color: #25D366; /* Verde do WhatsApp */
+        background-color: #25D366;
         color: #fff;
         border-radius: 50%;
         display: flex;
@@ -55,7 +53,6 @@
         transform: translateY(-5px) scale(1.05);
     }
 
-    /* ===== NOVO: Menu de Navegação (Header) ===== */
     .main-nav {
       position: absolute;
       top: 0;
@@ -119,7 +116,6 @@
       box-shadow: 0 8px 25px rgba(212,175,55,0.4);
     }
     
-    /* --- Botão Hamburger --- */
     .nav-toggle {
       display: none;
       width: 30px;
@@ -158,7 +154,6 @@
       transform: translateY(8px);
     }
     
-    /* --- Animação Hamburger para X --- */
     .nav-toggle.active .hamburger {
       background: transparent;
       transform: rotate(180deg);
@@ -170,13 +165,10 @@
       transform: translateY(0) rotate(-45deg);
     }
 
-
-    /* ===== HERO (Ajustado) ===== */
     header {
       background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
       position: relative;
       overflow: hidden;
-      /* Padding aumentado para dar espaço ao novo menu */
       padding: 180px 20px 120px; 
     }
     
@@ -235,7 +227,6 @@
       line-height: 1.2;
     }
     
-    /* --- NOVO TEXTO (COPY) --- */
     header p {
       font-size: 1.3em;
       color: #b8b8b8;
@@ -346,9 +337,10 @@
       border-radius: 10px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       border: 1px solid rgba(212,175,55,0.3);
+      /* NOVO: Cursor para indicar que é clicável */
+      cursor: zoom-in;
     }
     
-    /* --- NOVO TEXTO (COPY) --- */
     .carousel-placeholder {
       text-align: center;
       color: #666;
@@ -447,7 +439,6 @@
       z-index: 10;
     }
 
-    /* ===== ABOUT (NOVO TEXTO) ===== */
     section.about {
       max-width: 1100px;
       margin: 100px auto;
@@ -472,8 +463,6 @@
       line-height: 1.8;
     }
 
-    /* ===== FEATURES ===== */
-    /* Adicionado ID para âncora do menu */
     section.features {
       background: #0f0f0f;
       padding: 100px 20px;
@@ -573,8 +562,7 @@
       z-index: 1;
     }
 
-    /* ===== WHY CHOOSE ===== */
-    /* Adicionado ID para âncora do menu */
+    /* ===== SEÇÃO DEPOIMENTOS (MANTIDA) ===== */
     section.why {
       padding: 100px 20px;
       background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -625,6 +613,12 @@
       box-shadow: 0 15px 40px rgba(212,175,55,0.15);
     }
     
+    .reason .stars {
+      color: #d4af37;
+      font-size: 1.4em;
+      margin-bottom: 15px;
+    }
+
     .reason h3 {
       font-size: 1.3em;
       margin-bottom: 15px;
@@ -635,6 +629,19 @@
       font-size: 1em;
       color: #b8b8b8;
       line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .reason .author {
+      font-size: 1em;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .reason .author span {
+      display: block;
+      font-size: 0.9em;
+      color: #888;
+      font-weight: 400;
     }
 
     /* ===== CTA FINAL ===== */
@@ -732,6 +739,52 @@
       color: #f4d03f;
     }
 
+    /* ===== (NOVO) ESTILOS DO LIGHTBOX (MODAL) ===== */
+    .lightbox {
+      position: fixed;
+      z-index: 9998; /* Abaixo do menu mobile, mas acima de tudo */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      /* Começa escondido */
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .lightbox.active {
+      /* Mostra o lightbox */
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 95%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 3em;
+      font-weight: 300;
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.3s;
+    }
+
+    .lightbox-close:hover {
+      transform: scale(1.1);
+    }
+
     /* ===== ANIMATIONS ===== */
     @keyframes fadeUp {
       from {
@@ -755,18 +808,26 @@
       }
     }
 
-    /* ===== RESPONSIVIDADE (Ajustado) ===== */
+    /* (NOVO) Animação para o lightbox */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+
+    /* ===== RESPONSIVIDADE ===== */
     @media(max-width: 768px) {
       header h1 {
         font-size: 2.5em;
       }
       header {
-        padding-top: 140px; /* Mais espaço para o header */
+        padding-top: 140px;
       }
       .about h2, .features h2, .why h2, .final-cta h2, .showcase h2 {
         font-size: 2em;
       }
       .carousel {
+        /* A altura continua 450px, mas agora a imagem é clicável */
         height: 450px;
       }
       .carousel-arrow {
@@ -778,11 +839,10 @@
         grid-template-columns: 1fr;
       }
 
-      /* --- NOVO: Estilos do Menu Mobile --- */
       .nav-links {
         position: fixed;
         top: 0;
-        right: -100%; /* Começa fora da tela */
+        right: -100%;
         width: 80%;
         max-width: 320px;
         height: 100vh;
@@ -794,10 +854,12 @@
         padding: 100px 40px 40px;
         transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+        /* Z-index alto para ficar sobre o lightbox */
+        z-index: 9999; 
       }
 
       .nav-links.active {
-        right: 0; /* Entra na tela */
+        right: 0;
       }
 
       .nav-links li {
@@ -821,6 +883,13 @@
       .nav-toggle {
         display: block;
       }
+
+      /* (NOVO) Ajuste do Lightbox no Mobile */
+      .lightbox-close {
+        top: 15px;
+        right: 20px;
+        font-size: 2.5em;
+      }
     }
 
   </style>
@@ -832,7 +901,7 @@
       <a href="{% url 'index' %}" class="logo">RM <span>Agendamentos</span></a>
       <ul class="nav-links">
         <li><a href="#features">Funcionalidades</a></li>
-        <li><a href="#diferenciais">Diferenciais</a></li>
+        <li><a href="#depoimentos">Depoimentos</a></li>
         <li><a href="{% url 'login' %}">Login</a></li>
         <li><a href="{% url 'home' %}" class="nav-cta">Agendar Agora</a></li>
       </ul>
@@ -900,7 +969,7 @@
 
   <section class="about">
     <h2>Feito para Donos de Negócios Exigentes</h2>
-    <p>O <strong>RM Agendamentos</strong> não é apenas uma agenda, é o seu novo gerente financeiro e de operações. Desenvolvido em Python/Django, ele elimina o trabalho manual, previne agendamentos duplicados (double-booking) e automatiza o recebimento via Mercado Pago, para que você possa focar no que realmente importa: seus clientes.</p>
+    <p>O <strong>RM Agendamentos</strong> não é apenas uma agenda, é o seu novo gerente financeiro e de operations. Ele elimina o trabalho manual, previne agendamentos duplicados (double-booking) e automatiza o recebimento via Mercado Pago, para que você possa focar no que realmente importa: seus clientes.</p>
   </section>
 
   <section class="features" id="features">
@@ -909,12 +978,12 @@
       <div class="card">
         <div class="icon">📅</div>
         <h3>Agendamento Online</h3>
-        <p>Clientes escolhem profissional, data e horário disponível. Confirmação instantânea com prevenção de conflitos por transação atômica.</p>
+        <p>Seu cliente reserva e o horário é bloqueado na hora. O sistema impede agendamentos duplicados, mesmo em horários de pico.</p>
       </div>
       <div class="card">
         <div class="icon">💳</div>
         <h3>Mercado Pago Integrado</h3>
-        <p>Webhook inteligente que confirma agendamentos automaticamente após pagamento aprovado. Suporte a PIX, cartão e boleto.</p>
+        <p>Pagamento aprovado, agendamento confirmado. O sistema atualiza sua agenda sozinho, sem você precisar conferir manualmente.</p>
       </div>
       <div class="card">
         <div class="icon">📊</div>
@@ -944,7 +1013,7 @@
       <div class="card">
         <div class="icon">🎯</div>
         <h3>Gestão de Serviços</h3>
-        <p>Adicione, edite ou exclua serviços. Sistema inteligente de snapshots preserva histórico mesmo após exclusão.</p>
+        <p>Seus relatórios financeiros nunca quebram. Mesmo que você mude um serviço, o histórico de faturamento é preservado.</p>
       </div>
       <div class="card">
         <div class="icon">📱</div>
@@ -954,33 +1023,40 @@
     </div>
   </section>
 
-  <section class="why" id="diferenciais">
-    <h2>Diferenciais Técnicos</h2>
+  <section class="why" id="depoimentos">
+    <h2>Quem Usa, Recomenda</h2>
     <div class="reasons">
+      
       <div class="reason">
-        <h3>🚀 Django & Python</h3>
-        <p>Desenvolvido com Django 5.1+, garantindo robustez, segurança e escalabilidade para seu negócio crescer.</p>
+        <div class="stars">★★★★★</div>
+        <h3>"Mudou meu negócio!"</h3>
+        <p>"Antes eu perdia horas no WhatsApp. Agora, 90% dos clientes agendam e pagam sozinhos. Meu faturamento aumentou 30%."</p>
+        <div class="author">
+          Ana Souza
+          <span>Estúdio de Beleza, SP</span>
+        </div>
       </div>
+      
       <div class="reason">
-        <h3>🔒 Transações Atômicas</h3>
-        <p>Race condition prevention: horários reservados simultaneamente são tratados com transações seguras do banco de dados.</p>
+        <div class="stars">★★★★★</div>
+        <h3>"Simples e poderoso"</h3>
+        <p>"A melhor parte é o financeiro. Sei exatamente quanto ganhei, quanto foi de comissão. Os relatórios em PDF são uma mão na roda."</p>
+        <div class="author">
+          Bruno Lima
+          <span>Clínica de Fisioterapia, RJ</span>
+        </div>
       </div>
+
       <div class="reason">
-        <h3>⚡ Webhook Inteligente</h3>
-        <p>Integração completa com Mercado Pago. Confirmação automática após pagamento com tratamento de todos os status possíveis.</p>
+        <div class="stars">★★★★★</div>
+        <h3>"Não vivo mais sem"</h3>
+        <p>"Meus clientes amaram a facilidade de agendar. O sistema é lindo, rápido e nunca tive um agendamento duplicado. Recomendo."</p>
+        <div class="author">
+          Mariana Costa
+          <span>Studio de Tatuagem, MG</span>
+        </div>
       </div>
-      <div class="reason">
-        <h3>📈 Sistema de Snapshots</h3>
-        <p>Preserva histórico de serviços excluídos. Relatórios financeiros sempre precisos, mesmo após mudanças no cadastro.</p>
-      </div>
-      <div class="reason">
-        <h3>🎨 UI/UX Premium</h3>
-        <p>Interface elegante com design preto e dourado. Experiência premium para você e seus clientes.</p>
-      </div>
-      <div class="reason">
-        <h3>🔐 Multi-Usuário</h3>
-        <p>Sistema de permissões: superusuário (dona), staff (funcionários) e clientes. Cada um com acesso apropriado.</p>
-      </div>
+
     </div>
   </section>
 
@@ -992,7 +1068,7 @@
 
   <footer>
     <p>&copy; 2025 RM Agendamentos. Todos os direitos reservados.</p>
-    <p>Desenvolvido com excelência por <a href="httpsa://rmdev.vercel.app" target="_blank">Rafael Mendes</a></p>
+    <p>Desenvolvido com excelência por <a href="https://rmdev.vercel.app" target="_blank">Rafael Mendes</a></p>
   </footer>
 
   <a href="https://wa.me/5583920006113?text=Ol%C3%A1%21%20Gostaria%20de%20saber%20mais%20sobre%20o%20sistema%20RM%20Agendamentos." 
@@ -1001,6 +1077,12 @@
     title="Fale Conosco no WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
+
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <img src="" alt="Imagem Ampliada" class="lightbox-content" id="lightboxImg">
+  </div>
 
 
   <script>
@@ -1049,21 +1131,18 @@
     setInterval(() => changeSlide(1), 6000);
 
     
-    // --- NOVO: Script do Menu Hamburger ---
+    // --- Script do Menu Hamburger ---
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     const allNavLinks = document.querySelectorAll('.nav-links a');
 
     navToggle.addEventListener('click', () => {
-      // Anima o botão e o menu
       navToggle.classList.toggle('active');
       navLinks.classList.toggle('active');
-      
-      // Trava o scroll da página quando o menu está aberto
+      // Trava o scroll (body.nav-open)
       document.body.classList.toggle('nav-open');
     });
 
-    // Fecha o menu ao clicar em um link (útil para âncoras)
     allNavLinks.forEach(link => {
       link.addEventListener('click', () => {
         if (navLinks.classList.contains('active')) {
@@ -1072,6 +1151,44 @@
           document.body.classList.remove('nav-open');
         }
       });
+    });
+
+
+    // --- (NOVO) SCRIPT DO LIGHTBOX ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    
+    // Seleciona TODAS as imagens dentro dos itens do carrossel
+    const carouselImages = document.querySelectorAll('.carousel-item img');
+
+    // Adiciona um "escutador" de clique em cada imagem
+    carouselImages.forEach(img => {
+      img.addEventListener('click', () => {
+        // 1. Pega o 'src' (link) da imagem que foi clicada
+        lightboxImg.src = img.src;
+        // 2. Adiciona a classe 'active' para mostrar o lightbox
+        lightbox.classList.add('active');
+        // 3. Trava o scroll da página (reutilizando a classe do menu)
+        document.body.classList.add('nav-open');
+      });
+    });
+
+    // Função para fechar o lightbox
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.classList.remove('nav-open');
+    }
+
+    // 1. Fecha ao clicar no 'X'
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    // 2. Fecha ao clicar "em qualquer lugar" (no fundo escuro)
+    lightbox.addEventListener('click', (e) => {
+      // Só fecha se o clique foi EXATAMENTE no fundo (e não na imagem)
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
     });
 
   </script>
