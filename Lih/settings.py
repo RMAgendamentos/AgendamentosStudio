@@ -5,6 +5,7 @@ Django settings for Lih project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv # 1. IMPORTAR
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,3 +156,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+if 'DATABASE_URL' in os.environ:
+    # Substitui a configuração 'default' pela do Supabase/Postgres
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,  # Mantém conexões abertas por 600s
+        ssl_require=True   # O Supabase exige conexão segura (SSL)
+    )
