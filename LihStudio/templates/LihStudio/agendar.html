@@ -925,6 +925,29 @@
                     servicoSelect.dispatchEvent(new Event('change'));
                 }
             }
+
+            // =================================================
+            // ✅ NOVA LÓGICA PARA EXIBIR ERROS DE POST
+            // =================================================
+            {% if form.errors %}
+                // 1. Força a exibição do container de detalhes
+                $('#form-detalhes-container').show();
+                
+                // 2. Completa a barra de progresso visualmente
+                $('#progress-bar').addClass('step-4-active');
+                
+                // 3. Rola a tela para a primeira mensagem de erro
+                var $firstError = $('.error-message').first();
+                if (!$firstError.length) {
+                    $firstError = $('.errorlist').first();
+                }
+
+                if ($firstError.length) {
+                    $('html, body').animate({
+                        scrollTop: $firstError.offset().top - 150
+                    }, 500);
+                }
+            {% endif %}
             // Fim dos scripts
         });
     </script>
