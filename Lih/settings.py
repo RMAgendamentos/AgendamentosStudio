@@ -1,7 +1,10 @@
+"""
+Django settings for Lih project.
+"""
+
 from pathlib import Path
 import os
 from dotenv import load_dotenv # 1. IMPORTAR
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -96,15 +99,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# Adicione esta lógica para sobrescrever o DB no Render
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES['default'] = dj_database_url.config(
-        default=DATABASE_URL, 
-        conn_max_age=600,
-        conn_health_checks=True
-    )
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
