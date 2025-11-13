@@ -21,9 +21,21 @@
             --warning: #f59e0b;
             --danger: #ef4444;
             --info: #3b82f6;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --box-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --box-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -47,31 +59,31 @@
         .admin-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.3);
-            position: relative;
+            padding: 1.75rem 0;
+            box-shadow: 0 4px 20px rgba(196, 64, 123, 0.25);
+            position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             backdrop-filter: blur(10px);
         }
 
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .header-left h1 {
             font-size: 1.75rem;
             font-weight: 800;
-            margin-bottom: 0.25rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .header-left h1 i {
@@ -82,45 +94,47 @@
             display: flex;
             gap: 0.75rem;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         .action-link { 
             color: white; 
             text-decoration: none; 
             font-weight: 600; 
+            font-size: 0.95rem;
             padding: 0.75rem 1.5rem; 
-            border-radius: var(--border-radius); 
-            background: rgba(255,255,255,0.2); 
+            border-radius: var(--border-radius-sm); 
+            background: rgba(255,255,255,0.15); 
             backdrop-filter: blur(10px);
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            white-space: nowrap;
         }
 
         .action-link:hover { 
-            background: rgba(255,255,255,0.3); 
+            background: rgba(255,255,255,0.25); 
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.4);
         }
 
         /* Main Container */
         .main-container {
             max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
         }
 
-        /* Form Sections */
+        /* Section Cards */
         .section-card {
             background: var(--light);
             border-radius: var(--border-radius);
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
-            border-left: 5px solid var(--primary);
+            box-shadow: var(--box-shadow-md);
+            border: 1px solid var(--gray-200);
             transition: var(--transition);
             position: relative;
             overflow: hidden;
@@ -129,17 +143,15 @@
         .section-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(196, 64, 123, 0.05) 0%, transparent 70%);
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
+            box-shadow: var(--box-shadow-lg);
         }
 
         .section-title {
@@ -149,7 +161,9 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-100);
         }
 
         .section-title i {
@@ -157,181 +171,136 @@
             color: var(--primary);
         }
 
+        /* Form Styles */
         .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
             margin-bottom: 1.5rem;
         }
 
         .form-group {
-            flex: 1;
-            min-width: 200px;
+            display: flex;
+            flex-direction: column;
         }
 
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #6b7280;
-            font-size: 0.85rem;
+            color: var(--gray-700);
+            font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.025em;
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius-sm);
             font-family: inherit;
             font-size: 0.95rem;
             transition: var(--transition);
+            background: var(--gray-50);
+            color: var(--dark);
+        }
+
+        .form-control:hover {
+            border-color: var(--gray-300);
             background: white;
         }
 
         .form-control:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(196, 64, 123, 0.2);
+            box-shadow: 0 0 0 3px rgba(196, 64, 123, 0.1);
             outline: none;
+            background: white;
         }
 
         select.form-control {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4407b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 15px;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 2.5rem;
         }
 
+        /* Button Styles */
         .action-btn {
-            padding: 0.6rem 1.25rem;
-            border-radius: 8px;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--border-radius-sm);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            justify-content: center;
+            gap: 0.5rem;
             border: none;
             cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.3);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.25);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.4);
+            box-shadow: 0 6px 20px rgba(196, 64, 123, 0.35);
         }
 
         .btn-success {
             background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
 
         .btn-success:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
         }
 
         .btn-danger {
             background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
         }
 
         .btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-        }
-
-        /* Schedule List */
-        .schedule-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            background: white;
-            border-radius: var(--border-radius);
-            margin-bottom: 0.75rem;
-            transition: var(--transition);
-            border-left: 4px solid var(--primary);
-        }
-
-        .schedule-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .schedule-info {
-            flex: 1;
-        }
-
-        .schedule-date {
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 1rem;
-        }
-
-        .schedule-time {
-            color: #6b7280;
-            font-size: 0.85rem;
-        }
-
-        .schedule-status {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-right: 1rem;
-        }
-
-        .status-available {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
-            color: #059669;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .status-unavailable {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
-            color: #d97706;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-delete {
-            color: var(--danger);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 0.6rem;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .btn-delete:hover {
-            color: white;
-            background: var(--danger);
-            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
         }
 
         /* Days Selection */
         .days-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -341,35 +310,43 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: white;
-            padding: 1rem;
-            border-radius: var(--border-radius);
+            background: var(--gray-50);
+            padding: 1.25rem;
+            border-radius: var(--border-radius-sm);
             box-shadow: var(--box-shadow);
             transition: var(--transition);
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 2px solid var(--gray-200);
+            position: relative;
         }
 
         .day-option:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow-md);
+            border-color: var(--gray-300);
         }
 
         .day-option.selected {
             border-color: var(--primary);
             background: var(--secondary);
-            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.2);
+            box-shadow: 0 4px 12px rgba(196, 64, 123, 0.15);
         }
 
         .day-option input {
             position: absolute;
             opacity: 0;
+            pointer-events: none;
         }
 
         .day-icon {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             margin-bottom: 0.5rem;
             color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .day-option:hover .day-icon {
+            transform: scale(1.1);
         }
 
         .day-name {
@@ -377,13 +354,136 @@
             font-weight: 600;
             color: var(--dark);
             cursor: pointer;
+            text-align: center;
+        }
+
+        #select-all-btn {
+            grid-column: 1 / -1;
+            background: var(--gray-100);
+            color: var(--dark);
+            border: 2px solid var(--gray-200);
+            padding: 0.875rem 1.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        #select-all-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--gray-50);
+            transform: none;
+            box-shadow: var(--box-shadow-md);
+        }
+
+        /* Schedule List */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.75rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .section-header .section-title {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            gap: 1rem;
+        }
+
+        .schedule-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--box-shadow-md);
+            background: white;
+        }
+
+        .schedule-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .schedule-date {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .schedule-time {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .schedule-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .schedule-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-available {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-unavailable {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+            border: 1.5px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-delete {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid rgba(239, 68, 68, 0.2);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.6rem;
+            border-radius: 8px;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-delete:hover {
+            color: white;
+            background: var(--danger);
+            border-color: var(--danger);
+            transform: scale(1.05);
         }
 
         /* Dropdown */
         .dropdown {
             position: relative;
             display: inline-block;
-            width: 100%; /* Para mobile ocupar largura total */
         }
 
         .dropdown-menu {
@@ -392,47 +492,58 @@
             right: 0;
             background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            box-shadow: var(--box-shadow-xl);
             padding: 1.5rem;
-            width: 350px;
-            max-width: calc(100vw - 2rem); /* Nunca ultrapassar a tela */
-            z-index: 100;
-            border: 1px solid #e5e7eb;
-        }
-
-        /* Botão de exclusão - ajuste para mobile */
-        .delete-dropdown-container {
-            display: flex;
-            justify-content: flex-end;
-            width: 100%;
+            width: 380px;
+            max-width: calc(100vw - 2rem);
+            z-index: 1001;
+            border: 1px solid var(--gray-200);
+            margin-top: 0.5rem;
         }
 
         .dropdown-menu h4 {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             color: var(--dark);
             font-size: 1.1rem;
             font-weight: 700;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gray-100);
         }
 
         .dropdown-menu small {
-            color: #6b7280;
-            font-size: 0.85rem;
+            color: var(--gray-500);
+            font-size: 0.8rem;
             display: block;
             margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .dropdown-section {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .dropdown-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         /* Filter Container */
         .filter-container {
-            background: var(--light);
+            background: var(--gray-50);
             padding: 1.5rem;
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-sm);
             margin-bottom: 1.5rem;
             box-shadow: var(--box-shadow);
+            border: 1px solid var(--gray-200);
             transition: var(--transition);
         }
 
         .filter-container:hover {
-            box-shadow: var(--box-shadow-hover);
+            box-shadow: var(--box-shadow-md);
+            border-color: var(--gray-300);
         }
 
         .filter-container h4 {
@@ -445,36 +556,20 @@
         /* Empty Message */
         .empty-message {
             text-align: center;
-            padding: 3rem;
-            color: #6b7280;
+            padding: 4rem 2rem;
+            color: var(--gray-400);
         }
 
         .empty-message i {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
-            color: #d1d5db;
+            color: var(--gray-300);
         }
 
         .empty-message p {
             font-size: 1.1rem;
             font-weight: 600;
-        }
-
-        /* Select All Button */
-        #select-all-btn {
-            grid-column: 1 / -1;
-            background: #e5e7eb;
-            color: var(--dark);
-            border: 2px solid #e5e7eb;
-            padding: 0.6rem 1.25rem;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        #select-all-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
+            color: var(--gray-500);
         }
 
         /* Messages */
@@ -483,19 +578,20 @@
             top: 20px;
             right: 20px;
             z-index: 10000;
-            max-width: 400px;
+            max-width: 420px;
         }
 
         .alert {
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.5rem;
             margin-bottom: 1rem;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-xl);
             display: flex;
             align-items: center;
             gap: 1rem;
-            animation: slideInRight 0.3s ease;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         @keyframes slideInRight {
@@ -509,6 +605,11 @@
             }
         }
 
+        .alert i {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
         .alert-success {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
             color: white;
@@ -519,128 +620,218 @@
             color: white;
         }
 
-/* RESPONSIVE - Ajustes críticos */
-@media (max-width: 768px) {
-    /* Container principal */
-    .main-container {
-        padding: 0 1rem;
-    }
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 1.5rem 1rem;
+            }
 
-    /* Header actions */
-    .header-content {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
+            .section-card {
+                padding: 1.5rem;
+            }
 
-    .header-actions {
-        width: 100%;
-        justify-content: center;
-    }
+            .days-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
 
-    .action-link {
-        width: 100%;
-        justify-content: center;
-    }
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1.25rem 0;
+            }
 
-    /* Seção de horários cadastrados */
-    .section-card > div:first-child {
-        flex-direction: column !important;
-        gap: 1rem;
-        align-items: stretch !important;
-    }
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
 
-    /* Dropdown de exclusão em mobile */
-    .dropdown {
-        width: 100%;
-    }
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
 
-    .dropdown-menu {
-        width: calc(100vw - 2rem);
-        right: 1rem;
-        left: 1rem;
-        margin: 0 auto;
-    }
+            .header-left h1 i {
+                font-size: 1.6rem;
+            }
 
-    #deleteDropdownBtn {
-        width: 100%;
-        justify-content: center;
-    }
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
 
-    /* Form rows */
-    .form-row {
-        flex-direction: column;
-        gap: 1rem;
-    }
+            .action-link {
+                flex: 1;
+                justify-content: center;
+            }
 
-    .form-group {
-        min-width: 100%;
-    }
+            .main-container {
+                padding: 1rem;
+            }
 
-    /* Days container */
-    .days-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-    }
+            .section-card {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
 
-    /* Schedule items */
-    .schedule-item {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-        padding: 1rem;
-    }
+            .section-title {
+                font-size: 1.25rem;
+                margin-bottom: 1.25rem;
+            }
 
-    .schedule-item > div:last-child {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
 
-    /* Filter container */
-    .filter-container .form-row {
-        grid-template-columns: 1fr;
-    }
+            .days-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
 
-    /* Action buttons */
-    .action-btn {
-        width: 100%;
-        justify-content: center;
-    }
+            .day-option {
+                padding: 1rem;
+            }
 
-    /* Section cards */
-    .section-card {
-        padding: 1.5rem 1rem;
-    }
+            .day-icon {
+                font-size: 1.5rem;
+            }
 
-    .section-title {
-        font-size: 1.2rem;
-    }
-}
+            .day-name {
+                font-size: 0.85rem;
+            }
 
-/* Para telas muito pequenas */
-@media (max-width: 480px) {
-    .dropdown-menu {
-        padding: 1rem;
-    }
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-    .days-container {
-        grid-template-columns: 1fr;
-    }
+            .dropdown {
+                width: 100%;
+            }
 
-    .stat-card p {
-        font-size: 2rem;
-    }
+            .dropdown-menu {
+                width: calc(100vw - 2rem);
+                right: 1rem;
+                left: 1rem;
+                margin: 0.5rem auto 0;
+            }
 
-    .admin-header {
-        padding: 1rem;
-    }
+            #deleteDropdownBtn {
+                width: 100%;
+                justify-content: center;
+            }
 
-    .header-left h1 {
-        font-size: 1.3rem;
-    }
-}
+            .filter-container {
+                padding: 1.25rem;
+            }
+
+            .schedule-item {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+            }
+
+            .schedule-info {
+                margin-bottom: 0.75rem;
+            }
+
+            .schedule-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.875rem 1.25rem;
+            }
+
+            .messages-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+
+            .alert {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-header {
+                padding: 1rem 0;
+            }
+
+            .header-left h1 {
+                font-size: 1.2rem;
+            }
+
+            .header-left h1 i {
+                font-size: 1.4rem;
+            }
+
+            .section-card {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .days-container {
+                grid-template-columns: 1fr;
+            }
+
+            .dropdown-menu {
+                padding: 1.25rem;
+            }
+
+            .filter-container {
+                padding: 1rem;
+            }
+
+            .schedule-date {
+                font-size: 1rem;
+            }
+
+            .schedule-time {
+                font-size: 0.8rem;
+            }
+
+            .schedule-status {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Acessibilidade e Performance */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .admin-header,
+            .action-btn,
+            .btn-delete,
+            .dropdown,
+            .filter-container,
+            .messages-container {
+                display: none !important;
+            }
+
+            .section-card {
+                box-shadow: none;
+                border: 1px solid #000;
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -649,7 +840,7 @@
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">
             <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
-            {{ message }}
+            <span>{{ message }}</span>
         </div>
         {% endfor %}
     </div>
@@ -685,15 +876,15 @@
                         <label for="id_hora" class="form-label">Hora</label>
                         <input type="time" name="hora" id="id_hora" class="form-control" required>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_profissional" class="form-label">Profissional</label>
-                    <select name="profissional" class="form-control" required>
-                        <option value="ambas" selected>Todos</option>
-                        {% for p in profissionais %}
-                            <option value="{{ p.slug }}">{{ p.nome }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="form-group">
+                        <label for="id_profissional" class="form-label">Profissional</label>
+                        <select name="profissional" id="id_profissional" class="form-control" required>
+                            <option value="ambas" selected>Todos</option>
+                            {% for p in profissionais %}
+                                <option value="{{ p.slug }}">{{ p.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <button type="submit" class="action-btn btn-primary">
                     <i class="fas fa-plus"></i> Adicionar horário
@@ -708,61 +899,59 @@
             </h2>
             <form action="{% url 'gerar_horarios' %}" method="POST" id="autoScheduleForm">
                 {% csrf_token %}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Dias da semana</label>
-                        <div class="days-container">
-                            <button type="button" class="action-btn" id="select-all-btn">
-                                <i class="fas fa-check-double"></i> Selecionar todos
-                            </button>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="segunda" value="1" checked>
-                                <label for="segunda">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Segunda-feira</span>
-                                </label>
-                            </div>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="terca" value="2" checked>
-                                <label for="terca">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Terça-feira</span>
-                                </label>
-                            </div>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="quarta" value="3" checked>
-                                <label for="quarta">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Quarta-feira</span>
-                                </label>
-                            </div>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="quinta" value="4" checked>
-                                <label for="quinta">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Quinta-feira</span>
-                                </label>
-                            </div>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="sexta" value="5" checked>
-                                <label for="sexta">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Sexta-feira</span>
-                                </label>
-                            </div>
-                            
-                            <div class="day-option" onclick="toggleDay(this)">
-                                <input type="checkbox" name="dias" id="sabado" value="6" checked>
-                                <label for="sabado">
-                                    <i class="fas fa-calendar-day day-icon"></i>
-                                    <span class="day-name">Sábado</span>
-                                </label>
-                            </div>
+                <div class="form-group">
+                    <label class="form-label">Dias da semana</label>
+                    <div class="days-container">
+                        <button type="button" class="action-btn" id="select-all-btn">
+                            <i class="fas fa-check-double"></i> Selecionar todos
+                        </button>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="segunda" value="1" checked>
+                            <label for="segunda">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Segunda-feira</span>
+                            </label>
+                        </div>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="terca" value="2" checked>
+                            <label for="terca">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Terça-feira</span>
+                            </label>
+                        </div>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="quarta" value="3" checked>
+                            <label for="quarta">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Quarta-feira</span>
+                            </label>
+                        </div>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="quinta" value="4" checked>
+                            <label for="quinta">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Quinta-feira</span>
+                            </label>
+                        </div>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="sexta" value="5" checked>
+                            <label for="sexta">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Sexta-feira</span>
+                            </label>
+                        </div>
+                        
+                        <div class="day-option selected" onclick="toggleDay(this)">
+                            <input type="checkbox" name="dias" id="sabado" value="6" checked>
+                            <label for="sabado">
+                                <i class="fas fa-calendar-day day-icon"></i>
+                                <span class="day-name">Sábado</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -776,6 +965,14 @@
                                 <option value="{{ p.slug }}">{{ p.nome }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_inicio_auto" class="form-label">Data de Início</label>
+                        <input type="date" name="data_inicio_auto" id="data_inicio_auto" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_fim_auto" class="form-label">Data de Fim</label>
+                        <input type="date" name="data_fim_auto" id="data_fim_auto" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="horario_inicio" class="form-label">Horário de início</label>
@@ -798,28 +995,29 @@
 
         <!-- Lista de Horários -->
         <section class="section-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                <h2 class="section-title" style="margin-bottom: 0;">
+            <div class="section-header">
+                <h2 class="section-title">
                     <i class="far fa-calendar-alt"></i> Horários Cadastrados
                 </h2>
                 
-                <!-- Dropdown de exclusão -->
-                <div class="dropdown delete-dropdown-container">
+                <div class="dropdown">
                     <button class="action-btn btn-danger" id="deleteDropdownBtn">
                         <i class="fas fa-trash-alt"></i> Opções de exclusão
                     </button>
                     <div class="dropdown-menu" id="deleteDropdown">
                         <h4>Selecione o que excluir:</h4>
                         
-                        <form id="deletePastForm" method="POST" action="{% url 'excluir_horarios_passados' %}" style="margin-bottom: 1rem;">
-                            {% csrf_token %}
-                            <button type="button" class="action-btn btn-danger" onclick="confirmDeletePast()" style="width: 100%; margin-bottom: 0.5rem;">
-                                <i class="fas fa-clock"></i> Excluir horários passados
-                            </button>
-                            <small>Remove apenas horários de datas anteriores a hoje</small>
-                        </form>
+                        <div class="dropdown-section">
+                            <form id="deletePastForm" method="POST" action="{% url 'excluir_horarios_passados' %}">
+                                {% csrf_token %}
+                                <button type="button" class="action-btn btn-danger" onclick="confirmDeletePast()" style="width: 100%;">
+                                    <i class="fas fa-clock"></i> Excluir horários passados
+                                </button>
+                                <small>Remove apenas horários de datas anteriores a hoje</small>
+                            </form>
+                        </div>
                         
-                        <div style="margin-bottom: 1rem;">
+                        <div class="dropdown-section">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="data_inicio" class="form-label">De</label>
@@ -835,13 +1033,13 @@
                             </button>
                         </div>
                         
-                        <div>
+                        <div class="dropdown-section">
                             <form id="deleteAllForm" method="POST" action="{% url 'excluir_todos_horarios' %}">
                                 {% csrf_token %}
                                 <button type="button" class="action-btn btn-danger" onclick="confirmDeleteAll()" style="width: 100%;">
                                     <i class="fas fa-exclamation-triangle"></i> Excluir TODOS os horários
                                 </button>
-                                <small style="color: var(--danger); font-weight: 500;">Atenção: Remove todos os horários sem exceção e desvincula de agendamentos</small>
+                                <small style="color: var(--danger); font-weight: 600;">Atenção: Remove todos os horários sem exceção e desvincula de agendamentos</small>
                             </form>
                         </div>
                     </div>
@@ -852,6 +1050,7 @@
                 <h4>Filtrar horários:</h4>
                 <div class="form-row">
                     <div class="form-group">
+                        <label for="filterProfissional" class="form-label">Profissional</label>
                         <select id="filterProfissional" class="form-control" onchange="filterSchedules()">
                             <option value="all">Todas as profissionais</option>
                             {% for p in profissionais %}
@@ -860,6 +1059,7 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="filterStatus" class="form-label">Status</label>
                         <select id="filterStatus" class="form-control" onchange="filterSchedules()">
                             <option value="all">Todos os status</option>
                             <option value="available">Disponíveis</option>
@@ -867,6 +1067,7 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="filterPeriod" class="form-label">Período</label>
                         <select id="filterPeriod" class="form-control" onchange="filterSchedules()">
                             <option value="all">Todos os períodos</option>
                             <option value="today">Hoje</option>
@@ -877,6 +1078,7 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="searchDate" class="form-label">Buscar</label>
                         <input type="text" id="searchDate" class="form-control" placeholder="Buscar por data (dd/mm)" onkeyup="filterSchedules()">
                     </div>
                 </div>
@@ -890,11 +1092,11 @@
                                 <span class="schedule-date">{{ h.data|date:"d/m/Y" }}</span>
                                 <span class="schedule-time">às {{ h.hora|time:"H:i" }} com {{ h.profissional|title }}</span>
                             </div>
-                            <div>
+                            <div class="schedule-actions">
                                 <span class="schedule-status {% if h.disponivel %}status-available{% else %}status-unavailable{% endif %}">
                                     {% if h.disponivel %}Disponível{% else %}Ocupado{% endif %}
                                 </span>
-                                <button class="btn-delete" onclick="if(confirm('Tem certeza que deseja excluir este horário?')) { window.location.href='{% url 'excluir_horario' h.id %}' }">
+                                <button class="btn-delete" onclick="if(confirm('Tem certeza que deseja excluir este horário?')) { window.location.href='{% url 'excluir_horario' h.id %}' }" title="Excluir horário">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -946,7 +1148,8 @@
         });
         
         // Dropdown de exclusão
-        document.getElementById('deleteDropdownBtn').addEventListener('click', function() {
+        document.getElementById('deleteDropdownBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
             const dropdown = document.getElementById('deleteDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         });
@@ -968,14 +1171,12 @@
             const periodFilter = document.getElementById('filterPeriod').value;
             const searchText = document.getElementById('searchDate').value.toLowerCase();
 
-            // 1. Cria a data de HOJE, zerando a hora e garantindo que é no fuso local/neutro
             const now = new Date();
             const todayUtc = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
             
             document.querySelectorAll('.schedule-item').forEach(item => {
-                // 2. Cria a data do ITEM, garantindo que é no mesmo fuso neutro (UTC)
-                const dateParts = item.dataset.date.split('-'); // ex: ['2025', '10', '18']
-                const itemDateUtc = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])); // Mês é 0-indexado!
+                const dateParts = item.dataset.date.split('-');
+                const itemDateUtc = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
 
                 const itemStatus = item.dataset.status;
                 const itemProfissional = item.dataset.profissional;
@@ -1050,10 +1251,10 @@
             });
             updateSelectAllButton();
             
-            // Define a data de hoje como padrão para o filtro de período
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('data_inicio').value = today;
             document.getElementById('data_fim').value = today;
+            document.getElementById('data_inicio_auto').value = today;
             
             // Fecha mensagens após 4 segundos
             document.querySelectorAll('.messages-container .alert').forEach(msg => {
@@ -1096,4 +1297,4 @@
         });
     </script>
 </body>
-</html>
+</html

@@ -183,7 +183,8 @@
         /* ===== AGENDAMENTOS ===== */
         .agendamento {
             display: grid;
-            grid-template-columns: 120px 1fr 1fr 150px 80px;
+            /* HORA | INFO | SERVIÇO | STATUS | AÇÕES */
+            grid-template-columns: 100px 1fr 1fr 150px 1fr;
             gap: 1.5rem;
             padding: 1.75rem 2rem;
             border-bottom: 1px solid #f3f4f6;
@@ -268,13 +269,57 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        /* ===== BOTÃO WHATSAPP ===== */
+        /* ===== BOTÕES DE AÇÃO (NOVO) ===== */
+        .actions-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .concluir-btn {
+            background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .concluir-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        
         .whatsapp-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
+            min-width: 40px; /* Tamanho ajustado */
+            height: 40px;
             background: linear-gradient(135deg, var(--whatsapp) 0%, #1da851 100%);
             color: white;
             border-radius: 50%;
@@ -290,7 +335,7 @@
         }
 
         .whatsapp-btn i {
-            font-size: 1.5rem;
+            font-size: 1.2rem; /* Tamanho ajustado */
         }
 
         /* ===== AGENDA VAZIA ===== */
@@ -354,36 +399,98 @@
             color: white;
         }
 
+        /* ===== MODAL (NOVO) ===== */
+        #confirmModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-content h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-cancel {
+            background: #e5e7eb;
+            color: var(--dark);
+        }
+        .modal-btn-cancel:hover { background: #d1d5db; }
+        
+        .modal-btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .modal-btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .modal-btn-danger:hover,
+        .modal-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .admin-header {
-                padding: 1rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .header-left h1 {
-                font-size: 1.4rem;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .action-link {
-                flex: 1;
-                justify-content: center;
-                padding: 0.6rem 0.8rem;
-                font-size: 0.85rem;
-            }
-            
-            .admin-container {
-                padding: 1rem;
-            }
+            .admin-header { padding: 1rem; }
+            .header-content { flex-direction: column; gap: 1rem; }
+            .header-left h1 { font-size: 1.4rem; }
+            .header-actions { width: 100%; justify-content: center; }
+            .action-link { flex: 1; justify-content: center; padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+            .admin-container { padding: 1rem; }
             
             .agendamento {
                 grid-template-columns: 1fr;
@@ -391,33 +498,22 @@
                 gap: 1rem;
                 padding: 1.5rem;
             }
-
-            .ag-hora {
-                font-size: 2rem;
-            }
-
-            .ag-info strong {
-                font-size: 1.3rem;
+            .ag-hora { font-size: 2rem; }
+            .ag-info strong { font-size: 1.3rem; justify-content: center; }
+            .ag-info span { justify-content: center; }
+            .ag-status { width: max-content; margin: 0 auto; }
+            
+            /* Ajuste para ações em mobile */
+            .actions-container {
                 justify-content: center;
             }
-
-            .ag-info span {
-                justify-content: center;
-            }
-
-            .ag-status {
-                width: max-content;
-                margin: 0 auto;
-            }
-
-            .whatsapp-btn {
-                margin: 0 auto;
+            .action-btn {
+                font-size: 0.9rem; /* Botões maiores em mobile */
             }
         }
     </style>
 </head>
 <body>
-    <!-- MESSAGES -->
     {% if messages %}
     <div class="messages-container">
         {% for message in messages %}
@@ -429,7 +525,6 @@
     </div>
     {% endif %}
 
-    <!-- HEADER -->
     <header class="admin-header">
         <div class="header-content">
             <div class="header-left">
@@ -444,6 +539,11 @@
                 {% endif %}
             </div>
             <div class="header-actions">
+                {% if request.user.is_superuser %}
+                <a href="{% url 'painel_dona' %}" class="action-link" style="background: rgba(255, 255, 255, 0.3);">
+                    <i class="fas fa-user-shield"></i> Painel da Dona
+                </a>
+                {% endif %}
                 <form action="{% url 'logout' %}" method="post" style="display: inline; margin: 0;">
                     {% csrf_token %}
                     <button type="submit" class="action-link logout-btn">
@@ -454,10 +554,8 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
     <div class="admin-container">
         
-        <!-- AGENDA DE HOJE -->
         <div class="card">
             <div class="card-header hoje">
                 <i class="fas fa-star" style="font-size: 1.5rem;"></i>
@@ -486,14 +584,37 @@
                                 <i class="fas fa-times-circle"></i> Cancelado
                             {% endif %}
                         </div>
-                        <!-- BOTÃO WHATSAPP -->
-                        <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
-                           class="whatsapp-btn" 
-                           target="_blank" 
-                           title="Chamar no WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
+                        
+                        <div class="actions-container">
+                            <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
+                               class="whatsapp-btn" 
+                               target="_blank" 
+                               title="Chamar no WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            
+                            {% if ag.status == 'pendente' %}
+                                <button class="action-btn confirm-btn modal-trigger"
+                                    data-action="confirmar"
+                                    data-url="{% url 'confirmar_agendamento' ag.id %}"
+                                    data-nome="{{ ag.nome }}"
+                                    data-servico="{{ ag.get_servico_display }}"
+                                    data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                    <i class="fas fa-check"></i> Confirmar
+                                </button>
+                                
+                            {% elif ag.status == 'confirmado' %}
+                                <button class="action-btn concluir-btn modal-trigger"
+                                    data-action="concluir"
+                                    data-url="{% url 'concluir_agendamento' ag.id %}"
+                                    data-nome="{{ ag.nome }}"
+                                    data-servico="{{ ag.get_servico_display }}"
+                                    data-datahora="{{ ag.hora_backup|time:'H:i' }}">
+                                    <i class="fas fa-check-double"></i> Concluir
+                                </button>
+                            {% endif %}
+                        </div>
+                        </div>
                 {% empty %}
                     <div class="agenda-vazia">
                         <i class="fas fa-calendar-times"></i>
@@ -504,7 +625,6 @@
             </div>
         </div>
 
-        <!-- PRÓXIMOS AGENDAMENTOS -->
         <div class="card">
             <div class="card-header futuros">
                 <i class="fas fa-calendar-days" style="font-size: 1.5rem;"></i>
@@ -538,14 +658,37 @@
                                 <i class="fas fa-times-circle"></i> Cancelado
                             {% endif %}
                         </div>
-                        <!-- BOTÃO WHATSAPP -->
-                        <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
-                        class="whatsapp-btn" 
-                        target="_blank" 
-                        title="Chamar no WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
+
+                        <div class="actions-container">
+                            <a href="https://wa.me/55{{ ag.telefone|cut:'(' |cut:')' |cut:' ' |cut:'-' }}?text=Olá {{ ag.nome|urlencode }}, tudo bem? Aqui é do RM Studio! 😊" 
+                            class="whatsapp-btn" 
+                            target="_blank" 
+                            title="Chamar no WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            
+                            {% if ag.status == 'pendente' %}
+                                <button class="action-btn confirm-btn modal-trigger"
+                                    data-action="confirmar"
+                                    data-url="{% url 'confirmar_agendamento' ag.id %}"
+                                    data-nome="{{ ag.nome }}"
+                                    data-servico="{{ ag.get_servico_display }}"
+                                    data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                    <i class="fas fa-check"></i> Confirmar
+                                </button>
+                                
+                            {% elif ag.status == 'confirmado' %}
+                                <button class="action-btn concluir-btn modal-trigger"
+                                    data-action="concluir"
+                                    data-url="{% url 'concluir_agendamento' ag.id %}"
+                                    data-nome="{{ ag.nome }}"
+                                    data-servico="{{ ag.get_servico_display }}"
+                                    data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                    <i class="fas fa-check-double"></i> Concluir
+                                </button>
+                            {% endif %}
+                        </div>
+                        </div>
                 {% empty %}
                     <div class="agenda-vazia">
                         <i class="fas fa-calendar-check"></i>
@@ -558,6 +701,20 @@
 
     </div>
 
+    <div id="confirmModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirmar Ação</h3>
+            <div id="modalMessage"></div>
+            <div class="modal-actions">
+                <button id="cancelModalBtn" class="modal-btn modal-btn-cancel">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button id="confirmModalBtn" class="modal-btn modal-btn-danger">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Auto-fechamento de mensagens
@@ -569,6 +726,81 @@
                     setTimeout(() => msg.remove(), 500);
                 }, 5000);
             });
+
+            // ==== INÍCIO DO JAVASCRIPT DO MODAL (NOVO) ====
+            const modal = document.getElementById('confirmModal');
+            if (modal) { // Verifica se o modal existe
+                const modalTitle = document.getElementById('modalTitle');
+                const modalMessage = document.getElementById('modalMessage');
+                const cancelModalBtn = document.getElementById('cancelModalBtn');
+                const confirmModalBtn = document.getElementById('confirmModalBtn');
+                let currentActionUrl = '';
+
+                document.querySelectorAll('.modal-trigger').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const action = this.getAttribute('data-action');
+                        const nome = this.getAttribute('data-nome');
+                        const servico = this.getAttribute('data-servico');
+                        const datahora = this.getAttribute('data-datahora');
+                        currentActionUrl = this.getAttribute('data-url');
+                        
+                        let title, message, icon, btnText, btnClass, iconColor;
+
+                        if (action === 'confirmar') {
+                            title = 'Confirmar Agendamento';
+                            message = 'Tem certeza que deseja <strong>confirmar</strong> este agendamento?';
+                            icon = 'fa-check-circle';
+                            btnText = 'Sim, Confirmar';
+                            btnClass = 'modal-btn-success';
+                            iconColor = 'var(--success)';
+                        } else if (action === 'concluir') {
+                            title = 'Concluir Agendamento';
+                            message = 'Marcar este agendamento como <strong>concluído</strong>?';
+                            icon = 'fa-star';
+                            btnText = 'Sim, Concluir';
+                            btnClass = 'modal-btn-success'; // Pode ser 'modal-btn-info' se preferir
+                            iconColor = 'var(--info)';
+                        }
+
+                        modalTitle.innerHTML = `<i class="fas ${icon}" style="color: ${iconColor}; margin-right: 0.5rem;"></i>${title}`;
+                        modalMessage.innerHTML = `
+                            <p style="margin: 1.5rem 0; font-size: 1.05rem;">${message}</p>
+                            <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; text-align: left; margin-top: 1rem;">
+                                <p style="margin: 0.5rem 0;"><strong>👤 Cliente:</strong> ${nome}</p>
+                                <p style="margin: 0.5rem 0;"><strong>💅 Serviço:</strong> ${servico}</p>
+                                <p style="margin: 0.5rem 0;"><strong>📅 Data/Hora:</strong> ${datahora}</p>
+                            </div>
+                        `;
+                        
+                        confirmModalBtn.className = `modal-btn ${btnClass}`;
+                        confirmModalBtn.innerHTML = `<i class="fas fa-check"></i> ${btnText}`;
+
+                        modal.style.display = 'flex';
+                    });
+                });
+
+                cancelModalBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    currentActionUrl = '';
+                });
+
+                confirmModalBtn.addEventListener('click', () => {
+                    if(currentActionUrl) {
+                        window.location.href = currentActionUrl;
+                    }
+                });
+
+                // Fechar modal ao clicar fora
+                modal.addEventListener('click', (e) => {
+                    if(e.target === modal) {
+                        modal.style.display = 'none';
+                        currentActionUrl = '';
+                    }
+                });
+            }
+            // ==== FIM DO JAVASCRIPT DO MODAL ====
         });
     </script>
 </body>

@@ -377,6 +377,11 @@ def painel_dona(request):
         status='pendente', 
         pagamento_status='pendente'
     )
+
+    agendamentos_passados_pendentes = Agendamento.objects.filter(
+    data__lt=hoje,
+    status__in=['pendente', 'confirmado']
+    ).select_related('hora', 'profissional', 'servico').order_by('-data')
     
     return render(request, 'LihStudio/painel_dona.html', {
         'agendamentos_hoje': agendamentos_hoje,
@@ -387,6 +392,7 @@ def painel_dona(request):
         'agendamentos_pagamento_pendente': agendamentos_pagamento_pendente,
         'total_clientes': total_clientes,
         'hoje': hoje,
+        'agendamentos_passados_pendentes': agendamentos_passados_pendentes,
     })
 
 def cancelar_agendamento_cliente(request, agendamento_id, token):
@@ -528,7 +534,7 @@ def cancelar_agendamento_cliente(request, agendamento_id, token):
         'horario': f"{ag.hora.data.strftime('%d/%m/%Y')} às {ag.hora.hora.strftime('%H:%M')}" if ag.hora else ""
     })
 
-@only_admin
+@only_staff
 def confirmar_agendamento(request, agendamento_id):
     ag = get_object_or_404(Agendamento, id=agendamento_id)
     ag.confirmado = True
@@ -682,7 +688,11 @@ def confirmar_agendamento(request, agendamento_id):
     msg.send()
     
     messages.success(request, 'Agendamento confirmado com sucesso!')
-    return redirect('painel_dona')
+
+    if request.user.is_superuser:
+        return redirect('painel_dona')
+    else:
+        return redirect('painel_funcionario')
 
 # ------------------------- VIEWS MERCADO PAGO -------------------------
 
@@ -1135,14 +1145,18 @@ def enviar_email_confirmacao_automatica(agendamento):
         print(f"Erro ao enviar email: {e}")
         return False
 
-@only_admin
+@only_staff
 def concluir_agendamento(request, agendamento_id):
     ag = get_object_or_404(Agendamento, id=agendamento_id)
     
     # Verificar se está cancelado
     if ag.status == 'cancelado':
         messages.error(request, 'Não é possível concluir um agendamento cancelado!')
-        return redirect('painel_dona')
+        # --- MUDANÇA NO REDIRECIONAMENTO ---
+        if request.user.is_superuser:
+            return redirect('painel_dona')
+        else:
+            return redirect('painel_funcionario')
     
     ag.status = 'concluido'
 
@@ -1245,7 +1259,11 @@ def concluir_agendamento(request, agendamento_id):
     msg.send()
 
     messages.success(request, 'Serviço marcado como concluído e e-mail enviado!')
-    return redirect('painel_dona')
+
+    if request.user.is_superuser:
+        return redirect('painel_dona')
+    else:
+        return redirect('painel_funcionario')
 
 @only_admin
 def cancelar_agendamento(request, agendamento_id):
@@ -1435,15 +1453,18 @@ def excluir_horario(request, horario_id):
 @only_admin
 def gerar_horarios_semanais(request):
     if request.method == "POST":
+        # Dados do formulário
         dias_selecionados = request.POST.getlist("dias", [])          # ['1', '3', '5']
         inicio_str        = request.POST.get("horario_inicio", "09:00")
         fim_str           = request.POST.get("horario_fim", "18:00")
         intervalo         = int(request.POST.get("intervalo", 30))    # em minutos
         prof_slug         = request.POST.get("profissional")          # 'elisama' | 'alana' | 'ambas'
 
-        # -------------------------------------------------------- #
-        # 1.  Define a lista de profissionais alvo
-        # -------------------------------------------------------- #
+        # 1. Pegar as novas datas do formulário
+        data_inicio_str = request.POST.get("data_inicio_auto")
+        data_fim_str    = request.POST.get("data_fim_auto")
+
+        # 2. Define a lista de profissionais alvo (lógica original)
         if not prof_slug or prof_slug == "ambas":
             profissionais = Profissional.objects.filter(ativo=True)   # todas
         else:
@@ -1453,9 +1474,7 @@ def gerar_horarios_semanais(request):
             messages.error(request, "Profissional não encontrada.")
             return redirect("adicionar_horario")
 
-        # -------------------------------------------------------- #
-        # 2.  Converte strings de hora → objetos time
-        # -------------------------------------------------------- #
+        # 3. Converte strings de hora → objetos time (lógica original)
         try:
             inicio_time = datetime.strptime(inicio_str, "%H:%M").time()
             fim_time    = datetime.strptime(fim_str, "%H:%M").time()
@@ -1467,34 +1486,60 @@ def gerar_horarios_semanais(request):
             messages.error(request, "Horário de início deve ser antes do horário de fim.")
             return redirect("adicionar_horario")
 
-        # -------------------------------------------------------- #
-        # 3.  Gera horários para os próximos 7 dias
-        # -------------------------------------------------------- #
-        hoje = timezone.now().date()
+        # 4. Valida e converte as datas de INÍCIO e FIM
+        try:
+            data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date()
+            data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            messages.error(request, "Datas de início ou fim inválidas.")
+            return redirect("adicionar_horario")
+        
+        if data_inicio > data_fim:
+            messages.error(request, "A data de início não pode ser maior que a data de fim.")
+            return redirect("adicionar_horario")
+        
+        # Calcula o número de dias para o loop
+        total_dias = (data_fim - data_inicio).days + 1
 
+
+        # 5.  Gera horários para o PERÍODO selecionado (substitui o range(7))
+        horarios_criados = 0
         for prof in profissionais:
-            for offset in range(7):
-                data = hoje + timedelta(days=offset)        # dia analisado
+            
+            # Loop dinâmico baseado no total de dias
+            for offset in range(total_dias):
+                data = data_inicio + timedelta(days=offset) # dia analisado
+                
+                # A verificação do dia da semana continua a mesma
                 if str(data.isoweekday()) not in dias_selecionados:
                     continue                                # pula dias fora da seleção
 
+                # Lógica interna do loop (é a mesma que você já tinha)
                 inicio_dt = datetime.combine(data, inicio_time)
                 fim_dt    = datetime.combine(data, fim_time)
 
                 hora_atual = inicio_dt
                 while hora_atual <= fim_dt:
-                    HorarioDisponivel.objects.get_or_create(
+                    # Usamos get_or_create para não duplicar horários
+                    obj, created = HorarioDisponivel.objects.get_or_create(
                         profissional=prof,
                         data=hora_atual.date(),
                         hora=hora_atual.time(),
                         defaults={"disponivel": True},
                     )
+                    if created:
+                        horarios_criados += 1 # Conta apenas os horários realmente novos
+                    
                     hora_atual += timedelta(minutes=intervalo)
-
-        messages.success(request, "Horários gerados com sucesso!")
+        
+        # Mensagem de sucesso melhorada
+        if horarios_criados > 0:
+            messages.success(request, f"{horarios_criados} novos horários gerados com sucesso no período selecionado!")
+        else:
+            messages.info(request, "Nenhum horário novo foi criado (provavelmente já existiam).")
+            
         return redirect("adicionar_horario")
 
-    # GET – exibe tela (se precisar)
     profissionais = Profissional.objects.filter(ativo=True)
     return render(request, "LihStudio/gerar_horarios.html", {"profissionais": profissionais})
 

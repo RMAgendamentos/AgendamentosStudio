@@ -1115,6 +1115,111 @@
                 </div>
             {% endif %}
         </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">
+                    <h2 style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Pendências Passadas</h2>
+                    <span class="agendamento-count" style="background: var(--danger);">
+                    {{ agendamentos_passados_pendentes.count }}
+                    </span>
+                </div>
+            </div>
+
+            {% if agendamentos_passados_pendentes %}
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">
+            Estes agendamentos são de datas passadas, mas nunca foram marcados como "Concluído" ou "Cancelado".
+            Por favor, resolva-os.
+            </p>
+
+            <div style="overflow-x: auto;">
+                <table id="passados-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Cliente</th>
+                            <th><i class="fas fa-spa"></i> Serviço</th>
+                            <th><i class="fas fa-calendar"></i> Data</th> <th><i class="fas fa-clock"></i> Hora</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                            <th><i class="fas fa-cog"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ag in agendamentos_passados_pendentes %}
+                        <tr class="{% if ag.status == 'pendente' %}pending{% elif ag.status == 'confirmado' %}confirmed{% endif %}">
+                            <td><strong>{{ ag.nome }}</strong></td>
+                            <td>{{ ag.get_servico_display }}</td>
+                            <td>{{ ag.data|date:"d/m/Y" }}</td>
+                            <td><strong>{{ ag.hora_backup|time:"H:i" }}</strong></td>
+                            <td>
+                                <span class="status status-{{ ag.status }}">
+                                    {% if ag.status == 'pendente' %}
+                                        <i class="fas fa-hourglass-half"></i> Pendente
+                                    {% elif ag.status == 'confirmado' %}
+                                        <i class="fas fa-check-circle"></i> Confirmado
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <a href="https://wa.me/55{{ ag.telefone|cut:' '|cut:'-'|cut:'('|cut:')' }}" 
+                                    target="_blank" 
+                                    class="action-btn whatsapp-btn"
+                                    title="WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+
+                                    {% if ag.status == 'pendente' %}
+                                        <button class="action-btn concluir-btn modal-trigger"
+                                            data-action="concluir"
+                                            data-url="{% url 'concluir_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check-double"></i> Concluir (Não compareceu?)
+                                        </button>
+
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% elif ag.status == 'confirmado' %}
+                                        <button class="action-btn concluir-btn modal-trigger"
+                                            data-action="concluir"
+                                            data-url="{% url 'concluir_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-check-double"></i> Concluir
+                                        </button>
+
+                                        <button class="action-btn cancel-btn modal-trigger"
+                                            data-action="cancelar"
+                                            data-url="{% url 'cancelar_agendamento' ag.id %}"
+                                            data-nome="{{ ag.nome }}"
+                                            data-servico="{{ ag.get_servico_display }}"
+                                            data-datahora="{{ ag.data|date:'d/m/Y' }} às {{ ag.hora_backup|time:'H:i' }}">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-check-circle" style="color: var(--success); opacity: 0.5;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhuma pendência encontrada!</p>
+                    <p>Todos os agendamentos passados estão resolvidos.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <!-- MODAL -->
