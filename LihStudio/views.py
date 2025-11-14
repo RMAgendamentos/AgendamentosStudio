@@ -22,6 +22,8 @@ from django.urls import reverse
 from django.db import models
 from django.utils.dateparse import parse_date
 import json
+from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 def index(request):
     """Renderiza a nova landing page (index.html)"""
@@ -1397,9 +1399,105 @@ def cancelar_agendamento(request, agendamento_id):
 
 # ------------------------- VIEWS ADICIONAR HORARIO -------------------------
 
+@only_admin  # Protege a view
+def buscar_horarios_api(request):
+    
+    # 1. Obter filtros e paginação da URL
+    prof_slug = request.GET.get('profissional')
+    status = request.GET.get('status')
+    periodo = request.GET.get('periodo')
+    search = request.GET.get('search', '').lower()
+    page_number = request.GET.get('page', 1)
+
+    # 2. Query base (ordenada pela data/hora correta)
+    query = HorarioDisponivel.objects.select_related('profissional').order_by('data', 'hora')
+
+    # 3. Aplicar filtros
+    if prof_slug and prof_slug != 'all':
+        query = query.filter(profissional__slug=prof_slug)
+    
+    if status and status != 'all':
+        query = query.filter(disponivel=(status == 'available'))
+        
+    # ==========================================================
+    # ✅ INÍCIO DA CORREÇÃO (Substitui o 'if search:' antigo)
+    # ==========================================================
+    if search:
+        try:
+            # Tenta dividir "dd/mm"
+            if '/' in search:
+                parts = search.split('/')
+                day_str = parts[0].strip()
+                month_str = parts[1].strip()
+                
+                q_objects = Q()
+                if day_str:
+                    q_objects &= Q(data__day=int(day_str))
+                if month_str:
+                    q_objects &= Q(data__month=int(month_str))
+                
+                query = query.filter(q_objects)
+            
+            # Se não tem '/', busca no dia OU no mês
+            else:
+                search_int = int(search)
+                query = query.filter(
+                    Q(data__day=search_int) | Q(data__month=search_int)
+                )
+        except (ValueError, IndexError):
+            # O usuário digitou algo não-numérico (ex: 'abc') ou "12/"
+            # Apenas ignora o filtro de busca para não quebrar.
+            pass
+    # ==========================================================
+    # ✅ FIM DA CORREÇÃO
+    # ==========================================================
+        
+    if periodo and periodo != 'all':
+        today = timezone.now().date()
+        
+        if periodo == 'today':
+            query = query.filter(data=today)
+        elif periodo == 'future':
+            query = query.filter(data__gt=today) 
+        elif periodo == 'past':
+            query = query.filter(data__lt=today)
+        elif periodo == 'this_week':
+            end_week = today + timedelta(days=6) # Corrigido na etapa anterior
+            query = query.filter(data__range=[today, end_week]) 
+        elif periodo == 'this_month':
+            query = query.filter(data__year=today.year, data__month=today.month)
+
+    # 4. Paginar os resultados (50 por página)
+    paginator = Paginator(query, 50)
+    page_obj = paginator.get_page(page_number)
+    
+    # 5. Serializar (transformar em JSON)
+    horarios_list = []
+    for h in page_obj:
+        horarios_list.append({
+            'id': h.id,
+            'data': h.data.strftime('%d/%m/%Y'),
+            'hora': h.hora.strftime('%H:%M'),
+            'profissional': h.profissional.nome,
+            'profissional_slug': h.profissional.slug,
+            'disponivel': h.disponivel,
+            # Gera a URL de exclusão
+            'delete_url': reverse('excluir_horario', args=[h.id]) 
+        })
+        
+    # 7. Retornar os dados como JSON
+    return JsonResponse({
+        'horarios': horarios_list,
+        'has_next': page_obj.has_next(),
+        'total_items': paginator.count,
+        'page_number': page_obj.number,
+    })
+
 @only_admin
 def adicionar_horario(request):
     if request.method == 'POST':
+        
+        # --- Início da lógica POST (deixe como está) ---
         data = request.POST.get('data')
         hora = request.POST.get('hora')
         profissional_slug = request.POST.get('profissional')
@@ -1410,7 +1508,6 @@ def adicionar_horario(request):
 
         try:
             if profissional_slug == 'ambas':
-                # Cria para TODAS as profissionais ativas
                 profissionais = Profissional.objects.filter(ativo=True)
                 for prof in profissionais:
                     HorarioDisponivel.objects.create(
@@ -1435,12 +1532,17 @@ def adicionar_horario(request):
         except Exception as e:
             messages.error(request, f'Ocorreu um erro ao adicionar o horário: {str(e)}')
             return redirect('adicionar_horario')
+        # --- Fim da lógica POST ---
 
-    horarios = HorarioDisponivel.objects.all().order_by('data', 'hora')
+    # ===== AQUI ESTÁ A MUDANÇA =====
+    # A consulta de 'horarios' foi REMOVIDA
     profissionais = Profissional.objects.filter(ativo=True)
+    
+    # Renderiza a página VAZIA, sem a lista de horários.
+    # Os horários serão buscados por JavaScript.
     return render(request, 'LihStudio/adicionar_horario.html', {
-        'horarios': horarios,
-        'profissionais': profissionais
+        'profissionais': profissionais 
+        # A chave 'horarios' não é mais necessária aqui
     })
 
 @only_admin

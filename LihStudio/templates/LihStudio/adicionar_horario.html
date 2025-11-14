@@ -61,7 +61,7 @@
             color: white;
             padding: 1.75rem 0;
             box-shadow: 0 4px 20px rgba(196, 64, 123, 0.25);
-            position: sticky;
+            position: relative;
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
@@ -860,7 +860,6 @@
     </header>
 
     <main class="main-container">
-        <!-- Formulário de Adição Manual -->
         <section class="section-card">
             <h2 class="section-title">
                 <i class="fas fa-plus-circle"></i> Adicionar Horário Manualmente
@@ -892,7 +891,6 @@
             </form>
         </section>
 
-        <!-- Formulário de Geração Automática -->
         <section class="section-card">
             <h2 class="section-title">
                 <i class="fas fa-calendar-plus"></i> Gerar Horários Automáticos
@@ -999,7 +997,6 @@
             </form>
         </section>
 
-        <!-- Lista de Horários -->
         <section class="section-card">
             <div class="section-header">
                 <h2 class="section-title">
@@ -1057,7 +1054,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="filterProfissional" class="form-label">Profissional</label>
-                        <select id="filterProfissional" class="form-control" onchange="filterSchedules()">
+                        <select id="filterProfissional" class="form-control">
                             <option value="all">Todas as profissionais</option>
                             {% for p in profissionais %}
                                 <option value="{{ p.slug }}">{{ p.nome }}</option>
@@ -1066,7 +1063,7 @@
                     </div>
                     <div class="form-group">
                         <label for="filterStatus" class="form-label">Status</label>
-                        <select id="filterStatus" class="form-control" onchange="filterSchedules()">
+                        <select id="filterStatus" class="form-control">
                             <option value="all">Todos os status</option>
                             <option value="available">Disponíveis</option>
                             <option value="unavailable">Ocupados</option>
@@ -1074,7 +1071,7 @@
                     </div>
                     <div class="form-group">
                         <label for="filterPeriod" class="form-label">Período</label>
-                        <select id="filterPeriod" class="form-control" onchange="filterSchedules()">
+                        <select id="filterPeriod" class="form-control">
                             <option value="all">Todos os períodos</option>
                             <option value="today">Hoje</option>
                             <option value="this_week">Esta semana</option>
@@ -1085,40 +1082,33 @@
                     </div>
                     <div class="form-group">
                         <label for="searchDate" class="form-label">Buscar</label>
-                        <input type="text" id="searchDate" class="form-control" placeholder="Buscar por data (dd/mm)" onkeyup="filterSchedules()">
+                        <input type="text" id="searchDate" class="form-control" placeholder="Buscar por data (dd/mm)">
                     </div>
                 </div>
             </div>
             
             <div id="scheduleItemsContainer">
-                {% if horarios %}
-                    {% for h in horarios %}
-                        <div class="schedule-item" data-date="{{ h.data|date:'Y-m-d' }}" data-status="{% if h.disponivel %}available{% else %}unavailable{% endif %}" data-profissional="{{ h.profissional.slug }}">
-                            <div class="schedule-info">
-                                <span class="schedule-date">{{ h.data|date:"d/m/Y" }}</span>
-                                <span class="schedule-time">às {{ h.hora|time:"H:i" }} com {{ h.profissional|title }}</span>
-                            </div>
-                            <div class="schedule-actions">
-                                <span class="schedule-status {% if h.disponivel %}status-available{% else %}status-unavailable{% endif %}">
-                                    {% if h.disponivel %}Disponível{% else %}Ocupado{% endif %}
-                                </span>
-                                <button class="btn-delete" onclick="if(confirm('Tem certeza que deseja excluir este horário?')) { window.location.href='{% url 'excluir_horario' h.id %}' }" title="Excluir horário">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-message">
-                        <i class="far fa-calendar-times"></i>
-                        <p>Nenhum horário cadastrado ainda.</p>
-                    </div>
-                {% endif %}
+                <div class="empty-message" id="loadingMessage">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Buscando horários...</p>
+                </div>
+                
+                <div class="empty-message" id="emptyMessage" style="display: none;">
+                    <i class="far fa-calendar-times"></i>
+                    <p>Nenhum horário encontrado para os filtros aplicados.</p>
+                </div>
             </div>
+
+            <button class="action-btn btn-primary" id="loadMoreBtn" style="display: none; width: 100%; margin-top: 1.5rem; background: var(--dark-light);">
+                <i class="fas fa-plus"></i> Carregar Mais
+            </button>
         </section>
     </main>
 
     <script>
+        // ===============================================
+        // SEÇÃO 1: SCRIPT DOS BOTÕES DE DIAS (Seu original)
+        // ===============================================
         function toggleDay(element) {
             const checkbox = element.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
@@ -1153,14 +1143,15 @@
             updateSelectAllButton();
         });
         
-        // Dropdown de exclusão
+        // ===============================================
+        // SEÇÃO 2: SCRIPT DO DROPDOWN (Seu original)
+        // ===============================================
         document.getElementById('deleteDropdownBtn').addEventListener('click', function(e) {
             e.stopPropagation();
             const dropdown = document.getElementById('deleteDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         });
         
-        // Fechar dropdown ao clicar fora
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('deleteDropdown');
             const btn = document.getElementById('deleteDropdownBtn');
@@ -1170,55 +1161,152 @@
             }
         });
         
-        // Funções de filtro
-        function filterSchedules() {
-            const profissionalFilter = document.getElementById('filterProfissional').value;
-            const statusFilter = document.getElementById('filterStatus').value;
-            const periodFilter = document.getElementById('filterPeriod').value;
-            const searchText = document.getElementById('searchDate').value.toLowerCase();
+        // ===============================================
+        // SEÇÃO 3: NOVOS SCRIPTS DE FILTRO (AJAX)
+        // ===============================================
+        
+        // Variáveis de estado
+        let currentPage = 1;
+        let isLoading = false;
+        
+        const container = document.getElementById('scheduleItemsContainer');
+        const loadingMsg = document.getElementById('loadingMessage');
+        const emptyMsg = document.getElementById('emptyMessage');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        
+        // Elementos de filtro
+        const filterProfissional = document.getElementById('filterProfissional');
+        const filterStatus = document.getElementById('filterStatus');
+        const filterPeriod = document.getElementById('filterPeriod');
+        const searchDate = document.getElementById('searchDate');
 
-            const now = new Date();
-            const todayUtc = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+        // URL da nossa API (IMPORTANTE)
+        const API_URL = "{% url 'buscar_horarios_api' %}";
+
+        /**
+         * Busca horários no servidor
+         * @param {boolean} append - Se true, adiciona os resultados. Se false, substitui.
+         */
+        async function fetchSchedules(append = false) {
+            if (isLoading) return;
+            isLoading = true;
             
-            document.querySelectorAll('.schedule-item').forEach(item => {
-                const dateParts = item.dataset.date.split('-');
-                const itemDateUtc = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+            if (append) {
+                loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando...';
+            } else {
+                // Limpa o container e mostra o loading principal
+                container.innerHTML = ''; 
+                // Adiciona a mensagem de loading de volta, se ela tiver sido removida
+                container.appendChild(loadingMsg); 
+                loadingMsg.style.display = 'block';
+                emptyMsg.style.display = 'none';
+                loadMoreBtn.style.display = 'none';
+                currentPage = 1; // Reseta a página
+            }
 
-                const itemStatus = item.dataset.status;
-                const itemProfissional = item.dataset.profissional;
-                const itemDateStr = item.querySelector('.schedule-date').textContent.toLowerCase();
+            // 1. Monta a URL com os filtros
+            const params = new URLSearchParams({
+                profissional: filterProfissional.value,
+                status: filterStatus.value,
+                periodo: filterPeriod.value,
+                search: searchDate.value,
+                page: currentPage
+            });
+            
+            const url = `${API_URL}?${params.toString()}`;
+
+            try {
+                // 2. Faz a requisição
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // 3. Renderiza os dados
+                loadingMsg.style.display = 'none'; // Esconde o loading principal
                 
-                let profissionalMatch = profissionalFilter === 'all' || 
-                                    itemProfissional === profissionalFilter;
-                
-                let statusMatch = statusFilter === 'all' || 
-                                (statusFilter === 'available' && itemStatus === 'available') ||
-                                (statusFilter === 'unavailable' && itemStatus === 'unavailable');
-                
-                let periodMatch = true;
-                if (periodFilter !== 'all') {
-                    const dayDiff = Math.floor((itemDateUtc - todayUtc) / (1000 * 60 * 60 * 24));
-                    
-                    if (periodFilter === 'today') {
-                        periodMatch = dayDiff === 0;
-                    } else if (periodFilter === 'future') {
-                        periodMatch = dayDiff >= 1; 
-                    } else if (periodFilter === 'past') {
-                        periodMatch = dayDiff <= -1;   
-                    } else if (periodFilter === 'this_week') {
-                        periodMatch = dayDiff >= 0 && dayDiff < 7;
-                    } else if (periodFilter === 'this_month') {
-                        periodMatch = now.getFullYear() === itemDateUtc.getFullYear() && now.getMonth() === itemDateUtc.getMonth();
-                    }
+                if (data.horarios && data.horarios.length > 0) {
+                    renderHorarios(data.horarios, append);
                 }
                 
-                let searchMatch = searchText === '' || itemDateStr.includes(searchText);
+                // 4. Controla a paginação
+                if (data.has_next) {
+                    loadMoreBtn.style.display = 'block';
+                    loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Carregar Mais';
+                    currentPage++; // Prepara para a próxima página
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+
+                // 5. Mostra mensagem de "vazio" se necessário
+                const totalItems = container.querySelectorAll('.schedule-item').length;
+                if (totalItems === 0) {
+                    container.appendChild(emptyMsg); // Adiciona a msg de vazio
+                    emptyMsg.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error("Erro ao buscar horários:", error);
+                loadingMsg.style.display = 'none';
+                emptyMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <p>Erro ao carregar horários.</p>';
+                container.appendChild(emptyMsg);
+                emptyMsg.style.display = 'block';
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        /**
+         * Renderiza os items de horário no container
+         * @param {Array} horarios - Lista de objetos de horário vinda do JSON
+         * @param {boolean} append - Adiciona ou substitui o HTML
+         */
+        function renderHorarios(horarios, append) {
+            let html = '';
+            
+            for (const h of horarios) {
+                const statusClass = h.disponivel ? 'status-available' : 'status-unavailable';
+                const statusText = h.disponivel ? 'Disponível' : 'Ocupado';
                 
-                item.style.display = profissionalMatch && statusMatch && periodMatch && searchMatch ? 'flex' : 'none';
-            });
+                html += `
+                    <div class="schedule-item" 
+                         data-date-search="${h.data}" 
+                         data-status="${h.disponivel ? 'available' : 'unavailable'}" 
+                         data-profissional="${h.profissional_slug}">
+                         
+                        <div class="schedule-info">
+                            <span class="schedule-date">${h.data}</span>
+                            <span class="schedule-time">às ${h.hora} com ${h.profissional}</span>
+                        </div>
+                        <div class="schedule-actions">
+                            <span class="schedule-status ${statusClass}">
+                                ${statusText}
+                            </span>
+                            <button class="btn-delete" 
+                                    onclick="confirmDeleteHorario('${h.delete_url}')" 
+                                    title="Excluir horário">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (append) {
+                container.insertAdjacentHTML('beforeend', html);
+            } else {
+                container.innerHTML = html; // Substitui o conteúdo (remove o "loading")
+            }
         }
         
-        // Funções de exclusão
+        // Nova função para confirmar exclusão (evita o 'if' inline)
+        function confirmDeleteHorario(url) {
+            if(confirm('Tem certeza que deseja excluir este horário?')) {
+                window.location.href = url;
+            }
+        }
+
+        // ===============================================
+        // SEÇÃO 4: FUNÇÕES DE EXCLUSÃO (Seu original)
+        // ===============================================
         function confirmDeletePast() {
             if(confirm('Tem certeza que deseja excluir todos os horários passados (anteriores a hoje)?')) {
                 document.getElementById('deletePastForm').submit(); 
@@ -1235,6 +1323,7 @@
             }
             
             if(confirm(`Tem certeza que deseja excluir todos os horários entre ${formatDate(dataInicio)} e ${formatDate(dataFim)}?`)) {
+                // CORREÇÃO: A URL de exclusão é /excluir-horarios-periodo/
                 window.location.href = `{% url 'excluir_horarios_periodo' %}?inicio=${dataInicio}&fim=${dataFim}`;
             }
         }
@@ -1250,19 +1339,23 @@
             return `${day}/${month}/${year}`;
         }
         
-        // Inicialização
+        // ===============================================
+        // SEÇÃO 5: INICIALIZAÇÃO DA PÁGINA (Seu original + AJAX)
+        // ===============================================
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicialização dos botões de dia (seu código)
             document.querySelectorAll('.day-option input[type="checkbox"]:checked').forEach(checkbox => {
                 checkbox.closest('.day-option').classList.add('selected');
             });
             updateSelectAllButton();
             
+            // Preenche datas padrão (seu código)
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('data_inicio').value = today;
             document.getElementById('data_fim').value = today;
             document.getElementById('data_inicio_auto').value = today;
             
-            // Fecha mensagens após 4 segundos
+            // Fecha mensagens de alerta (seu código)
             document.querySelectorAll('.messages-container .alert').forEach(msg => {
                 setTimeout(() => {
                     msg.style.transition = 'all 0.5s ease';
@@ -1272,7 +1365,7 @@
                 }, 4000);
             });
 
-            // Validação do formulário de adição manual
+            // Validações dos formulários (seu código)
             document.getElementById('addScheduleForm').addEventListener('submit', function(e) {
                 const profissional = document.getElementById('id_profissional').value;
                 if (profissional === 'ambas') {
@@ -1281,8 +1374,7 @@
                     }
                 }
             });
-
-            // Validação do formulário de geração automática
+            
             document.getElementById('autoScheduleForm').addEventListener('submit', function(e) {
                 const inicio = document.getElementById('horario_inicio').value;
                 const fim = document.getElementById('horario_fim').value;
@@ -1300,7 +1392,28 @@
                     }
                 }
             });
+
+            // === NOVO: Adiciona os 'listeners' nos filtros ===
+            filterProfissional.addEventListener('change', () => fetchSchedules(false));
+            filterStatus.addEventListener('change', () => fetchSchedules(false));
+            filterPeriod.addEventListener('change', () => fetchSchedules(false));
+            
+            // Adiciona um 'debounce' para o campo de busca (para não buscar a cada tecla)
+            let searchTimeout;
+            searchDate.addEventListener('keyup', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetchSchedules(false);
+                }, 300); // Espera 300ms após o usuário parar de digitar
+            });
+
+            // Listener para o botão "Carregar Mais"
+            loadMoreBtn.addEventListener('click', () => fetchSchedules(true));
+            
+            // === NOVO: Carrega os dados iniciais ===
+            // Remove os 'onchange' e 'onkeyup' do HTML e centraliza aqui.
+            fetchSchedules(false);
         });
     </script>
-</body>
-</html
+    </body>
+</html>

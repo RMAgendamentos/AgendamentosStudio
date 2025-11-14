@@ -401,6 +401,22 @@
         .calendario-dia.active .dia-semana, .calendario-dia.active .dia-mes { opacity: 0.9; }
         .calendario-vazio { width: 100%; text-align: center; padding: 2rem 1rem; color: #6b7280; font-style: italic; grid-column: 1 / -1; }
 
+        
+        .mes-grupo {
+            margin-bottom: 2rem;
+        }
+        .mes-grupo:last-of-type {
+            margin-bottom: 0;
+        }
+        .mes-titulo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--secondary);
+            text-transform: capitalize;
+        }
         /* ===== 3. CSS DO GRID DE HORÁRIOS ===== */
         .select-hora-original { position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; margin: 0; }
         .horarios-grid-container { width: 100%; background: #fdfdff; border: 2px solid #f0f2f5; border-radius: var(--border-radius); padding: 1.5rem; }
@@ -516,9 +532,10 @@
                             <i class="fas fa-calendar-alt"></i>
                             Escolha a data disponível
                         </label>
-                        <div id="calendario-visual" class="calendario-container">
-                            </div>
-                    </div>
+                        
+                        <div id="calendario-visual">
+                        </div>
+                        </div>
                 </form>
             {% endif %}
 
@@ -730,29 +747,43 @@
                 }, 600);
             }
 
-            // =================================================
-            // 2. SCRIPT DO CALENDÁRIO VISUAL
-            // =================================================
+            
             const selectData = $('#data');
-            const calendarioContainer = $('#calendario-visual');
+            const calendarioWrapper = $('#calendario-visual'); // Renomeado de calendarioContainer
             const selectContainer = $('#select-data-container');
 
-            if (selectData.length && calendarioContainer.length) {
+            if (selectData.length && calendarioWrapper.length) {
                 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
                 const opcoes = selectData.find('option').slice(1);
+                
+                // Objeto para agrupar os botões por mês/ano
+                const gruposDeMeses = {};
 
                 if (opcoes.length > 0) {
                     opcoes.each(function() {
-                        const valor = $(this).val();
-                        const texto = $(this).text().trim();
+                        const valor = $(this).val(); // "2025-12-31"
+                        const texto = $(this).text().trim(); // "31/12/2025 (Quarta)"
                         const isSelected = $(this).is(':selected');
                         
+                        // Parsing dos dados
                         const diaNumero = texto.substring(0, 2);
                         const diaSemana = texto.match(/\(([^)]+)\)/)[1].substring(0, 3);
                         const mesNumero = parseInt(valor.substring(5, 7), 10);
                         const mesAbrev = meses[mesNumero - 1];
-                        const activeClass = isSelected ? 'active' : '';
                         
+                        // Chave de agrupamento (ex: "2025-12")
+                        const mesAnoKey = valor.substring(0, 7); 
+                        
+                        // Nome do mês (ex: "dezembro de 2025")
+                        // Criamos uma data (T00:00:00) para evitar bugs de fuso horário
+                        const dataObj = new Date(valor + 'T00:00:00');
+                        const nomeMesAno = dataObj.toLocaleString('pt-BR', { 
+                            month: 'long', 
+                            year: 'numeric' 
+                        });
+
+                        // HTML do botão
+                        const activeClass = isSelected ? 'active' : '';
                         const diaBotao = `
                             <button type="button" class="calendario-dia ${activeClass}" data-valor="${valor}">
                                 <span class="dia-semana">${diaSemana}.</span>
@@ -760,13 +791,44 @@
                                 <span class="dia-mes">${mesAbrev}</span>
                             </button>
                         `;
-                        calendarioContainer.append(diaBotao);
+                        
+                        // Adiciona ao grupo
+                        if (!gruposDeMeses[mesAnoKey]) {
+                            gruposDeMeses[mesAnoKey] = {
+                                nome: nomeMesAno,
+                                htmlBotoes: []
+                            };
+                        }
+                        gruposDeMeses[mesAnoKey].htmlBotoes.push(diaBotao);
                     });
 
+                    // Limpa o container principal
+                    calendarioWrapper.empty(); 
+                    
+                    // Constrói o HTML final, grupo por grupo
+                    for (const key in gruposDeMeses) {
+                        const grupo = gruposDeMeses[key];
+                        
+                        const grupoHTML = `
+                            <div class="mes-grupo">
+                                <h4 class="mes-titulo">${grupo.nome}</h4>
+                                <div class="calendario-container">
+                                    ${grupo.htmlBotoes.join('')}
+                                </div>
+                            </div>
+                        `;
+                        calendarioWrapper.append(grupoHTML);
+                    }
+
+                    // Adiciona o handler de clique a TODOS os botões
                     $('.calendario-dia').on('click', function() {
                         const valorSelecionado = $(this).data('valor');
                         selectData.val(valorSelecionado);
-                        $(this).addClass('active').siblings().removeClass('active');
+                        
+                        // Remove 'active' de TODOS os botões, depois adiciona neste
+                        $('.calendario-dia').removeClass('active');
+                        $(this).addClass('active');
+                        
                         $(this).html('<i class="fas fa-spinner fa-spin"></i>');
                         
                         setTimeout(() => {
@@ -782,11 +844,11 @@
                         }, 600);
                     }
                 } else {
-                    calendarioContainer.html('<p class="calendario-vazio">Nenhuma data disponível para esta profissional no momento.</p>');
+                    // Mensagem de "vazio" (agora no wrapper)
+                    calendarioWrapper.html('<p class="calendario-vazio">Nenhuma data disponível para esta profissional no momento.</p>');
                     selectContainer.hide();
                 }
             }
-            
             // =================================================
             // 3. SCRIPT DO GRID DE HORÁRIOS (COM CORREÇÃO DE PARSING)
             // =================================================

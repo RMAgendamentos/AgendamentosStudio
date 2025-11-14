@@ -22,8 +22,11 @@ urlpatterns = [
     path('clientes/', views.lista_cliente, name='lista_clientes'),
     path('clientes/historico/', views.historico_cliente, name='historico_cliente'),
     path('clientes/exportar/', views.exportar_clientes_pdf, name='exportar_clientes_pdf'),
+    # Sobre Horarios
     path('adicionar_horario/', only_admin(views.adicionar_horario), name='adicionar_horario'),
     path('gerar-horarios/', only_admin(views.gerar_horarios_semanais), name='gerar_horarios'),
+    path('admin/api/buscar-horarios/', views.buscar_horarios_api, name='buscar_horarios_api'),
+    # Agendamento Manual pelo Admin
     path('agendar-manual-admin/', only_admin(views.agendar_manual_admin), name='agendar_manual_admin'),
     # PAINEL ADMIN PARA CRIAR SERVIÇOS
     path('pagina-admin/', views.pagina_administrador, name='pagina_admin'),
