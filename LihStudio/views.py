@@ -369,7 +369,7 @@ def painel_dona(request):
     agendamentos_confirmados = Agendamento.objects.filter(status='confirmado')
     agendamentos_pendentes = Agendamento.objects.filter(status='pendente')
     agendamentos_cancelados = Agendamento.objects.filter(status='cancelado')
-    total_clientes = Agendamento.objects.values('nome').distinct().count()
+    total_clientes = Agendamento.objects.values('nome', 'telefone').distinct().count()
     agendamentos_futuros = Agendamento.objects.filter(data__gte=hoje).exclude(data=hoje).exclude(status='cancelado').order_by('data', 'hora__hora')
     
     # Agendamentos com pagamento pendente
