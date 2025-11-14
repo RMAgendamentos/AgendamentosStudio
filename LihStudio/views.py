@@ -1488,12 +1488,25 @@ def gerar_horarios_semanais(request):
 
         # 4. Valida e converte as datas de INÍCIO e FIM
         try:
+            # A data de início é sempre obrigatória
             data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date()
-            data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
         except (ValueError, TypeError):
-            messages.error(request, "Datas de início ou fim inválidas.")
+            messages.error(request, "Data de início inválida.")
             return redirect("adicionar_horario")
+
+        # Agora, validamos a data de fim
+        if not data_fim_str:
+            data_fim = data_inicio + timedelta(days=6)
+            
+        else:
+            # Se a data fim FOI PREENCHIDA, apenas converte
+            try:
+                data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
+            except (ValueError, TypeError):
+                messages.error(request, "A Data de Fim preenchida é inválida.")
+                return redirect("adicionar_horario")
         
+        # A verificação de 'data_inicio > data_fim' continua igual e funciona para os dois casos
         if data_inicio > data_fim:
             messages.error(request, "A data de início não pode ser maior que a data de fim.")
             return redirect("adicionar_horario")
