@@ -1948,9 +1948,13 @@ def sitemap_xml(request):
     
     urls = []
     for name in url_names:
+        # Determina o valor do float
+        priority_val = 0.8 if name == 'home' or name == 'index' else 0.5
+                
         urls.append({
             'loc': request.build_absolute_uri(reverse(name)),
-            'priority': 0.8 if name == 'home' or name == 'index' else 0.5,
+            # ✅ CORREÇÃO: Força o float a ser uma string com PONTO
+            'priority': str(priority_val), 
         })
 
     # Renderiza o template sitemap.xml (que vamos criar)
