@@ -1826,6 +1826,7 @@ def historico_cliente(request):
 
 from django.template.loader import get_template
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from itertools import groupby
 
@@ -1931,6 +1932,32 @@ def termos_uso(request):
 def politica_privacidade(request):
     """Página de Política de Privacidade"""
     return render(request, 'LihStudio/politica_privacidade.html')
+
+def sitemap_xml(request):
+    """
+    Gera o sitemap.xml dinamicamente com as URLs públicas.
+    """
+    # URLs estáticas públicas que você quer indexar
+    url_names = [
+        'index',
+        'home',
+        'login',
+        'termos_uso',
+        'politica_privacidade',
+    ]
+    
+    urls = []
+    for name in url_names:
+        urls.append({
+            'loc': request.build_absolute_uri(reverse(name)),
+            'priority': 0.8 if name == 'home' or name == 'index' else 0.5,
+        })
+
+    # Renderiza o template sitemap.xml (que vamos criar)
+    xml_content = render_to_string('LihStudio/sitemap.xml', {'urls': urls})
+    
+    # Retorna como um arquivo XML
+    return HttpResponse(xml_content, content_type='application/xml')
 
 # ------------------------- VIEWS FATURAMENTO -------------------------
 

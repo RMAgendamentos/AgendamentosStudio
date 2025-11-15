@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Desabilitar indexação de áreas administrativas e de usuário
+Disallow: /admin/
+Disallow: /login/
+Disallow: /painel-funcionario/
+Disallow: /painel/
+Disallow: /clientes/
+Disallow: /adicionar_horario/
+Disallow: /gerar-horarios/
+Disallow: /agendar-manual-admin/
+Disallow: /pagina-admin/
+Disallow: /faturamento/
+Disallow: /excluir-horario/
+Disallow: /excluir-todos-horarios/
+Disallow: /excluir_horarios_passados/
+Disallow: /excluir_horarios_periodo/
+Disallow: /concluir-agendamento/
+Disallow: /confirmar/
+Disallow: /cancelar-agendamento/
+Disallow: /pagamento/
+Disallow: /sucesso/
+
+# Informar ao Google onde está o seu mapa do site (que faremos a seguir)
+Sitemap: https://rmagendamentos.online/sitemap.xml

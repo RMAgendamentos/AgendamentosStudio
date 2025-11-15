@@ -54,4 +54,6 @@ urlpatterns = [
     path('pagamento/falha/', views.pagamento_falha, name='pagamento_falha'),
     path('pagamento/pendente/', views.pagamento_pendente, name='pagamento_pendente'),
     path('webhook/mercadopago/', views.webhook_mercadopago, name='webhook_mercadopago'),
+    # Sobre SEO
+    path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),
 ]
